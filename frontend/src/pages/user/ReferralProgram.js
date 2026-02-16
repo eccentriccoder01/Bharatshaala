@@ -6,11 +6,15 @@ import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import { formatCurrency, copyToClipboard } from '../../utils/helpers';
+import { useNotification } from '../../context/NotificationContext';
 
 const ReferralProgram = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification(); // Added this line
   const { user } = useAuth();
+  const { language } = useLanguage(); // Added this line
   const [loading, setLoading] = useState(true);
   const [referralData, setReferralData] = useState({
     referralCode: '',
@@ -164,15 +168,15 @@ const ReferralProgram = () => {
   const handleShareToSocial = (platform) => {
     const referralUrl = `https://bharatshaala.com/signup?ref=${referralData.referralCode}`;
     const shareText = `भारतशाला पर जुड़ें और पारंपरिक भारतीय उत्पादों की खरीदारी करें! मेरा रेफरल कोड: ${referralData.referralCode}`;
-    
+
     const shareUrl = platform.shareUrl + encodeURIComponent(
-      platform.name === 'WhatsApp' || platform.name === 'Telegram' 
+      platform.name === 'WhatsApp' || platform.name === 'Telegram'
         ? `${shareText} ${referralUrl}`
         : referralUrl
     );
 
     window.open(shareUrl, '_blank');
-    
+
     trackEvent('referral_shared', {
       platform: platform.name,
       userId: user?.id,
@@ -182,7 +186,7 @@ const ReferralProgram = () => {
 
   const handleSendInvites = async (e) => {
     e.preventDefault();
-    
+
     try {
       const validEmails = inviteForm.emails.filter(email => email.trim() !== '');
       if (validEmails.length === 0) {
@@ -236,8 +240,8 @@ const ReferralProgram = () => {
   };
 
   const getCurrentTier = () => {
-    return referralTiers.find(tier => 
-      referralData.totalReferrals >= tier.minReferrals && 
+    return referralTiers.find(tier =>
+      referralData.totalReferrals >= tier.minReferrals &&
       referralData.totalReferrals <= tier.maxReferrals
     ) || referralTiers[0];
   };
@@ -250,7 +254,7 @@ const ReferralProgram = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="रेफरल डेटा लोड हो रहा है..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "रेफरल डेटा लोड हो रहा है..." : "Loading referral data..."} />
       </div>
     );
   }
@@ -385,7 +389,7 @@ const ReferralProgram = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <p className="text-sm text-gray-600 mb-2">रेफरल लिंक</p>
                   <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-800 break-all">
@@ -466,7 +470,7 @@ const ReferralProgram = () => {
                       <textarea
                         rows={3}
                         value={inviteForm.message}
-                        onChange={(e) => setInviteForm({...inviteForm, message: e.target.value})}
+                        onChange={(e) => setInviteForm({ ...inviteForm, message: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -489,7 +493,7 @@ const ReferralProgram = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h2 className="text-xl font-bold text-gray-900 mb-4">हाल के रेफरल्स</h2>
-                
+
                 {referralData.referrals.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="text-4xl mb-4">👥</div>
@@ -517,8 +521,8 @@ const ReferralProgram = () => {
                             {formatCurrency(referral.earnings || 0)}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {referral.status === 'active' ? 'सक्रिय' : 
-                             referral.status === 'pending' ? 'प्रतीक्षा में' : 'निष्क्रिय'}
+                            {referral.status === 'active' ? 'सक्रिय' :
+                              referral.status === 'pending' ? 'प्रतीक्षा में' : 'निष्क्रिय'}
                           </p>
                         </div>
                       </div>
@@ -538,7 +542,7 @@ const ReferralProgram = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h3 className="text-lg font-bold text-gray-900 mb-4">टियर प्रोग्रेस</h3>
-                
+
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-gray-600">वर्तमान: {currentTier.tier}</span>
@@ -546,11 +550,11 @@ const ReferralProgram = () => {
                       <span className="text-sm text-gray-600">अगला: {nextTier.tier}</span>
                     )}
                   </div>
-                  
+
                   {nextTier && (
                     <>
                       <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                        <div 
+                        <div
                           className={`bg-${currentTier.color}-600 h-2 rounded-full`}
                           style={{
                             width: `${Math.min(100, (referralData.totalReferrals / nextTier.minReferrals) * 100)}%`
@@ -566,13 +570,12 @@ const ReferralProgram = () => {
 
                 <div className="space-y-3">
                   {referralTiers.map((tier, index) => (
-                    <div 
+                    <div
                       key={index}
-                      className={`p-3 rounded-lg border-2 ${
-                        tier.tier === currentTier.tier 
-                          ? `border-${tier.color}-500 bg-${tier.color}-50` 
-                          : 'border-gray-200'
-                      }`}
+                      className={`p-3 rounded-lg border-2 ${tier.tier === currentTier.tier
+                        ? `border-${tier.color}-500 bg-${tier.color}-50`
+                        : 'border-gray-200'
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">

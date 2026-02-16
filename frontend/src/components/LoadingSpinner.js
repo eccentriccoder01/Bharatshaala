@@ -1,6 +1,12 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
-const LoadingSpinner = ({ message = "लोड हो रहा है..." }) => {
+const LoadingSpinner = ({ message }) => {
+  const { t } = useLanguage();
+
+  // Use provided message or default to translated 'loading'
+  const displayMessage = message || t('loading');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 flex items-center justify-center">
       <div className="text-center">
@@ -14,8 +20,8 @@ const LoadingSpinner = ({ message = "लोड हो रहा है..." }) =>
         </div>
 
         {/* Message */}
-        <h2 className="text-2xl font-bold text-emerald-800 mb-2">{message}</h2>
-        <p className="text-emerald-600">कृपया प्रतीक्षा करें...</p>
+        <h2 className="text-2xl font-bold text-emerald-800 mb-2">{displayMessage}</h2>
+        <p className="text-emerald-600">{t('pleaseWait')}</p>
 
         {/* Loading Dots */}
         <div className="flex justify-center space-x-2 mt-6">
@@ -26,7 +32,7 @@ const LoadingSpinner = ({ message = "लोड हो रहा है..." }) =>
 
         {/* Cultural Touch */}
         <div className="mt-8 text-emerald-600 text-sm">
-          "धैर्य सबसे बड़ा धन है" 🙏
+          {t('patienceQuote')}
         </div>
       </div>
     </div>

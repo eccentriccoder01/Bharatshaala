@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import "../../App.css";
 
 const VendorAnalytics = () => {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('last_30_days');
@@ -166,14 +168,14 @@ const VendorAnalytics = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="एनालिटिक्स डेटा लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "Analytics लोड हो रहा है..." : "Analytics is loading..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -185,18 +187,17 @@ const VendorAnalytics = () => {
                   आपके बिज़नेस की विस्तृत जानकारी और ट्रेंड्स
                 </p>
               </div>
-              
+
               {/* Period Selector */}
               <div className="flex bg-white rounded-xl p-1 shadow-lg">
                 {periods.map((period) => (
                   <button
                     key={period.id}
                     onClick={() => setSelectedPeriod(period.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      selectedPeriod === period.id
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
-                        : 'text-emerald-600 hover:bg-emerald-50'
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedPeriod === period.id
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
+                      : 'text-emerald-600 hover:bg-emerald-50'
+                      }`}
                   >
                     <span>{period.icon}</span>
                     <span>{period.name}</span>
@@ -214,10 +215,10 @@ const VendorAnalytics = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-8">
-              
+
               {/* Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
+
                 {/* Revenue Card */}
                 <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl p-6 text-white shadow-lg">
                   <div className="flex items-center justify-between mb-4">
@@ -341,7 +342,7 @@ const VendorAnalytics = () => {
 
               {/* Charts Section */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
+
                 {/* Revenue by Category */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
                   <h3 className="text-xl font-bold text-emerald-800 mb-6">श्रेणी के अनुसार राजस्व</h3>
@@ -349,12 +350,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.revenue?.byCategory?.map((item, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${
-                            index === 0 ? 'from-emerald-400 to-green-500' :
+                          <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${index === 0 ? 'from-emerald-400 to-green-500' :
                             index === 1 ? 'from-blue-400 to-indigo-500' :
-                            index === 2 ? 'from-purple-400 to-pink-500' :
-                            'from-orange-400 to-red-500'
-                          }`}></div>
+                              index === 2 ? 'from-purple-400 to-pink-500' :
+                                'from-orange-400 to-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 capitalize">{item.category}</span>
                         </div>
                         <div className="text-right">
@@ -373,20 +373,19 @@ const VendorAnalytics = () => {
                     {Object.entries(analyticsData?.orders?.status || {}).map(([status, count], index) => (
                       <div key={status} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            status === 'pending' ? 'bg-yellow-500' :
+                          <div className={`w-3 h-3 rounded-full ${status === 'pending' ? 'bg-yellow-500' :
                             status === 'processing' ? 'bg-blue-500' :
-                            status === 'shipped' ? 'bg-purple-500' :
-                            status === 'delivered' ? 'bg-green-500' :
-                            status === 'cancelled' ? 'bg-red-500' :
-                            'bg-orange-500'
-                          }`}></div>
+                              status === 'shipped' ? 'bg-purple-500' :
+                                status === 'delivered' ? 'bg-green-500' :
+                                  status === 'cancelled' ? 'bg-red-500' :
+                                    'bg-orange-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 capitalize">
                             {status === 'pending' ? 'लंबित' :
-                             status === 'processing' ? 'प्रक्रिया में' :
-                             status === 'shipped' ? 'भेजे गए' :
-                             status === 'delivered' ? 'वितरित' :
-                             status === 'cancelled' ? 'रद्द' : 'वापस'}
+                              status === 'processing' ? 'प्रक्रिया में' :
+                                status === 'shipped' ? 'भेजे गए' :
+                                  status === 'delivered' ? 'वितरित' :
+                                    status === 'cancelled' ? 'रद्द' : 'वापस'}
                           </span>
                         </div>
                         <span className="font-bold text-gray-800">{count}</span>
@@ -438,7 +437,7 @@ const VendorAnalytics = () => {
 
               {/* Traffic Sources & Customer Demographics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
+
                 {/* Traffic Sources */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
                   <h3 className="text-xl font-bold text-emerald-800 mb-6">ट्रैफिक स्रोत</h3>
@@ -446,12 +445,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.traffic?.sources?.map((source, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            index === 0 ? 'bg-emerald-500' :
+                          <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
                             index === 1 ? 'bg-blue-500' :
-                            index === 2 ? 'bg-purple-500' :
-                            index === 3 ? 'bg-orange-500' : 'bg-red-500'
-                          }`}></div>
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800">{source.source}</span>
                         </div>
                         <div className="text-right">
@@ -470,12 +468,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.customers?.geography?.map((location, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            index === 0 ? 'bg-emerald-500' :
+                          <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
                             index === 1 ? 'bg-blue-500' :
-                            index === 2 ? 'bg-purple-500' :
-                            index === 3 ? 'bg-orange-500' : 'bg-red-500'
-                          }`}></div>
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800">{location.state}</span>
                         </div>
                         <div className="text-right">
@@ -491,7 +488,7 @@ const VendorAnalytics = () => {
               {/* Insights & Recommendations */}
               <div className="bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl p-8 text-white">
                 <h3 className="text-2xl font-bold mb-6">📊 इनसाइट्स और सुझाव</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6">
                     <h4 className="font-semibold mb-3 flex items-center space-x-2">
@@ -499,18 +496,18 @@ const VendorAnalytics = () => {
                       <span>बेस्ट परफॉर्मिंग कैटेगरी</span>
                     </h4>
                     <p className="text-emerald-100">
-                      ज्वेलरी आपकी सबसे अच्छी कैटेगरी है जो कुल राजस्व का 46.5% हिस्सा है। 
+                      ज्वेलरी आपकी सबसे अच्छी कैटेगरी है जो कुल राजस्व का 46.5% हिस्सा है।
                       इस कैटेगरी में और उत्पाद जोड़ने से अच्छे परिणाम मिल सकते हैं।
                     </p>
                   </div>
-                  
+
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6">
                     <h4 className="font-semibold mb-3 flex items-center space-x-2">
                       <span>🎯</span>
                       <span>कन्वर्शन सुधार</span>
                     </h4>
                     <p className="text-emerald-100">
-                      आपका कन्वर्शन रेट 4.8% है जो अच्छा है, लेकिन बेहतर उत्पाद फोटो और विवरण 
+                      आपका कन्वर्शन रेट 4.8% है जो अच्छा है, लेकिन बेहतर उत्पाद फोटो और विवरण
                       से इसे और बेहतर बनाया जा सकता है।
                     </p>
                   </div>

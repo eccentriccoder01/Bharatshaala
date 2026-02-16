@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../context/NotificationContext';
 import ReviewCard from '../components/ReviewCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const Reviews = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Reviews = () => {
   const { user, isAuthenticated } = useAuth();
   const { get, post, put, delete: deleteReview } = useAPI();
   const { showSuccess, showError } = useNotification();
+  const { language } = useLanguage();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -117,7 +119,7 @@ const Reviews = () => {
           canEdit: false
         }
       ]);
-      
+
       // Add pending reviews for demo
       if (filter === 'pending') {
         setReviews([
@@ -221,9 +223,8 @@ const Reviews = () => {
           <button
             key={star}
             onClick={isInteractive ? () => onRatingChange?.(star) : undefined}
-            className={`text-2xl ${isInteractive ? 'cursor-pointer hover:scale-110' : 'cursor-default'} transition-transform duration-200 ${
-              star <= rating ? 'text-yellow-500' : 'text-gray-300'
-            }`}
+            className={`text-2xl ${isInteractive ? 'cursor-pointer hover:scale-110' : 'cursor-default'} transition-transform duration-200 ${star <= rating ? 'text-yellow-500' : 'text-gray-300'
+              }`}
             disabled={!isInteractive}
           >
             ⭐
@@ -234,13 +235,13 @@ const Reviews = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="समीक्षाएं लोड हो रही हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "समीक्षाएं लोड हो रही हैं..." : "Loading reviews..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-6xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-emerald-800 mb-4">
@@ -254,7 +255,7 @@ const Reviews = () => {
         {/* Filters and Controls */}
         <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Filter Options */}
             <div>
               <label className="block text-emerald-800 font-semibold mb-3">फ़िल्टर करें</label>
@@ -263,11 +264,10 @@ const Reviews = () => {
                   <button
                     key={option.id}
                     onClick={() => setFilter(option.id)}
-                    className={`flex items-center space-x-2 p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      filter === option.id
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                    }`}
+                    className={`flex items-center space-x-2 p-3 rounded-lg text-sm font-medium transition-all duration-200 ${filter === option.id
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                      }`}
                   >
                     <span>{option.icon}</span>
                     <span>{option.name}</span>
@@ -313,10 +313,10 @@ const Reviews = () => {
                   <span className="font-semibold">
                     {reviews.filter(r => r.userId === user.id && !r.isPending).length > 0
                       ? (reviews
-                          .filter(r => r.userId === user.id && !r.isPending)
-                          .reduce((acc, r) => acc + r.rating, 0) / 
-                         reviews.filter(r => r.userId === user.id && !r.isPending).length
-                        ).toFixed(1)
+                        .filter(r => r.userId === user.id && !r.isPending)
+                        .reduce((acc, r) => acc + r.rating, 0) /
+                        reviews.filter(r => r.userId === user.id && !r.isPending).length
+                      ).toFixed(1)
                       : '0.0'
                     } ⭐
                   </span>
@@ -335,8 +335,8 @@ const Reviews = () => {
                 <div key={review.id} className="bg-white rounded-2xl p-6 shadow-lg border-l-4 border-orange-500">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <img 
-                        src={review.productImage} 
+                      <img
+                        src={review.productImage}
                         alt={review.productName}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
@@ -367,7 +367,7 @@ const Reviews = () => {
                   review={review}
                   onUpdate={handleUpdateReview}
                   onDelete={handleDeleteReview}
-                  onReport={() => {}} // Implement report functionality
+                  onReport={() => { }} // Implement report functionality
                   isEditable={review.userId === user.id}
                   showActions={true}
                 />
@@ -380,7 +380,7 @@ const Reviews = () => {
                 {filter === 'pending' ? 'कोई समीक्षा लिखना बाकी नहीं' : 'कोई समीक्षा नहीं मिली'}
               </h3>
               <p className="text-emerald-600 mb-6">
-                {filter === 'pending' 
+                {filter === 'pending'
                   ? 'सभी खरीदे गए उत्पादों की समीक्षा लिख दी गई है।'
                   : 'पहली समीक्षा लिखने वाले बनें!'
                 }
@@ -412,8 +412,8 @@ const Reviews = () => {
 
               {/* Product Info */}
               <div className="flex items-center space-x-4 mb-6 p-4 bg-emerald-50 rounded-xl">
-                <img 
-                  src={selectedProduct.productImage} 
+                <img
+                  src={selectedProduct.productImage}
                   alt={selectedProduct.productName}
                   className="w-16 h-16 object-cover rounded-lg"
                 />
@@ -428,12 +428,12 @@ const Reviews = () => {
               {/* Rating */}
               <div className="mb-6">
                 <label className="block text-emerald-800 font-semibold mb-3">रेटिंग दें *</label>
-                {renderStars(newReview.rating, true, (rating) => setNewReview({...newReview, rating}))}
+                {renderStars(newReview.rating, true, (rating) => setNewReview({ ...newReview, rating }))}
                 <p className="text-gray-600 text-sm mt-2">
                   {newReview.rating === 5 ? 'उत्कृष्ट' :
-                   newReview.rating === 4 ? 'अच्छा' :
-                   newReview.rating === 3 ? 'ठीक' :
-                   newReview.rating === 2 ? 'खराब' : 'बहुत खराब'}
+                    newReview.rating === 4 ? 'अच्छा' :
+                      newReview.rating === 3 ? 'ठीक' :
+                        newReview.rating === 2 ? 'खराब' : 'बहुत खराब'}
                 </p>
               </div>
 
@@ -444,7 +444,7 @@ const Reviews = () => {
                   type="text"
                   placeholder="संक्षिप्त शीर्षक लिखें"
                   value={newReview.title}
-                  onChange={(e) => setNewReview({...newReview, title: e.target.value})}
+                  onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                 />
               </div>
@@ -455,7 +455,7 @@ const Reviews = () => {
                 <textarea
                   placeholder="अपना अनुभव विस्तार से बताएं..."
                   value={newReview.comment}
-                  onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
                   rows={5}
                   className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none resize-none"
                 ></textarea>

@@ -5,9 +5,15 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 
 const CustomerSupport = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateTicket, setShowCreateTicket] = useState(false);
@@ -76,7 +82,7 @@ const CustomerSupport = () => {
 
   const handleCreateTicket = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await apiService.createSupportTicket(ticketForm);
       if (response.success) {
@@ -103,7 +109,7 @@ const CustomerSupport = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    
+
     if (!newMessage.trim() || !selectedTicket) return;
 
     try {
@@ -159,7 +165,7 @@ const CustomerSupport = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="सपोर्ट टिकट्स लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "सपोर्ट टिकट्स लोड हो रहे हैं..." : "Loading support tickets..."} />
       </div>
     );
   }
@@ -195,7 +201,7 @@ const CustomerSupport = () => {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">मेरे टिकट्स</h2>
-                
+
                 {tickets.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="text-4xl mb-4">🎫</div>
@@ -214,11 +220,10 @@ const CustomerSupport = () => {
                       <div
                         key={ticket.id}
                         onClick={() => setSelectedTicket(ticket)}
-                        className={`p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
-                          selectedTicket?.id === ticket.id
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:bg-gray-50'
-                        }`}
+                        className={`p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${selectedTicket?.id === ticket.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:bg-gray-50'
+                          }`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center space-x-2">
@@ -234,10 +239,10 @@ const CustomerSupport = () => {
                             </span>
                           </div>
                         </div>
-                        
+
                         <h3 className="font-medium text-gray-900 mb-1 line-clamp-2">{ticket.subject}</h3>
                         <p className="text-sm text-gray-600 mb-2 line-clamp-2">{ticket.description}</p>
-                        
+
                         <div className="flex items-center justify-between text-xs text-gray-500">
                           <span>{new Date(ticket.createdAt).toLocaleDateString('hi-IN')}</span>
                           {ticket.lastMessageAt && (
@@ -278,7 +283,7 @@ const CustomerSupport = () => {
                         type="text"
                         required
                         value={ticketForm.subject}
-                        onChange={(e) => setTicketForm({...ticketForm, subject: e.target.value})}
+                        onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="समस्या का संक्षिप्त विवरण"
                       />
@@ -292,7 +297,7 @@ const CustomerSupport = () => {
                         <select
                           required
                           value={ticketForm.category}
-                          onChange={(e) => setTicketForm({...ticketForm, category: e.target.value})}
+                          onChange={(e) => setTicketForm({ ...ticketForm, category: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           <option value="">श्रेणी चुनें</option>
@@ -310,7 +315,7 @@ const CustomerSupport = () => {
                         </label>
                         <select
                           value={ticketForm.priority}
-                          onChange={(e) => setTicketForm({...ticketForm, priority: e.target.value})}
+                          onChange={(e) => setTicketForm({ ...ticketForm, priority: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           {priorityLevels.map((priority) => (
@@ -330,7 +335,7 @@ const CustomerSupport = () => {
                         required
                         rows={6}
                         value={ticketForm.description}
-                        onChange={(e) => setTicketForm({...ticketForm, description: e.target.value})}
+                        onChange={(e) => setTicketForm({ ...ticketForm, description: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="अपनी समस्या का विस्तृत विवरण दें..."
                       />
@@ -377,7 +382,7 @@ const CustomerSupport = () => {
                           <span>बनाया गया: {new Date(selectedTicket.createdAt).toLocaleDateString('hi-IN')}</span>
                         </div>
                       </div>
-                      
+
                       {selectedTicket.status !== 'closed' && (
                         <button
                           onClick={() => handleCloseTicket(selectedTicket.id)}
@@ -406,21 +411,18 @@ const CustomerSupport = () => {
                       {selectedTicket.messages?.map((message, index) => (
                         <div
                           key={index}
-                          className={`rounded-lg p-4 ${
-                            message.sender === 'user'
-                              ? 'bg-blue-50 ml-8'
-                              : 'bg-gray-50 mr-8'
-                          }`}
+                          className={`rounded-lg p-4 ${message.sender === 'user'
+                            ? 'bg-blue-50 ml-8'
+                            : 'bg-gray-50 mr-8'
+                            }`}
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className={`font-semibold ${
-                              message.sender === 'user' ? 'text-blue-900' : 'text-gray-900'
-                            }`}>
+                            <span className={`font-semibold ${message.sender === 'user' ? 'text-blue-900' : 'text-gray-900'
+                              }`}>
                               {message.sender === 'user' ? 'आप' : 'सपोर्ट टीम'}
                             </span>
-                            <span className={`text-sm ${
-                              message.sender === 'user' ? 'text-blue-600' : 'text-gray-600'
-                            }`}>
+                            <span className={`text-sm ${message.sender === 'user' ? 'text-blue-600' : 'text-gray-600'
+                              }`}>
                               {new Date(message.timestamp).toLocaleString('hi-IN')}
                             </span>
                           </div>

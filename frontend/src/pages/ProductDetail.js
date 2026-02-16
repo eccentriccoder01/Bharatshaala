@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../context/NotificationContext';
 import { useRecentlyViewed } from '../hooks/useLocalStorage';
 import QuantitySelector from '../components/QuantitySelector';
 import ReviewCard from '../components/ReviewCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const ProductDetail = () => {
   const { get } = useAPI();
   const { showSuccess, showError } = useNotification();
   const { addItem: addToRecentlyViewed } = useRecentlyViewed();
+  const { language } = useLanguage();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -102,7 +104,7 @@ const ProductDetail = () => {
       setProduct(mockProduct);
       setSelectedVariant(mockProduct.variants[0]);
       addToRecentlyViewed(mockProduct);
-      
+
       // Mock reviews
       setReviews([
         {
@@ -186,7 +188,7 @@ const ProductDetail = () => {
   ];
 
   if (loading) {
-    return <LoadingSpinner message="उत्पाद लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "उत्पाद लोड हो रहा है..." : "Loading product..."} />;
   }
 
   if (!product) {
@@ -208,7 +210,7 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Breadcrumb */}
         <nav className="mb-8">
           <div className="flex items-center space-x-2 text-emerald-600">
@@ -225,7 +227,7 @@ const ProductDetail = () => {
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-          
+
           {/* Product Images */}
           <div>
             {/* Main Image */}
@@ -235,7 +237,7 @@ const ProductDetail = () => {
                 alt={product.images[selectedImage]?.alt}
                 className="w-full h-96 object-cover rounded-xl"
               />
-              
+
               {/* Discount Badge */}
               {product.discount > 0 && (
                 <div className="absolute top-6 left-6 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
@@ -250,9 +252,8 @@ const ProductDetail = () => {
                 <button
                   key={index}
                   onClick={() => handleImageClick(index)}
-                  className={`bg-white rounded-lg p-2 border-2 transition-all duration-200 ${
-                    selectedImage === index ? 'border-emerald-500' : 'border-gray-200 hover:border-emerald-300'
-                  }`}
+                  className={`bg-white rounded-lg p-2 border-2 transition-all duration-200 ${selectedImage === index ? 'border-emerald-500' : 'border-gray-200 hover:border-emerald-300'
+                    }`}
                 >
                   <img
                     src={image.url}
@@ -266,12 +267,12 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            
+
             {/* Title and Rating */}
             <div>
               <h1 className="text-3xl font-bold text-emerald-800 mb-2">{product.name}</h1>
               <p className="text-lg text-gray-600 mb-4">{product.nameEn}</p>
-              
+
               <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center space-x-1">
                   <div className="flex">
@@ -317,13 +318,12 @@ const ProductDetail = () => {
                       key={variant.id}
                       onClick={() => setSelectedVariant(variant)}
                       disabled={!variant.inStock}
-                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        selectedVariant?.id === variant.id
-                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                          : variant.inStock
-                            ? 'border-gray-200 hover:border-emerald-300'
-                            : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
-                      }`}
+                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedVariant?.id === variant.id
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                        : variant.inStock
+                          ? 'border-gray-200 hover:border-emerald-300'
+                          : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
                     >
                       {variant.name}
                       <div className="text-xs mt-1">₹{variant.price.toLocaleString()}</div>
@@ -352,12 +352,12 @@ const ProductDetail = () => {
                 disabled={!product.inStock}
                 className="w-full bg-emerald-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
               >
-                {isItemInCart(product.id) ? 
-                  `कार्ट में जोड़ें (${getItemQuantity(product.id)} पहले से)` : 
+                {isItemInCart(product.id) ?
+                  `कार्ट में जोड़ें (${getItemQuantity(product.id)} पहले से)` :
                   'कार्ट में जोड़ें'
                 }
               </button>
-              
+
               <button
                 onClick={handleBuyNow}
                 disabled={!product.inStock}
@@ -371,8 +371,8 @@ const ProductDetail = () => {
             <div className="flex items-center space-x-2">
               <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
               <span className={`font-medium ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
-                {product.inStock ? 
-                  (product.quantity > 10 ? 'स्टॉक में उपलब्ध' : `केवल ${product.quantity} बचे`) : 
+                {product.inStock ?
+                  (product.quantity > 10 ? 'स्टॉक में उपलब्ध' : `केवल ${product.quantity} बचे`) :
                   'स्टॉक में नहीं'
                 }
               </span>
@@ -418,7 +418,7 @@ const ProductDetail = () => {
               चेक करें
             </button>
           </div>
-          
+
           {deliveryInfo && (
             <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
               <div className="flex items-center space-x-2 mb-2">
@@ -436,18 +436,17 @@ const ProductDetail = () => {
 
         {/* Product Details Tabs */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          
+
           {/* Tab Headers */}
           <div className="flex border-b border-gray-200">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 px-6 py-4 text-center font-medium transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? 'text-emerald-600 border-b-2 border-emerald-500 bg-emerald-50'
-                    : 'text-gray-600 hover:text-emerald-600'
-                }`}
+                className={`flex-1 px-6 py-4 text-center font-medium transition-colors duration-200 ${activeTab === tab.id
+                  ? 'text-emerald-600 border-b-2 border-emerald-500 bg-emerald-50'
+                  : 'text-gray-600 hover:text-emerald-600'
+                  }`}
               >
                 <span className="mr-2">{tab.icon}</span>
                 {tab.name}
@@ -457,7 +456,7 @@ const ProductDetail = () => {
 
           {/* Tab Content */}
           <div className="p-8">
-            
+
             {/* Description Tab */}
             {activeTab === 'description' && (
               <div className="space-y-6">
@@ -465,7 +464,7 @@ const ProductDetail = () => {
                   <h3 className="text-xl font-bold text-emerald-800 mb-4">उत्पाद विवरण</h3>
                   <p className="text-gray-700 leading-relaxed">{product.description}</p>
                 </div>
-                
+
                 {product.features && (
                   <div>
                     <h4 className="font-semibold text-emerald-800 mb-3">मुख्य विशेषताएं:</h4>
@@ -506,7 +505,7 @@ const ProductDetail = () => {
                     समीक्षा लिखें
                   </button>
                 </div>
-                
+
                 <div className="space-y-4">
                   {reviews.map((review) => (
                     <ReviewCard key={review.id} review={review} />
@@ -519,7 +518,7 @@ const ProductDetail = () => {
             {activeTab === 'delivery' && (
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-emerald-800 mb-4">डिलीवरी जानकारी</h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
@@ -529,7 +528,7 @@ const ProductDetail = () => {
                         <p className="text-gray-600 text-sm">₹499 से अधिक के ऑर्डर पर</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 text-xl">📦</span>
                       <div>
@@ -538,7 +537,7 @@ const ProductDetail = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 text-xl">🔄</span>
@@ -547,7 +546,7 @@ const ProductDetail = () => {
                         <p className="text-gray-600 text-sm">7 दिन की रिटर्न गारंटी</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 text-xl">💳</span>
                       <div>

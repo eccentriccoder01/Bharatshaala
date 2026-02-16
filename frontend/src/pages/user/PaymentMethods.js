@@ -5,12 +5,15 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
 
 const PaymentMethods = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const { language } = useLanguage();
   const [selectedType, setSelectedType] = useState('card');
 
   const [cardForm, setCardForm] = useState({
@@ -82,7 +85,7 @@ const PaymentMethods = () => {
 
   const handleAddPaymentMethod = async (e) => {
     e.preventDefault();
-    
+
     try {
       const data = selectedType === 'card' ? cardForm : upiForm;
       const response = await apiService.post('/user/payment-methods', {
@@ -170,7 +173,7 @@ const PaymentMethods = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="पेमेंट मेथड्स लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "पेमेंट मेथड्स लोड हो रहे हैं..." : "Loading payment methods..."} />
       </div>
     );
   }
@@ -209,7 +212,7 @@ const PaymentMethods = () => {
               className="bg-white rounded-lg shadow-lg p-6 mb-6"
             >
               <h2 className="text-xl font-bold text-gray-900 mb-4">नया पेमेंट मेथड जोड़ें</h2>
-              
+
               {/* Payment Type Selection */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -221,11 +224,10 @@ const PaymentMethods = () => {
                       key={type.id}
                       type="button"
                       onClick={() => setSelectedType(type.id)}
-                      className={`p-3 border rounded-lg text-center transition-colors duration-200 ${
-                        selectedType === type.id
-                          ? 'border-green-500 bg-green-50 text-green-700'
-                          : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
+                      className={`p-3 border rounded-lg text-center transition-colors duration-200 ${selectedType === type.id
+                        ? 'border-green-500 bg-green-50 text-green-700'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
                       <div className="text-2xl mb-1">{type.icon}</div>
                       <div className="font-medium">{type.name}</div>
@@ -244,7 +246,7 @@ const PaymentMethods = () => {
                     </label>
                     <select
                       value={cardForm.type}
-                      onChange={(e) => setCardForm({...cardForm, type: e.target.value})}
+                      onChange={(e) => setCardForm({ ...cardForm, type: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       {cardTypes.map((type) => (
@@ -261,7 +263,7 @@ const PaymentMethods = () => {
                       type="text"
                       maxLength="19"
                       value={formatCardNumber(cardForm.cardNumber)}
-                      onChange={(e) => setCardForm({...cardForm, cardNumber: e.target.value.replace(/\s/g, '')})}
+                      onChange={(e) => setCardForm({ ...cardForm, cardNumber: e.target.value.replace(/\s/g, '') })}
                       placeholder="1234 5678 9012 3456"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
@@ -275,7 +277,7 @@ const PaymentMethods = () => {
                       </label>
                       <select
                         value={cardForm.expiryMonth}
-                        onChange={(e) => setCardForm({...cardForm, expiryMonth: e.target.value})}
+                        onChange={(e) => setCardForm({ ...cardForm, expiryMonth: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                         required
                       >
@@ -291,7 +293,7 @@ const PaymentMethods = () => {
                       </label>
                       <select
                         value={cardForm.expiryYear}
-                        onChange={(e) => setCardForm({...cardForm, expiryYear: e.target.value})}
+                        onChange={(e) => setCardForm({ ...cardForm, expiryYear: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                         required
                       >
@@ -310,7 +312,7 @@ const PaymentMethods = () => {
                     <input
                       type="text"
                       value={cardForm.holderName}
-                      onChange={(e) => setCardForm({...cardForm, holderName: e.target.value})}
+                      onChange={(e) => setCardForm({ ...cardForm, holderName: e.target.value })}
                       placeholder="जैसा कि कार्ड पर लिखा है"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
@@ -322,7 +324,7 @@ const PaymentMethods = () => {
                       type="checkbox"
                       id="cardDefault"
                       checked={cardForm.isDefault}
-                      onChange={(e) => setCardForm({...cardForm, isDefault: e.target.checked})}
+                      onChange={(e) => setCardForm({ ...cardForm, isDefault: e.target.checked })}
                       className="mr-2"
                     />
                     <label htmlFor="cardDefault" className="text-sm text-gray-700">
@@ -358,7 +360,7 @@ const PaymentMethods = () => {
                     <input
                       type="text"
                       value={upiForm.upiId}
-                      onChange={(e) => setUpiForm({...upiForm, upiId: e.target.value})}
+                      onChange={(e) => setUpiForm({ ...upiForm, upiId: e.target.value })}
                       placeholder="yourname@paytm / yourname@gpay"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
@@ -372,7 +374,7 @@ const PaymentMethods = () => {
                     <input
                       type="text"
                       value={upiForm.holderName}
-                      onChange={(e) => setUpiForm({...upiForm, holderName: e.target.value})}
+                      onChange={(e) => setUpiForm({ ...upiForm, holderName: e.target.value })}
                       placeholder="आपका नाम"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
@@ -384,7 +386,7 @@ const PaymentMethods = () => {
                       type="checkbox"
                       id="upiDefault"
                       checked={upiForm.isDefault}
-                      onChange={(e) => setUpiForm({...upiForm, isDefault: e.target.checked})}
+                      onChange={(e) => setUpiForm({ ...upiForm, isDefault: e.target.checked })}
                       className="mr-2"
                     />
                     <label htmlFor="upiDefault" className="text-sm text-gray-700">
@@ -448,14 +450,14 @@ const PaymentMethods = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div className="text-3xl">
-                          {method.type === 'card' ? '💳' : 
-                           method.type === 'upi' ? '📱' : 
-                           method.type === 'netbanking' ? '🏦' : '👛'}
+                          {method.type === 'card' ? '💳' :
+                            method.type === 'upi' ? '📱' :
+                              method.type === 'netbanking' ? '🏦' : '👛'}
                         </div>
                         <div>
                           <div className="flex items-center space-x-2">
                             <h3 className="font-semibold text-gray-900">
-                              {method.type === 'card' ? 
+                              {method.type === 'card' ?
                                 `${getCardBrand(method.cardNumber)} ${method.cardType}` :
                                 method.type === 'upi' ? 'UPI' : method.type}
                             </h3>
@@ -466,8 +468,8 @@ const PaymentMethods = () => {
                             )}
                           </div>
                           <p className="text-gray-600">
-                            {method.type === 'card' ? 
-                              maskCardNumber(method.cardNumber) : 
+                            {method.type === 'card' ?
+                              maskCardNumber(method.cardNumber) :
                               method.upiId || method.accountNumber}
                           </p>
                           <p className="text-sm text-gray-500">{method.holderName}</p>
@@ -478,7 +480,7 @@ const PaymentMethods = () => {
                           )}
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         {!method.isDefault && (
                           <button

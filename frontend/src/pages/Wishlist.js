@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../context/NotificationContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const Wishlist = () => {
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { addToCart } = useCart();
@@ -245,8 +247,8 @@ const Wishlist = () => {
   };
 
   const handleSelectItem = (itemId) => {
-    setSelectedItems(prev => 
-      prev.includes(itemId) 
+    setSelectedItems(prev =>
+      prev.includes(itemId)
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
     );
@@ -279,8 +281,8 @@ const Wishlist = () => {
     try {
       const response = await post(`/wishlist/${itemId}/notifications`, { type });
       if (response.success) {
-        setWishlistItems(prev => prev.map(item => 
-          item.id === itemId 
+        setWishlistItems(prev => prev.map(item =>
+          item.id === itemId
             ? { ...item, notifications: { ...item.notifications, [type]: !item.notifications[type] } }
             : item
         ));
@@ -294,13 +296,13 @@ const Wishlist = () => {
   const filteredItems = filterAndSortItems();
 
   if (loading) {
-    return <LoadingSpinner message="विशलिस्ट लोड हो रही है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "विशलिस्ट लोड हो रही है..." : "Wishlist is loading..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-start">
@@ -312,7 +314,7 @@ const Wishlist = () => {
                 आपकी पसंदीदा चीजों का संग्रह ({wishlistItems.length} आइटम)
               </p>
             </div>
-            
+
             {wishlistItems.length > 0 && (
               <button
                 onClick={shareWishlist}
@@ -347,7 +349,7 @@ const Wishlist = () => {
             {/* Controls */}
             <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                
+
                 {/* Filter */}
                 <div>
                   <label className="block text-emerald-800 font-semibold mb-2">फ़िल्टर</label>
@@ -386,21 +388,19 @@ const Wishlist = () => {
                   <div className="flex bg-emerald-100 rounded-lg p-1">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        viewMode === 'grid' 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'text-emerald-600 hover:bg-emerald-200'
-                      }`}
+                      className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'grid'
+                        ? 'bg-emerald-500 text-white'
+                        : 'text-emerald-600 hover:bg-emerald-200'
+                        }`}
                     >
                       ⊞ ग्रिड
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        viewMode === 'list' 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'text-emerald-600 hover:bg-emerald-200'
-                      }`}
+                      className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'list'
+                        ? 'bg-emerald-500 text-white'
+                        : 'text-emerald-600 hover:bg-emerald-200'
+                        }`}
                     >
                       ☰ लिस्ट
                     </button>
@@ -449,16 +449,15 @@ const Wishlist = () => {
             </div>
 
             {/* Items Grid/List */}
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' 
+            <div className={viewMode === 'grid'
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
               : 'space-y-4'
             }>
               {filteredItems.map((item) => (
                 <div
                   key={item.id}
-                  className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${
-                    selectedItems.includes(item.id) ? 'ring-2 ring-emerald-500' : ''
-                  } ${viewMode === 'list' ? 'flex' : ''}`}
+                  className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${selectedItems.includes(item.id) ? 'ring-2 ring-emerald-500' : ''
+                    } ${viewMode === 'list' ? 'flex' : ''}`}
                 >
                   {/* Selection Checkbox */}
                   <div className="absolute top-3 left-3 z-10">
@@ -482,12 +481,12 @@ const Wishlist = () => {
 
                   {/* Product Image */}
                   <div className={`relative ${viewMode === 'list' ? 'w-48 h-32' : 'h-64'} overflow-hidden`}>
-                    <img 
-                      src={item.image} 
+                    <img
+                      src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    
+
                     {/* Stock Status */}
                     {!item.inStock && (
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -512,7 +511,7 @@ const Wishlist = () => {
                     <h3 className="font-semibold text-emerald-800 mb-2 line-clamp-2">
                       {item.name}
                     </h3>
-                    
+
                     <p className="text-gray-600 text-sm mb-2">
                       विक्रेता: {item.seller}
                     </p>
@@ -549,7 +548,7 @@ const Wishlist = () => {
                       >
                         {item.inStock ? 'कार्ट में जोड़ें' : 'स्टॉक में नहीं'}
                       </button>
-                      
+
                       <button
                         onClick={() => navigate(`/products/${item.productId}`)}
                         className="w-full border border-emerald-500 text-emerald-600 py-2 rounded-lg hover:bg-emerald-50 transition-colors duration-200 text-sm font-medium"

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import "../../App.css";
 
 const VendorDashboard = () => {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('week');
@@ -90,14 +92,14 @@ const VendorDashboard = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="विक्रेता डैशबोर्ड लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "विक्रेता डैशबोर्ड लोड हो रहा है..." : "Vendor dashboard is loading..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -109,18 +111,17 @@ const VendorDashboard = () => {
                   आपके व्यापार का संपूर्ण विवरण एक स्थान पर
                 </p>
               </div>
-              
+
               {/* Period Selector */}
               <div className="flex bg-white rounded-xl p-1 shadow-lg">
                 {periods.map((period) => (
                   <button
                     key={period.id}
                     onClick={() => setSelectedPeriod(period.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      selectedPeriod === period.id
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
-                        : 'text-emerald-600 hover:bg-emerald-50'
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedPeriod === period.id
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
+                      : 'text-emerald-600 hover:bg-emerald-50'
+                      }`}
                   >
                     <span>{period.icon}</span>
                     <span>{period.name}</span>
@@ -138,7 +139,7 @@ const VendorDashboard = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-8">
-              
+
               {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
@@ -240,7 +241,7 @@ const VendorDashboard = () => {
                     <span>📋</span>
                     <span>ऑर्डर स्थिति</span>
                   </h3>
-                  
+
                   <div className="space-y-4">
                     {[
                       { status: 'pending', name: 'लंबित', count: dashboardData?.orders?.pending, color: 'orange' },
@@ -270,7 +271,7 @@ const VendorDashboard = () => {
                     <span>🏆</span>
                     <span>सबसे ज्यादा बिकने वाले उत्पाद</span>
                   </h3>
-                  
+
                   <div className="space-y-4">
                     {dashboardData?.inventory?.topSelling?.map((product, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-200">
@@ -299,7 +300,7 @@ const VendorDashboard = () => {
                   <span>⚡</span>
                   <span>हाल की गतिविधि</span>
                 </h3>
-                
+
                 <div className="space-y-4">
                   {[
                     { time: '2 मिनट पहले', action: 'नया ऑर्डर प्राप्त हुआ', details: '#ORD-12345 - कुंदन हार', type: 'order' },
@@ -308,12 +309,11 @@ const VendorDashboard = () => {
                     { time: '3 घंटे पहले', action: 'नई समीक्षा प्राप्त', details: '5⭐ - मीनाकारी झुमके', type: 'review' }
                   ].map((activity, index) => (
                     <div key={index} className="flex items-start space-x-4 p-4 hover:bg-emerald-50 rounded-xl transition-colors duration-200">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        activity.type === 'order' ? 'bg-blue-100 text-blue-600' :
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${activity.type === 'order' ? 'bg-blue-100 text-blue-600' :
                         activity.type === 'inventory' ? 'bg-purple-100 text-purple-600' :
-                        activity.type === 'shipping' ? 'bg-green-100 text-green-600' :
-                        'bg-yellow-100 text-yellow-600'
-                      }`}>
+                          activity.type === 'shipping' ? 'bg-green-100 text-green-600' :
+                            'bg-yellow-100 text-yellow-600'
+                        }`}>
                         {activity.type === 'order' && '📦'}
                         {activity.type === 'inventory' && '📊'}
                         {activity.type === 'shipping' && '🚚'}

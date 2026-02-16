@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
-import LoadingSpinner from '../components/LoadingSpinner';
-import VendorSidebar from '../components/VendorSidebar';
+import { useAuth } from '../../hooks/useAuth';
+import { useAPI } from '../../hooks/useAPI';
+import { useNotification } from '../../context/NotificationContext';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import VendorSidebar from '../../components/VendorSidebar';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Promotions = () => {
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { get, post, put, delete: deletePromotion } = useAPI();
@@ -261,24 +263,24 @@ const Promotions = () => {
 
     switch (activeTab) {
       case 'active':
-        filtered = promotions.filter(promo => 
-          promo.isActive && 
-          new Date(promo.startDate) <= now && 
+        filtered = promotions.filter(promo =>
+          promo.isActive &&
+          new Date(promo.startDate) <= now &&
           new Date(promo.endDate) >= now
         );
         break;
       case 'scheduled':
-        filtered = promotions.filter(promo => 
+        filtered = promotions.filter(promo =>
           promo.isActive && new Date(promo.startDate) > now
         );
         break;
       case 'expired':
-        filtered = promotions.filter(promo => 
+        filtered = promotions.filter(promo =>
           new Date(promo.endDate) < now || promo.status === 'expired'
         );
         break;
       case 'draft':
-        filtered = promotions.filter(promo => 
+        filtered = promotions.filter(promo =>
           promo.status === 'draft' || !promo.startDate || !promo.endDate
         );
         break;
@@ -287,18 +289,18 @@ const Promotions = () => {
     }
 
     // Update tab counts
-    tabs[0].count = promotions.filter(promo => 
-      promo.isActive && 
-      new Date(promo.startDate) <= now && 
+    tabs[0].count = promotions.filter(promo =>
+      promo.isActive &&
+      new Date(promo.startDate) <= now &&
       new Date(promo.endDate) >= now
     ).length;
-    tabs[1].count = promotions.filter(promo => 
+    tabs[1].count = promotions.filter(promo =>
       promo.isActive && new Date(promo.startDate) > now
     ).length;
-    tabs[2].count = promotions.filter(promo => 
+    tabs[2].count = promotions.filter(promo =>
       new Date(promo.endDate) < now || promo.status === 'expired'
     ).length;
-    tabs[3].count = promotions.filter(promo => 
+    tabs[3].count = promotions.filter(promo =>
       promo.status === 'draft' || !promo.startDate || !promo.endDate
     ).length;
 
@@ -432,7 +434,7 @@ const Promotions = () => {
     for (let i = 0; i < 8; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    setPromotionForm({...promotionForm, code: result});
+    setPromotionForm({ ...promotionForm, code: result });
   };
 
   const getPromotionStatus = (promotion) => {
@@ -479,13 +481,13 @@ const Promotions = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="प्रमोशन्स लोड हो रहे हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "प्रमोशन्स लोड हो रहे हैं..." : "Promotions are loading..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-emerald-800 mb-2">
@@ -497,7 +499,7 @@ const Promotions = () => {
         </div>
 
         <div className="flex gap-8">
-          
+
           {/* Sidebar */}
           <div className="hidden lg:block">
             <VendorSidebar />
@@ -505,7 +507,7 @@ const Promotions = () => {
 
           {/* Main Content */}
           <div className="flex-1 space-y-8">
-            
+
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white">
@@ -569,17 +571,15 @@ const Promotions = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center space-x-2 py-2 px-4 rounded-xl font-medium transition-all duration-200 ${
-                        activeTab === tab.id
-                          ? 'bg-white text-emerald-800 shadow-sm'
-                          : 'text-emerald-600 hover:text-emerald-800'
-                      }`}
+                      className={`flex items-center space-x-2 py-2 px-4 rounded-xl font-medium transition-all duration-200 ${activeTab === tab.id
+                        ? 'bg-white text-emerald-800 shadow-sm'
+                        : 'text-emerald-600 hover:text-emerald-800'
+                        }`}
                     >
                       <span>{tab.icon}</span>
                       <span>{tab.name}</span>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        activeTab === tab.id ? 'bg-emerald-100' : 'bg-emerald-200'
-                      }`}>
+                      <span className={`px-2 py-1 rounded-full text-xs ${activeTab === tab.id ? 'bg-emerald-100' : 'bg-emerald-200'
+                        }`}>
                         {tab.count}
                       </span>
                     </button>
@@ -603,7 +603,7 @@ const Promotions = () => {
                   const statusInfo = getPromotionStatus(promotion);
                   return (
                     <div key={promotion.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                      
+
                       {/* Header */}
                       <div className="flex justify-between items-start mb-4">
                         <div>
@@ -611,12 +611,11 @@ const Promotions = () => {
                           <p className="text-emerald-600 text-sm">{promotion.description}</p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            statusInfo.color === 'green' ? 'bg-green-100 text-green-800' :
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.color === 'green' ? 'bg-green-100 text-green-800' :
                             statusInfo.color === 'blue' ? 'bg-blue-100 text-blue-800' :
-                            statusInfo.color === 'red' ? 'bg-red-100 text-red-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
+                              statusInfo.color === 'red' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                            }`}>
                             {statusInfo.label}
                           </span>
                         </div>
@@ -635,9 +634,9 @@ const Promotions = () => {
                             <span className="text-emerald-600 text-sm">छूट:</span>
                             <p className="font-semibold">
                               {promotion.type === 'percentage' ? `${promotion.value}%` :
-                               promotion.type === 'fixed' ? formatCurrency(promotion.value) :
-                               promotion.type === 'free_shipping' ? 'मुफ्त शिपिंग' :
-                               `${promotion.value}`}
+                                promotion.type === 'fixed' ? formatCurrency(promotion.value) :
+                                  promotion.type === 'free_shipping' ? 'मुफ्त शिपिंग' :
+                                    `${promotion.value}`}
                             </p>
                           </div>
                           <div>
@@ -675,15 +674,14 @@ const Promotions = () => {
                         </div>
                         {promotion.startDate && promotion.endDate && (
                           <div className="w-full bg-emerald-100 rounded-full h-2 mt-2">
-                            <div 
-                              className={`h-2 rounded-full ${
-                                statusInfo.color === 'green' ? 'bg-emerald-500' :
+                            <div
+                              className={`h-2 rounded-full ${statusInfo.color === 'green' ? 'bg-emerald-500' :
                                 statusInfo.color === 'blue' ? 'bg-blue-500' :
-                                statusInfo.color === 'red' ? 'bg-red-500' :
-                                'bg-gray-500'
-                              }`}
+                                  statusInfo.color === 'red' ? 'bg-red-500' :
+                                    'bg-gray-500'
+                                }`}
                               style={{
-                                width: statusInfo.status === 'active' ? 
+                                width: statusInfo.status === 'active' ?
                                   `${Math.min(100, ((new Date() - new Date(promotion.startDate)) / (new Date(promotion.endDate) - new Date(promotion.startDate))) * 100)}%` :
                                   statusInfo.status === 'expired' ? '100%' : '0%'
                               }}
@@ -704,11 +702,10 @@ const Promotions = () => {
                           </button>
                           <button
                             onClick={() => handleTogglePromotion(promotion.id, promotion.isActive)}
-                            className={`p-2 rounded-lg ${
-                              promotion.isActive 
-                                ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50' 
-                                : 'text-green-600 hover:text-green-800 hover:bg-green-50'
-                            }`}
+                            className={`p-2 rounded-lg ${promotion.isActive
+                              ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
+                              : 'text-green-600 hover:text-green-800 hover:bg-green-50'
+                              }`}
                             title={promotion.isActive ? 'निष्क्रिय करें' : 'सक्रिय करें'}
                           >
                             {promotion.isActive ? '⏸️' : '▶️'}
@@ -721,7 +718,7 @@ const Promotions = () => {
                             🗑️
                           </button>
                         </div>
-                        
+
                         {promotion.code && (
                           <button
                             onClick={() => {
@@ -744,9 +741,9 @@ const Promotions = () => {
                 <div className="text-8xl mb-6">🎯</div>
                 <h2 className="text-2xl font-bold text-emerald-800 mb-4">
                   {activeTab === 'active' ? 'कोई सक्रिय प्रमोशन नहीं' :
-                   activeTab === 'scheduled' ? 'कोई शेड्यूल्ड प्रमोशन नहीं' :
-                   activeTab === 'expired' ? 'कोई समाप्त प्रमोशन नहीं' :
-                   'कोई ड्राफ्ट प्रमोशन नहीं'}
+                    activeTab === 'scheduled' ? 'कोई शेड्यूल्ड प्रमोशन नहीं' :
+                      activeTab === 'expired' ? 'कोई समाप्त प्रमोशन नहीं' :
+                        'कोई ड्राफ्ट प्रमोशन नहीं'}
                 </h2>
                 <p className="text-emerald-600 mb-8">
                   अपने उत्पादों की बिक्री बढ़ाने के लिए आकर्षक प्रमोशन बनाएं
@@ -782,7 +779,7 @@ const Promotions = () => {
                   </div>
 
                   <div className="space-y-6">
-                    
+
                     {/* Basic Information */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
@@ -790,7 +787,7 @@ const Promotions = () => {
                         <input
                           type="text"
                           value={promotionForm.name}
-                          onChange={(e) => setPromotionForm({...promotionForm, name: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, name: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                           placeholder="जैसे: दिवाली महोत्सव"
                         />
@@ -800,7 +797,7 @@ const Promotions = () => {
                         <label className="block text-emerald-800 font-semibold mb-2">प्रमोशन प्रकार *</label>
                         <select
                           value={promotionForm.type}
-                          onChange={(e) => setPromotionForm({...promotionForm, type: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, type: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                         >
                           {promotionTypes.map(type => (
@@ -817,7 +814,7 @@ const Promotions = () => {
                       <label className="block text-emerald-800 font-semibold mb-2">विवरण</label>
                       <textarea
                         value={promotionForm.description}
-                        onChange={(e) => setPromotionForm({...promotionForm, description: e.target.value})}
+                        onChange={(e) => setPromotionForm({ ...promotionForm, description: e.target.value })}
                         rows={3}
                         className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none resize-none"
                         placeholder="प्रमोशन का विस्तृत विवरण..."
@@ -834,7 +831,7 @@ const Promotions = () => {
                           <input
                             type="number"
                             value={promotionForm.value}
-                            onChange={(e) => setPromotionForm({...promotionForm, value: e.target.value})}
+                            onChange={(e) => setPromotionForm({ ...promotionForm, value: e.target.value })}
                             className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                             placeholder={promotionForm.type === 'percentage' ? '25' : '500'}
                           />
@@ -848,7 +845,7 @@ const Promotions = () => {
                             <input
                               type="text"
                               value={promotionForm.code}
-                              onChange={(e) => setPromotionForm({...promotionForm, code: e.target.value.toUpperCase()})}
+                              onChange={(e) => setPromotionForm({ ...promotionForm, code: e.target.value.toUpperCase() })}
                               className="flex-1 px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none font-mono"
                               placeholder="PROMO25"
                             />
@@ -871,7 +868,7 @@ const Promotions = () => {
                         <input
                           type="number"
                           value={promotionForm.minOrderAmount}
-                          onChange={(e) => setPromotionForm({...promotionForm, minOrderAmount: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, minOrderAmount: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                           placeholder="1000"
                         />
@@ -882,7 +879,7 @@ const Promotions = () => {
                         <input
                           type="number"
                           value={promotionForm.maxDiscount}
-                          onChange={(e) => setPromotionForm({...promotionForm, maxDiscount: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, maxDiscount: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                           placeholder="2000"
                         />
@@ -893,7 +890,7 @@ const Promotions = () => {
                         <input
                           type="number"
                           value={promotionForm.usageLimit}
-                          onChange={(e) => setPromotionForm({...promotionForm, usageLimit: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, usageLimit: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                           placeholder="100"
                         />
@@ -907,7 +904,7 @@ const Promotions = () => {
                         <input
                           type="datetime-local"
                           value={promotionForm.startDate}
-                          onChange={(e) => setPromotionForm({...promotionForm, startDate: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, startDate: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
@@ -917,7 +914,7 @@ const Promotions = () => {
                         <input
                           type="datetime-local"
                           value={promotionForm.endDate}
-                          onChange={(e) => setPromotionForm({...promotionForm, endDate: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, endDate: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
@@ -930,7 +927,7 @@ const Promotions = () => {
                           <input
                             type="checkbox"
                             checked={promotionForm.isActive}
-                            onChange={(e) => setPromotionForm({...promotionForm, isActive: e.target.checked})}
+                            onChange={(e) => setPromotionForm({ ...promotionForm, isActive: e.target.checked })}
                             className="w-4 h-4 text-emerald-600 border-emerald-300 rounded focus:ring-emerald-500"
                           />
                           <span>प्रमोशन सक्रिय करें</span>
@@ -940,7 +937,7 @@ const Promotions = () => {
                           <input
                             type="checkbox"
                             checked={promotionForm.isAutomatic}
-                            onChange={(e) => setPromotionForm({...promotionForm, isAutomatic: e.target.checked})}
+                            onChange={(e) => setPromotionForm({ ...promotionForm, isAutomatic: e.target.checked })}
                             className="w-4 h-4 text-emerald-600 border-emerald-300 rounded focus:ring-emerald-500"
                           />
                           <span>स्वचालित लागू करें (कोड की जरूरत नहीं)</span>
@@ -952,7 +949,7 @@ const Promotions = () => {
                         <input
                           type="number"
                           value={promotionForm.usageLimitPerUser}
-                          onChange={(e) => setPromotionForm({...promotionForm, usageLimitPerUser: e.target.value})}
+                          onChange={(e) => setPromotionForm({ ...promotionForm, usageLimitPerUser: e.target.value })}
                           className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                           placeholder="2"
                         />

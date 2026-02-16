@@ -4,12 +4,14 @@ import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
 import { useNotification } from '../hooks/useNotification';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { get } = useAPI();
   const { showError } = useNotification();
+  const { language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
@@ -183,13 +185,13 @@ const AdminDashboard = () => {
   ];
 
   if (loading) {
-    return <LoadingSpinner message="एडमिन डैशबोर्ड लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "एडमिन डैशबोर्ड लोड हो रहा है..." : "Loading admin dashboard..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-start">
@@ -201,7 +203,7 @@ const AdminDashboard = () => {
                 भारतशाला प्लेटफॉर्म प्रबंधन केंद्र
               </p>
             </div>
-            
+
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -218,7 +220,7 @@ const AdminDashboard = () => {
 
         {/* Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          
+
           {/* Total Users */}
           <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
             <div className="flex items-center justify-between mb-4">
@@ -316,7 +318,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Recent Activities */}
           <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-lg">
             <h2 className="text-xl font-bold text-slate-800 mb-6">हाल की गतिविधियां</h2>
@@ -332,13 +334,12 @@ const AdminDashboard = () => {
                       <p className="text-slate-800 font-medium">{activity.message}</p>
                       <p className="text-slate-500 text-sm mt-1">{formatDate(activity.timestamp)}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      activity.priority === 'high' ? 'bg-red-100 text-red-700' :
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${activity.priority === 'high' ? 'bg-red-100 text-red-700' :
                       activity.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-green-100 text-green-700'
-                    }`}>
+                        'bg-green-100 text-green-700'
+                      }`}>
                       {activity.priority === 'high' ? 'उच्च' :
-                       activity.priority === 'medium' ? 'मध्यम' : 'कम'}
+                        activity.priority === 'medium' ? 'मध्यम' : 'कम'}
                     </span>
                   </div>
                 </div>
@@ -348,7 +349,7 @@ const AdminDashboard = () => {
 
           {/* System Health & Top Vendors */}
           <div className="space-y-8">
-            
+
             {/* System Health */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <h3 className="text-lg font-bold text-slate-800 mb-4">सिस्टम स्वास्थ्य</h3>

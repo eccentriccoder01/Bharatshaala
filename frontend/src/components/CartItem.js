@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 const CartItem = ({ item, onQuantityChange, onRemove }) => {
+  const { t } = useLanguage();
   const [isRemoving, setIsRemoving] = useState(false);
 
   const handleRemove = async () => {
@@ -9,14 +11,13 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
   };
 
   return (
-    <div className={`flex items-center space-x-4 p-4 bg-white rounded-xl border border-emerald-200 transition-all duration-300 ${
-      isRemoving ? 'opacity-50 scale-95' : 'hover:shadow-md'
-    }`}>
-      
+    <div className={`flex items-center space-x-4 p-4 bg-white rounded-xl border border-emerald-200 transition-all duration-300 ${isRemoving ? 'opacity-50 scale-95' : 'hover:shadow-md'
+      }`}>
+
       {/* Product Image */}
       <div className='flex-shrink-0'>
-        <img 
-          src={item.image} 
+        <img
+          src={item.image}
           alt={item.ItemName}
           className='w-20 h-20 object-cover rounded-lg'
         />
@@ -31,7 +32,7 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
           {item.description}
         </p>
         <div className='flex items-center space-x-3 text-sm text-emerald-600'>
-          <span>विक्रेता: {item.seller}</span>
+          <span>{t('seller')}: {item.seller}</span>
           <span>•</span>
           <span>₹{item.Price.toLocaleString()}</span>
         </div>
@@ -39,7 +40,7 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
 
       {/* Quantity Selector */}
       <div className='flex items-center space-x-3'>
-        <label className='text-emerald-700 font-medium text-sm'>मात्रा:</label>
+        <label className='text-emerald-700 font-medium text-sm'>{t('quantity')}:</label>
         <select
           value={item.Quantity}
           onChange={(e) => onQuantityChange(e, item)}
@@ -65,7 +66,7 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
         onClick={handleRemove}
         disabled={isRemoving}
         className='p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 disabled:opacity-50'
-        title="आइटम हटाएं"
+        title={t('removeItem')}
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const FashionStreet = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [fashionItems, setFashionItems] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -21,91 +23,91 @@ const FashionStreet = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const streetInfo = {
-    name: 'कोलाबा फैशन स्ट्रीट',
+    name: t('fashionStreetTitle'),
     nameEn: 'Colaba Fashion Street',
-    description: 'मुंबई का सबसे प्रसिद्ध स्ट्रीट फैशन हब - ट्रेंडी और किफायती कपड़ों का स्वर्ग',
+    description: t('fashionStreetDescription'),
     established: '1990s',
-    speciality: 'स्ट्रीट फैशन, ट्रेंडी आउटफिट्स',
-    location: 'कॉज़वे रोड, कोलाबा',
+    speciality: t('fashionStreetSpecialty'),
+    location: t('fashionStreetLocation'),
     heroImage: '/images/markets/colaba-fashion-street.jpg'
   };
 
   const fashionCategories = [
-    { id: 'all', name: 'सभी फैशन', icon: '👕' },
-    { id: 'tops', name: 'टॉप्स', icon: '👚' },
-    { id: 'dresses', name: 'ड्रेसेज', icon: '👗' },
-    { id: 'jeans', name: 'जींस', icon: '👖' },
-    { id: 'accessories', name: 'एक्सेसरीज', icon: '👜' },
-    { id: 'footwear', name: 'फुटवेयर', icon: '👠' },
-    { id: 'ethnic', name: 'एथनिक फ्यूजन', icon: '🥻' }
+    { id: 'all', name: t('allFashion'), icon: '👕' },
+    { id: 'tops', name: t('tops'), icon: '👚' },
+    { id: 'dresses', name: t('dresses'), icon: '👗' },
+    { id: 'jeans', name: t('jeans'), icon: '👖' },
+    { id: 'accessories', name: t('accessories'), icon: '👜' },
+    { id: 'footwear', name: t('footwear'), icon: '👠' },
+    { id: 'ethnic', name: t('ethnicFusion'), icon: '🥻' }
   ];
 
   const trendingItems = [
     {
-      name: 'बोहो चिक टॉप',
-      description: 'लेटेस्ट बोहेमियन स्टाइल टॉप',
+      name: t('bohoChicTop'),
+      description: t('bohoChicTopDesc'),
       price: '₹599',
       originalPrice: '₹1,200',
       discount: '50% OFF',
-      vendor: 'ट्रेंड बज़ार'
+      vendor: t('trendBazaar')
     },
     {
-      name: 'हाई वेस्ट जींस',
-      description: 'कॉम्फर्टेबल स्ट्रेच जींस',
+      name: t('highWaistJeans'),
+      description: t('highWaistJeansDesc'),
       price: '₹899',
       originalPrice: '₹1,800',
       discount: '50% OFF',
-      vendor: 'डेनिम हब'
+      vendor: t('denimHub')
     },
     {
-      name: 'इंडो-वेस्टर्न कुर्ता',
-      description: 'मॉडर्न कट के साथ ट्रेडिशनल टच',
+      name: t('indoWesternKurta'),
+      description: t('indoWesternKurtaDesc'),
       price: '₹799',
       originalPrice: '₹1,500',
       discount: '47% OFF',
-      vendor: 'फ्यूजन फैशन'
+      vendor: t('fusionFashion')
     }
   ];
 
   const popularVendors = [
     {
-      name: 'ट्रेंड बज़ार',
-      specialty: 'वेस्टर्न वेयर',
+      name: t('trendBazaar'),
+      specialty: t('westernWear'),
       rating: 4.6,
       items: 150,
-      experience: '8+ वर्ष',
-      bestseller: 'ट्रेंडी टॉप्स'
+      experience: `8+ ${t('yearsOld', 'years')}`,
+      bestseller: t('trendyTops')
     },
     {
-      name: 'डेनिम हब',
-      specialty: 'जींस और पैंट्स',
+      name: t('denimHub'),
+      specialty: t('jeansAndPants'),
       rating: 4.7,
       items: 85,
-      experience: '12+ वर्ष',
-      bestseller: 'डिज़ाइनर जींस'
+      experience: `12+ ${t('yearsOld', 'years')}`,
+      bestseller: t('designerJeans')
     },
     {
-      name: 'फ्यूजन फैशन',
-      specialty: 'इंडो-वेस्टर्न',
+      name: t('fusionFashion'),
+      specialty: t('indoWestern'),
       rating: 4.5,
       items: 120,
-      experience: '6+ वर्ष',
-      bestseller: 'फ्यूजन कुर्ते'
+      experience: `6+ ${t('yearsOld', 'years')}`,
+      bestseller: t('fusionKurtas')
     }
   ];
 
   const fashionTrends = [
-    { trend: 'बोहो चिक', description: 'फ्लोरल प्रिंट्स और लूज़ फिटिंग', popularity: '85%' },
-    { trend: 'मिनिमलिस्ट', description: 'सिंपल और क्लीन लुक', popularity: '78%' },
-    { trend: 'स्ट्रीट स्टाइल', description: 'कैजुअल और कम्फर्टेबल', popularity: '92%' },
-    { trend: 'इंडो-वेस्टर्न', description: 'ट्रेडिशनल और मॉडर्न का मिक्स', popularity: '88%' }
+    { trend: t('bohoChic'), description: t('floralPrintsDesc'), popularity: '85%' },
+    { trend: t('minimalist'), description: t('simpleCleanDesc'), popularity: '78%' },
+    { trend: t('streetStyle'), description: t('casualComfortableDesc'), popularity: '92%' },
+    { trend: t('indoWestern'), description: t('mixTradModernDesc'), popularity: '88%' }
   ];
 
   const shoppingTips = [
-    { tip: 'मोल-भाव', description: 'यहाँ बार्गेनिंग जरूरी है, आधी कीमत से शुरू करें' },
-    { tip: 'क्वालिटी चेक', description: 'कपड़े की सिलाई और फैब्रिक को अच्छे से देखें' },
-    { tip: 'साइज़ चेक', description: 'खरीदने से पहले साइज़ जरूर ट्राई करें' },
-    { tip: 'टाइमिंग', description: 'दोपहर के बाद कम भीड़ होती है' }
+    { tip: t('bargaining'), description: t('bargainingDesc') },
+    { tip: t('qualityCheck'), description: t('qualityCheckDesc') },
+    { tip: t('sizeCheck'), description: t('sizeCheckDesc') },
+    { tip: t('timing'), description: t('timingDesc') }
   ];
 
   useEffect(() => {
@@ -116,7 +118,7 @@ const FashionStreet = () => {
   const loadStreetData = async () => {
     try {
       setLoading(true);
-      
+
       const [itemsResponse, vendorsResponse] = await Promise.all([
         apiService.get('/markets/colaba-causeway/fashion-street/items'),
         apiService.get('/markets/colaba-causeway/fashion-street/vendors')
@@ -165,16 +167,16 @@ const FashionStreet = () => {
     }
   };
 
-  const filteredItems = activeCategory === 'all' 
-    ? fashionItems 
+  const filteredItems = activeCategory === 'all'
+    ? fashionItems
     : fashionItems.filter(item => item.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{streetInfo.name} - भारतशाला | कोलाबा का ट्रेंडी फैशन</title>
-        <meta name="description" content="कोलाबा फैशन स्ट्रीट से ट्रेंडी और किफायती फैशन आइटम्स। स्ट्रीट स्टाइल, बोहो चिक, इंडो-वेस्टर्न और एक्सेसरीज़।" />
-        <meta name="keywords" content="कोलाबा फैशन स्ट्रीट, ट्रेंडी कपड़े, किफायती फैशन, स्ट्रीट स्टाइल, मुंबई फैशन" />
+        <title>{streetInfo.name} - {t('welcome')} | {t('fashionStreetDescription')}</title>
+        <meta name="description" content={t('fashionStreetDescription')} />
+        <meta name="keywords" content="colaba fashion street, trendy clothes, affordable fashion, street style, mumbai fashion" />
         <link rel="canonical" href="https://bharatshaala.com/markets/colaba-causeway/fashion-street" />
       </Helmet>
 
@@ -182,11 +184,11 @@ const FashionStreet = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${streetInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -201,18 +203,18 @@ const FashionStreet = () => {
                   <p className="text-xl opacity-90">{streetInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-pink-200">{streetInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('specialityLabel')}</h3>
                   <p className="text-pink-200">{streetInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('locationLabel')}</h3>
                   <p className="text-pink-200">{streetInfo.location}</p>
                 </div>
               </div>
@@ -224,13 +226,13 @@ const FashionStreet = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">कोलाबा कॉज़वे</Link>
+              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">{t('colabaCausewayTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">फैशन स्ट्रीट</span>
+              <span className="text-gray-900">{t('fashionStreetTitle')}</span>
             </nav>
           </div>
         </div>
@@ -238,7 +240,7 @@ const FashionStreet = () => {
         {/* Trending Items */}
         <section className="py-12 bg-purple-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">आज के ट्रेंडिंग आइटम्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('trendingItemsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {trendingItems.map((item, index) => (
                 <motion.div
@@ -262,7 +264,7 @@ const FashionStreet = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">{item.vendor}</span>
                     <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200">
-                      खरीदें
+                      {t('shopNow')}
                     </button>
                   </div>
                 </motion.div>
@@ -274,17 +276,16 @@ const FashionStreet = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">फैशन श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('fashionCategories')}</h2>
             <div className="flex flex-wrap gap-4">
               {fashionCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-purple-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -297,7 +298,7 @@ const FashionStreet = () => {
         {/* Fashion Trends */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">लेटेस्ट ट्रेंड्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('latestTrends')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {fashionTrends.map((trend, index) => (
                 <motion.div
@@ -310,12 +311,12 @@ const FashionStreet = () => {
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{trend.trend}</h3>
                   <p className="text-gray-600 mb-4">{trend.description}</p>
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div 
-                      className="bg-purple-600 h-2 rounded-full" 
+                    <div
+                      className="bg-purple-600 h-2 rounded-full"
                       style={{ width: trend.popularity }}
                     ></div>
                   </div>
-                  <p className="text-purple-700 font-medium">{trend.popularity} लोकप्रिय</p>
+                  <p className="text-purple-700 font-medium">{trend.popularity} {t('popular')}</p>
                 </motion.div>
               ))}
             </div>
@@ -325,15 +326,15 @@ const FashionStreet = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="फैशन आइटम्स लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी फैशन आइटम्स' : fashionCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allFashion') : fashionCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredItems.map((item) => (
                   <ProductCard
@@ -351,8 +352,8 @@ const FashionStreet = () => {
               {filteredItems.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">👕</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई आइटम नहीं मिला</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noItemsFound')}</h3>
+                  <p className="text-gray-600">{t('chooseOtherCategory')}</p>
                 </div>
               )}
             </div>
@@ -362,7 +363,7 @@ const FashionStreet = () => {
         {/* Popular Vendors */}
         <section className="py-16 bg-gradient-to-r from-pink-100 to-purple-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">पॉपुलर वेंडर्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('popularVendors')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {popularVendors.map((vendor, index) => (
                 <motion.div
@@ -375,10 +376,10 @@ const FashionStreet = () => {
                   <div className="text-4xl mb-4">🏪</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{vendor.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>विशेषता:</strong> {vendor.specialty}</p>
-                    <p><strong>बेस्टसेलर:</strong> {vendor.bestseller}</p>
-                    <p><strong>आइटम्स:</strong> {vendor.items}</p>
-                    <p><strong>अनुभव:</strong> {vendor.experience}</p>
+                    <p><strong>{t('specialityLabel')}:</strong> {vendor.specialty}</p>
+                    <p><strong>{t('bestseller', 'Bestseller')}:</strong> {vendor.bestseller}</p>
+                    <p><strong>{t('items', 'Items')}:</strong> {vendor.items}</p>
+                    <p><strong>{t('experience')}:</strong> {vendor.experience}</p>
                   </div>
                   <div className="flex items-center justify-center space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -389,7 +390,7 @@ const FashionStreet = () => {
                     <span className="text-sm text-gray-600 ml-2">{vendor.rating}</span>
                   </div>
                   <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200">
-                    शॉप देखें
+                    {t('viewShop')}
                   </button>
                 </motion.div>
               ))}
@@ -400,7 +401,7 @@ const FashionStreet = () => {
         {/* Shopping Tips */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">शॉपिंग टिप्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('shoppingTips')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {shoppingTips.map((tip, index) => (
                 <div key={index} className="text-center">
@@ -416,28 +417,26 @@ const FashionStreet = () => {
         {/* Fashion Street Experience */}
         <section className="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">कोलाबा फैशन स्ट्रीट का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('fashionStreetExperience')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                30 साल से कोलाबा फैशन स्ट्रीट मुंबई की फैशन राजधानी है। 
-                यहाँ मिलता है इंटरनेशनल ट्रेंड्स का लोकल टच और किफायती कीमतों में लेटेस्ट स्टाइल। 
-                फैशन लवर्स के लिए यह जन्नत है जहाँ हर स्टाइल और हर बजट का इंतजाम है।
+                {t('fashionStreetExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>कॉज़वे रोड, कोलाबा, मुंबई</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('locationLabel')}</h3>
+                  <p>{t('fashionStreetLocation')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 11:00 - रात 11:00 (रोज़ाना खुला)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timingLabel')}</h3>
+                  <p>{t('timingDesc', '11 AM - 11 PM (Open Daily)')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">💰</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>किफायती ट्रेंडी फैशन</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('specialityLabel')}</h3>
+                  <p>{t('affordableTrendy')}</p>
                 </div>
               </div>
             </div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import ImageUploader from "../../components/ImageUploader";
 import "../../App.css";
 
 const EditItem = () => {
+  const { language } = useLanguage();
   const { itemId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -102,7 +104,7 @@ const EditItem = () => {
       [field]: value
     }));
     setHasChanges(true);
-    
+
     // Clear error for this field
     if (errors[field]) {
       setErrors(prev => ({
@@ -126,7 +128,7 @@ const EditItem = () => {
   const handleArrayInputChange = (field, value, action = 'add') => {
     setFormData(prev => ({
       ...prev,
-      [field]: action === 'add' 
+      [field]: action === 'add'
         ? [...prev[field], value]
         : prev[field].filter(item => item !== value)
     }));
@@ -135,14 +137,14 @@ const EditItem = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) newErrors.name = 'उत्पाद का नाम आवश्यक है';
     if (!formData.description.trim()) newErrors.description = 'उत्पाद का विवरण आवश्यक है';
     if (!formData.category) newErrors.category = 'श्रेणी चुनना आवश्यक है';
     if (!formData.price || formData.price <= 0) newErrors.price = 'वैध कीमत डालें';
     if (!formData.quantity || formData.quantity <= 0) newErrors.quantity = 'वैध मात्रा डालें';
     if (formData.images.length === 0) newErrors.images = 'कम से कम एक छवि आवश्यक है';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -153,7 +155,7 @@ const EditItem = () => {
     setLoading(true);
     try {
       const response = await axios.put(`/vendor/items/${itemId}`, formData);
-      
+
       if (response.data.success) {
         setHasChanges(false);
         navigate('/vendor/items?success=item-updated');
@@ -172,7 +174,7 @@ const EditItem = () => {
       const response = await axios.patch(`/vendor/items/${itemId}/status`, {
         isActive: newStatus
       });
-      
+
       if (response.data.success) {
         setFormData(prev => ({ ...prev, isActive: newStatus }));
       }
@@ -185,7 +187,7 @@ const EditItem = () => {
     if (window.confirm('क्या आप वाकई इस उत्पाद को हटाना चाहते हैं? यह क्रिया वापस नहीं की जा सकती।')) {
       try {
         const response = await axios.delete(`/vendor/items/${itemId}`);
-        
+
         if (response.data.success) {
           navigate('/vendor/items?success=item-deleted');
         }
@@ -196,7 +198,7 @@ const EditItem = () => {
   };
 
   if (pageLoading) {
-    return <LoadingSpinner message="उत्पाद की जानकारी लोड हो रही है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "उत्पाद की जानकारी लोड हो रही है..." : "Product details are loading..."} />;
   }
 
   if (!itemData) {
@@ -218,7 +220,7 @@ const EditItem = () => {
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -234,16 +236,15 @@ const EditItem = () => {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={toggleActiveStatus}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                    formData.isActive
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'bg-red-100 text-red-700 hover:bg-red-200'
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${formData.isActive
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-red-100 text-red-700 hover:bg-red-200'
+                    }`}
                 >
                   <span>{formData.isActive ? '✅' : '❌'}</span>
                   <span>{formData.isActive ? 'सक्रिय' : 'निष्क्रिय'}</span>
                 </button>
-                
+
                 <button
                   onClick={deleteItem}
                   className="flex items-center space-x-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300"
@@ -263,7 +264,7 @@ const EditItem = () => {
 
             {/* Main Content */}
             <div className="flex-1">
-              
+
               {/* Unsaved Changes Warning */}
               {hasChanges && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
@@ -288,11 +289,11 @@ const EditItem = () => {
 
               {/* Form Content */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-8">
-                
+
                 {/* Basic Information */}
                 <div>
                   <h3 className="text-2xl font-bold text-emerald-800 mb-6">बेसिक जानकारी</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-emerald-800 font-semibold mb-2">
@@ -302,9 +303,8 @@ const EditItem = () => {
                         type="text"
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
-                        className={`w-full px-4 py-3 border-2 rounded-xl ${
-                          errors.name ? 'border-red-300' : 'border-emerald-200'
-                        } focus:border-emerald-500 focus:outline-none`}
+                        className={`w-full px-4 py-3 border-2 rounded-xl ${errors.name ? 'border-red-300' : 'border-emerald-200'
+                          } focus:border-emerald-500 focus:outline-none`}
                         placeholder="जैसे: कुंदन हार"
                       />
                       {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -332,9 +332,8 @@ const EditItem = () => {
                       value={formData.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
                       rows={4}
-                      className={`w-full px-4 py-3 border-2 rounded-xl ${
-                        errors.description ? 'border-red-300' : 'border-emerald-200'
-                      } focus:border-emerald-500 focus:outline-none`}
+                      className={`w-full px-4 py-3 border-2 rounded-xl ${errors.description ? 'border-red-300' : 'border-emerald-200'
+                        } focus:border-emerald-500 focus:outline-none`}
                       placeholder="उत्पाद का विस्तृत विवरण लिखें..."
                     />
                     {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -344,7 +343,7 @@ const EditItem = () => {
                 {/* Price and Stock */}
                 <div>
                   <h3 className="text-2xl font-bold text-emerald-800 mb-6">मूल्य और स्टॉक</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                       <label className="block text-emerald-800 font-semibold mb-2">
@@ -354,9 +353,8 @@ const EditItem = () => {
                         type="number"
                         value={formData.price}
                         onChange={(e) => handleInputChange('price', e.target.value)}
-                        className={`w-full px-4 py-3 border-2 rounded-xl ${
-                          errors.price ? 'border-red-300' : 'border-emerald-200'
-                        } focus:border-emerald-500 focus:outline-none`}
+                        className={`w-full px-4 py-3 border-2 rounded-xl ${errors.price ? 'border-red-300' : 'border-emerald-200'
+                          } focus:border-emerald-500 focus:outline-none`}
                         placeholder="2500"
                       />
                       {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
@@ -388,9 +386,8 @@ const EditItem = () => {
                         type="number"
                         value={formData.quantity}
                         onChange={(e) => handleInputChange('quantity', e.target.value)}
-                        className={`w-full px-4 py-3 border-2 rounded-xl ${
-                          errors.quantity ? 'border-red-300' : 'border-emerald-200'
-                        } focus:border-emerald-500 focus:outline-none`}
+                        className={`w-full px-4 py-3 border-2 rounded-xl ${errors.quantity ? 'border-red-300' : 'border-emerald-200'
+                          } focus:border-emerald-500 focus:outline-none`}
                         placeholder="10"
                       />
                       {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity}</p>}
@@ -413,7 +410,7 @@ const EditItem = () => {
                 {/* Materials and Colors */}
                 <div>
                   <h3 className="text-2xl font-bold text-emerald-800 mb-6">विशेषताएं</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                       <label className="block text-emerald-800 font-semibold mb-3">
@@ -495,7 +492,7 @@ const EditItem = () => {
                       <span>←</span>
                       <span>वापस जाएं</span>
                     </a>
-                    
+
                     <button
                       onClick={() => window.open(`/products/${itemId}`, '_blank')}
                       className="flex items-center space-x-2 bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors duration-300"

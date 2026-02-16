@@ -7,11 +7,15 @@ import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
+import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
   const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     orders: [],
@@ -84,7 +88,7 @@ const Dashboard = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      
+
       const [ordersResponse, wishlistResponse, notificationsResponse, recommendationsResponse] = await Promise.all([
         apiService.getOrders({ limit: 5 }),
         apiService.getWishlist(),
@@ -136,7 +140,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="डैशबोर्ड लोड हो रहा है..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "डैशबोर्ड लोड हो रहा है..." : "Loading dashboard..."} />
       </div>
     );
   }
@@ -285,7 +289,7 @@ const Dashboard = () => {
                     सभी देखें
                   </Link>
                 </div>
-                
+
                 {dashboardData.notifications.length === 0 ? (
                   <div className="text-center py-4">
                     <div className="text-3xl mb-2">🔔</div>
@@ -349,7 +353,7 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-gray-600">
                             {order.items?.length || 0} आइटम्स
@@ -375,7 +379,7 @@ const Dashboard = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h2 className="text-xl font-bold text-gray-900 mb-4">आपके लिए सुझाव</h2>
-                
+
                 {dashboardData.recommendations.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="text-4xl mb-4">🎯</div>

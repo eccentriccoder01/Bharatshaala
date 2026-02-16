@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const StartupStore = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [products, setProducts] = useState([]);
   const [startups, setStartups] = useState([]);
@@ -21,90 +23,90 @@ const StartupStore = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const storeInfo = {
-    name: 'कमर्शियल स्ट्रीट स्टार्टअप स्टोर',
+    name: t('startupStoreTitle'),
     nameEn: 'Commercial Street Startup Store',
-    description: 'भारतीय स्टार्टअप्स के इनोवेटिव प्रोडक्ट्स का प्लेटफॉर्म - नवाचार और उद्यमिता का केंद्र',
+    description: t('startupStoreDescription'),
     established: '2015',
-    speciality: 'इनोवेटिव प्रोडक्ट्स, स्टार्टअप सपोर्ट',
-    location: 'कमर्शियल स्ट्रीट, बेंगलुरु',
+    speciality: t('innovativeProductsSupport'),
+    location: t('commercialStreetCity'),
     heroImage: '/images/markets/commercial-street-startup.jpg'
   };
 
   const productCategories = [
-    { id: 'all', name: 'सभी प्रोडक्ट्स', icon: '🚀' },
-    { id: 'tech-gadgets', name: 'टेक गैजेट्स', icon: '📱' },
-    { id: 'health-wellness', name: 'हेल्थ & वेलनेस', icon: '💪' },
-    { id: 'home-lifestyle', name: 'होम & लाइफस्टाइल', icon: '🏠' },
-    { id: 'sustainable', name: 'सस्टेनेबल प्रोडक्ट्स', icon: '🌱' },
-    { id: 'fashion-accessories', name: 'फैशन एक्सेसरीज', icon: '👜' },
-    { id: 'food-beverages', name: 'फूड & बेवरेजेस', icon: '🍯' }
+    { id: 'all', name: t('allProducts'), icon: '🚀' },
+    { id: 'tech-gadgets', name: t('techGadgets'), icon: '📱' },
+    { id: 'health-wellness', name: t('healthWellness'), icon: '💪' },
+    { id: 'home-lifestyle', name: t('homeLifestyle'), icon: '🏠' },
+    { id: 'sustainable', name: t('sustainableProducts'), icon: '🌱' },
+    { id: 'fashion-accessories', name: t('fashionAccessories'), icon: '👜' },
+    { id: 'food-beverages', name: t('foodBeverages'), icon: '🍯' }
   ];
 
   const featuredStartups = [
     {
       name: 'EcoWrap',
-      founder: 'अनुपमा रंगनाथन',
-      category: 'सस्टेनेबल पैकेजिंग',
+      founder: 'Anupama Ranganathan',
+      category: t('sustainablePackaging'),
       founded: '2017',
       products: 12,
-      specialty: 'बायो-डिग्रेडेबल फूड रैप',
+      specialty: t('bioDegradableWrap'),
       funding: 'Series A',
-      location: 'बेंगलुरु'
+      location: t('bangalore')
     },
     {
       name: 'SleepyOwl Coffee',
-      founder: 'अर्जुन कार्तिक',
-      category: 'कॉफी & बेवरेजेस',
+      founder: 'Arjun Kartik',
+      category: t('coffeeBeverages'),
       founded: '2016',
       products: 25,
-      specialty: 'कोल्ड ब्रू कॉफी',
+      specialty: t('coldBrewCoffee'),
       funding: 'Series B',
-      location: 'मुंबई/बेंगलुरु'
+      location: 'Mumbai/Bangalore'
     },
     {
       name: 'Pee Safe',
-      founder: 'विकास बागरिया',
-      category: 'हेल्थ & हाइजीन',
+      founder: 'Vikas Bagaria',
+      category: t('healthHygiene'),
       founded: '2013',
       products: 18,
-      specialty: 'पर्सनल हाइजीन प्रोडक्ट्स',
+      specialty: t('personalHygieneProducts'),
       funding: 'Series C',
-      location: 'गुरुग्राम/बेंगलुरु'
+      location: 'Gurugram/Bangalore'
     }
   ];
 
   const innovativeProducts = [
     {
-      name: 'स्मार्ट प्लांट पॉट',
+      name: t('smartPlantPot'),
       startup: 'GreenTech Solutions',
-      description: 'IoT इनेबल्ड प्लांट मॉनिटरिंग सिस्टम',
+      description: t('iotPlantSystem'),
       price: '₹2,499',
-      category: 'Tech Gadgets',
-      features: ['ऑटो वाटरिंग', 'स्मार्ट सेंसर', 'मोबाइल ऐप']
+      category: t('techGadgets'),
+      features: [t('autoWatering'), t('smartSensor'), t('mobileApp')]
     },
     {
-      name: 'ऑर्गेनिक स्किन केयर किट',
+      name: t('organicSkinCareKit'),
       startup: 'Pure Earth Cosmetics',
-      description: '100% नेचुरल और वीगन स्किन केयर',
+      description: t('naturalVegan'),
       price: '₹1,299',
-      category: 'Health & Wellness',
-      features: ['केमिकल-फ्री', 'वीगन फॉर्मुला', 'इको पैकेजिंग']
+      category: t('healthWellness'),
+      features: [t('chemicalFree'), t('veganFormula'), t('ecoPackaging')]
     },
     {
-      name: 'बांस फाइबर डिनर सेट',
+      name: t('bambooDinnerSet'),
       startup: 'Bamboo Innovations',
-      description: 'सस्टेनेबल और बायो-डिग्रेडेबल',
+      description: t('sustainableBiodegradable'),
       price: '₹999',
-      category: 'Sustainable',
-      features: ['100% बांस', 'माइक्रोवेव सेफ', 'डिशवाशर फ्रेंडली']
+      category: t('sustainableProducts'),
+      features: [t('100Bamboo'), t('microwaveSafe'), t('dishwasherFriendly')]
     }
   ];
 
   const startupPrograms = [
-    { program: 'इनक्यूबेशन सपोर्ट', description: 'नए स्टार्टअप्स के लिए मेंटरशिप और गाइडेंस' },
-    { program: 'प्रोडक्ट लॉन्च पैड', description: 'प्रोडक्ट लॉन्च और मार्केटिंग सपोर्ट' },
-    { program: 'इन्वेस्टर कनेक्ट', description: 'फंडिंग के लिए इन्वेस्टर नेटवर्किंग' },
-    { program: 'कस्टमर फीडबैक', description: 'रियल-टाइम कस्टमर इनसाइट्स और फीडबैक' }
+    { program: t('incubationSupport'), description: t('mentorshipGuidance') },
+    { program: t('productLaunchPad'), description: t('launchMarketingSupport') },
+    { program: t('investorConnect'), description: t('investorNetworking') },
+    { program: t('customerFeedback'), description: t('realTimeInsights') }
   ];
 
   useEffect(() => {
@@ -115,7 +117,7 @@ const StartupStore = () => {
   const loadStoreData = async () => {
     try {
       setLoading(true);
-      
+
       const [productsResponse, startupsResponse] = await Promise.all([
         apiService.get('/markets/commercial-street/startup-store/products'),
         apiService.get('/markets/commercial-street/startup-store/startups')
@@ -164,16 +166,16 @@ const StartupStore = () => {
     }
   };
 
-  const filteredProducts = activeCategory === 'all' 
-    ? products 
+  const filteredProducts = activeCategory === 'all'
+    ? products
     : products.filter(product => product.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{storeInfo.name} - भारतशाला | भारतीय स्टार्टअप प्रोडक्ट्स</title>
-        <meta name="description" content="भारतीय स्टार्टअप्स के इनोवेटिव प्रोडक्ट्स खरीदें। टेक गैजेट्स, हेल्थ प्रोडक्ट्स, सस्टेनेबल आइटम्स और लाइफस्टाइल प्रोडक्ट्स।" />
-        <meta name="keywords" content="भारतीय स्टार्टअप, इनोवेटिव प्रोडक्ट्स, टेक गैजेट्स, सस्टेनेबल प्रोडक्ट्स, बेंगलुरु स्टार्टअप" />
+        <title>{storeInfo.name} - {t('bharatshaala')} | {t('innovativeIndianProducts')}</title>
+        <meta name="description" content={storeInfo.description} />
+        <meta name="keywords" content="indian startups, innovative products, tech gadgets, sustainable products, bangalore startup" />
         <link rel="canonical" href="https://bharatshaala.com/markets/commercial-street/startup-store" />
       </Helmet>
 
@@ -181,11 +183,11 @@ const StartupStore = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${storeInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -200,18 +202,18 @@ const StartupStore = () => {
                   <p className="text-xl opacity-90">{storeInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-cyan-200">{storeInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('speciality')}</h3>
                   <p className="text-cyan-200">{storeInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('location')}</h3>
                   <p className="text-cyan-200">{storeInfo.location}</p>
                 </div>
               </div>
@@ -223,13 +225,13 @@ const StartupStore = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/commercial-street" className="hover:text-emerald-600">कमर्शियल स्ट्रीट</Link>
+              <Link to="/markets/commercial-street" className="hover:text-emerald-600">{t('commercialStreetTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">स्टार्टअप स्टोर</span>
+              <span className="text-gray-900">{t('startupStoreTitle')}</span>
             </nav>
           </div>
         </div>
@@ -237,7 +239,7 @@ const StartupStore = () => {
         {/* Featured Startups */}
         <section className="py-12 bg-blue-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">फीचर्ड स्टार्टअप्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredStartupsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredStartups.map((startup, index) => (
                 <motion.div
@@ -252,19 +254,19 @@ const StartupStore = () => {
                     <h3 className="text-xl font-bold text-gray-900">{startup.name}</h3>
                   </div>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>फाउंडर:</strong> {startup.founder}</p>
-                    <p><strong>कैटेगरी:</strong> {startup.category}</p>
-                    <p><strong>स्थापित:</strong> {startup.founded}</p>
-                    <p><strong>लोकेशन:</strong> {startup.location}</p>
-                    <p><strong>प्रोडक्ट्स:</strong> {startup.products}</p>
-                    <p><strong>स्पेशलिटी:</strong> {startup.specialty}</p>
+                    <p><strong>{t('founder')}:</strong> {startup.founder}</p>
+                    <p><strong>{t('category')}:</strong> {startup.category}</p>
+                    <p><strong>{t('established')}:</strong> {startup.founded}</p>
+                    <p><strong>{t('location')}:</strong> {startup.location}</p>
+                    <p><strong>{t('products')}:</strong> {startup.products}</p>
+                    <p><strong>{t('speciality')}:</strong> {startup.specialty}</p>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                       {startup.funding}
                     </span>
                     <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                      प्रोडक्ट्स देखें
+                      {t('viewProducts')}
                     </button>
                   </div>
                 </motion.div>
@@ -276,7 +278,7 @@ const StartupStore = () => {
         {/* Innovative Products */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">इनोवेटिव प्रोडक्ट्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('innovativeProductsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {innovativeProducts.map((product, index) => (
                 <motion.div
@@ -305,7 +307,7 @@ const StartupStore = () => {
                     ))}
                   </div>
                   <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                    कार्ट में जोड़ें
+                    {t('addToCart')}
                   </button>
                 </motion.div>
               ))}
@@ -316,17 +318,16 @@ const StartupStore = () => {
         {/* Categories Section */}
         <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">प्रोडक्ट श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('productCategoriesTitle')}</h2>
             <div className="flex flex-wrap gap-4">
               {productCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-blue-600 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -339,15 +340,15 @@ const StartupStore = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="प्रोडक्ट्स लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')} ${t('products', 'products')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी प्रोडक्ट्स' : productCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allProducts') : productCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
@@ -365,8 +366,8 @@ const StartupStore = () => {
               {filteredProducts.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🚀</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई प्रोडक्ट नहीं मिला</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noItemsFound')}</h3>
+                  <p className="text-gray-600">{t('tryDifferentCategory')}</p>
                 </div>
               )}
             </div>
@@ -376,7 +377,7 @@ const StartupStore = () => {
         {/* Startup Programs */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">स्टार्टअप प्रोग्राम्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('startupProgramsTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {startupPrograms.map((program, index) => (
                 <div key={index} className="text-center">
@@ -392,23 +393,23 @@ const StartupStore = () => {
         {/* Innovation Stats */}
         <section className="py-16 bg-blue-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">इनोवेशन स्टैट्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('innovationStatsTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">150+</div>
-                <p className="text-gray-600">रजिस्टर्ड स्टार्टअप्स</p>
+                <p className="text-gray-600">{t('registeredStartups')}</p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
-                <p className="text-gray-600">इनोवेटिव प्रोडक्ट्स</p>
+                <p className="text-gray-600">{t('innovativeProductsStat')}</p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">₹50Cr+</div>
-                <p className="text-gray-600">कुल फंडिंग</p>
+                <p className="text-gray-600">{t('totalFunding')}</p>
               </div>
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">1000+</div>
-                <p className="text-gray-600">जॉब्स क्रिएटेड</p>
+                <p className="text-gray-600">{t('jobsCreated')}</p>
               </div>
             </div>
           </div>
@@ -417,28 +418,26 @@ const StartupStore = () => {
         {/* Startup Store Experience */}
         <section className="py-16 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">स्टार्टअप स्टोर का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('startupStoreExperienceTitle')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                10 साल से कमर्शियल स्ट्रीट स्टार्टअप स्टोर भारतीय इनोवेशन को बढ़ावा दे रहा है। 
-                यहाँ मिलते हैं नए विचारों से बने प्रोडक्ट्स जो जिंदगी को आसान और बेहतर बनाते हैं। 
-                हर प्रोडक्ट के पीछे है एक सपना और एक कहानी।
+                {t('startupStoreExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>कमर्शियल स्ट्रीट, बेंगलुरु</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('location')}</h3>
+                  <p>{t('commercialStreetCity')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 10:00 - रात 8:00 (रोज़ाना)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timing')}</h3>
+                  <p>{t('startupStoreTiming')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🚀</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>इनोवेटिव भारतीय प्रोडक्ट्स</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('speciality')}</h3>
+                  <p>{t('innovativeIndianProducts')}</p>
                 </div>
               </div>
             </div>

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../../context/NotificationContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 
 const VendorApproval = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { get, put, post } = useAPI();
   const { showSuccess, showError, showInfo } = useNotification();
+  const { language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [pendingVendors, setPendingVendors] = useState([]);
@@ -282,13 +284,13 @@ const VendorApproval = () => {
   tabs[2].count = rejectedVendors.length;
 
   if (loading) {
-    return <LoadingSpinner message="विक्रेता डेटा लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "विक्रेता डेटा लोड हो रहा है..." : "Loading vendor data..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-start">
@@ -300,7 +302,7 @@ const VendorApproval = () => {
                 नए विक्रेता आवेदनों की समीक्षा और अप्रूवल
               </p>
             </div>
-            
+
             <button
               onClick={() => navigate('/admin')}
               className="bg-slate-500 text-white px-6 py-3 rounded-xl hover:bg-slate-600 transition-colors duration-200"
@@ -317,17 +319,15 @@ const VendorApproval = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-white text-slate-800 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-800'
-                }`}
+                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${activeTab === tab.id
+                  ? 'bg-white text-slate-800 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-800'
+                  }`}
               >
                 <span>{tab.icon}</span>
                 <span>{tab.name}</span>
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  activeTab === tab.id ? 'bg-slate-100' : 'bg-slate-200'
-                }`}>
+                <span className={`px-2 py-1 rounded-full text-xs ${activeTab === tab.id ? 'bg-slate-100' : 'bg-slate-200'
+                  }`}>
                   {tab.count}
                 </span>
               </button>
@@ -339,7 +339,7 @@ const VendorApproval = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {getCurrentTabData().map((vendor) => (
             <div key={vendor.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-              
+
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
@@ -347,10 +347,9 @@ const VendorApproval = () => {
                   <p className="text-slate-600">{vendor.ownerName}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={`w-3 h-3 rounded-full ${
-                    vendor.score >= 85 ? 'bg-green-500' :
+                  <span className={`w-3 h-3 rounded-full ${vendor.score >= 85 ? 'bg-green-500' :
                     vendor.score >= 70 ? 'bg-yellow-500' : 'bg-red-500'
-                  }`}></span>
+                    }`}></span>
                   <span className="text-sm font-medium">{vendor.score}%</span>
                 </div>
               </div>
@@ -442,18 +441,18 @@ const VendorApproval = () => {
         {getCurrentTabData().length === 0 && (
           <div className="text-center py-20">
             <div className="text-8xl mb-6">
-              {activeTab === 'pending' ? '⏳' : 
-               activeTab === 'approved' ? '✅' : '❌'}
+              {activeTab === 'pending' ? '⏳' :
+                activeTab === 'approved' ? '✅' : '❌'}
             </div>
             <h2 className="text-2xl font-bold text-slate-800 mb-4">
               {activeTab === 'pending' ? 'कोई पेंडिंग आवेदन नहीं' :
-               activeTab === 'approved' ? 'कोई अप्रूव्ड विक्रेता नहीं' :
-               'कोई रिजेक्टेड आवेदन नहीं'}
+                activeTab === 'approved' ? 'कोई अप्रूव्ड विक्रेता नहीं' :
+                  'कोई रिजेक्टेड आवेदन नहीं'}
             </h2>
             <p className="text-slate-600">
               {activeTab === 'pending' ? 'सभी आवेदनों की समीक्षा पूर्ण हो गई है।' :
-               activeTab === 'approved' ? 'अभी तक कोई विक्रेता अप्रूव नहीं हुआ है।' :
-               'अभी तक कोई आवेदन रिजेक्ट नहीं हुआ है।'}
+                activeTab === 'approved' ? 'अभी तक कोई विक्रेता अप्रूव नहीं हुआ है।' :
+                  'अभी तक कोई आवेदन रिजेक्ट नहीं हुआ है।'}
             </p>
           </div>
         )}
@@ -473,7 +472,7 @@ const VendorApproval = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
+
                 {/* Business Information */}
                 <div className="space-y-6">
                   <div>
@@ -543,7 +542,7 @@ const VendorApproval = () => {
 
                 {/* Additional Information */}
                 <div className="space-y-6">
-                  
+
                   {/* Contact Information */}
                   <div>
                     <h3 className="text-lg font-bold text-slate-800 mb-4">संपर्क जानकारी</h3>
@@ -587,10 +586,10 @@ const VendorApproval = () => {
                         <div key={docType} className="flex justify-between items-center">
                           <span className="text-sm capitalize">
                             {docType === 'gstCertificate' ? 'GST प्रमाणपत्र' :
-                             docType === 'panCard' ? 'PAN कार्ड' :
-                             docType === 'aadharCard' ? 'आधार कार्ड' :
-                             docType === 'bankPassbook' ? 'बैंक पासबुक' :
-                             docType === 'businessLicense' ? 'बिज़नेस लाइसेंस' : docType}:
+                              docType === 'panCard' ? 'PAN कार्ड' :
+                                docType === 'aadharCard' ? 'आधार कार्ड' :
+                                  docType === 'bankPassbook' ? 'बैंक पासबुक' :
+                                    docType === 'businessLicense' ? 'बिज़नेस लाइसेंस' : docType}:
                           </span>
                           <a
                             href={docUrl}
@@ -630,11 +629,10 @@ const VendorApproval = () => {
                         <span className="font-bold text-2xl">{selectedVendor.score}%</span>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            selectedVendor.score >= 85 ? 'bg-green-500' :
+                        <div
+                          className={`h-2 rounded-full ${selectedVendor.score >= 85 ? 'bg-green-500' :
                             selectedVendor.score >= 70 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
+                            }`}
                           style={{ width: `${selectedVendor.score}%` }}
                         ></div>
                       </div>
@@ -647,7 +645,7 @@ const VendorApproval = () => {
               {activeTab === 'pending' && (
                 <div className="mt-8 pt-6 border-t border-slate-200">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
+
                     {/* Approval Section */}
                     <div className="bg-green-50 rounded-xl p-6">
                       <h4 className="font-bold text-green-800 mb-4">✅ अप्रूव करें</h4>

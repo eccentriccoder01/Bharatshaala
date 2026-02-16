@@ -7,6 +7,7 @@ import { useNotification } from '../hooks/useNotification';
 import { useGeolocation } from '../hooks/useGeolocation';
 import PaymentGateway from '../components/PaymentGateway';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Checkout = () => {
   const { post } = useAPI();
   const { showSuccess, showError } = useNotification();
   const { deliveryAddress, setDeliveryFromCurrentLocation } = useGeolocation();
+  const { language } = useLanguage();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -85,7 +87,7 @@ const Checkout = () => {
       // In real app, this would be an API call
       const savedAddresses = JSON.parse(localStorage.getItem('user_addresses') || '[]');
       setAddresses(savedAddresses);
-      
+
       if (savedAddresses.length > 0) {
         setSelectedAddress(savedAddresses[0]);
       }
@@ -110,7 +112,7 @@ const Checkout = () => {
     setAddresses(updatedAddresses);
     setSelectedAddress(addressToAdd);
     localStorage.setItem('user_addresses', JSON.stringify(updatedAddresses));
-    
+
     setShowAddAddress(false);
     setNewAddress({
       name: '',
@@ -122,7 +124,7 @@ const Checkout = () => {
       pincode: '',
       type: 'home'
     });
-    
+
     showSuccess('पता सफलतापूर्वक जोड़ा गया');
   };
 
@@ -131,25 +133,25 @@ const Checkout = () => {
       showError('कृपया डिलीवरी पता चुनें');
       return;
     }
-    
+
     if (currentStep === 2 && !deliveryOption) {
       showError('कृपया डिलीवरी विकल्प चुनें');
       return;
     }
-    
+
     if (currentStep === 3) {
       // Prepare order and show payment
       prepareOrder();
       return;
     }
-    
+
     setCurrentStep(currentStep + 1);
   };
 
   const prepareOrder = () => {
     const cartSummary = getCartSummary();
     const selectedDelivery = deliveryOptions.find(opt => opt.id === deliveryOption);
-    
+
     const order = {
       userId: user.id,
       items: items.map(item => ({
@@ -171,7 +173,7 @@ const Checkout = () => {
         total: cartSummary.subtotal + selectedDelivery.price - cartSummary.discount
       }
     };
-    
+
     setOrderData(order);
     setShowPaymentGateway(true);
   };
@@ -188,7 +190,7 @@ const Checkout = () => {
 
       // Create order
       const response = await post('/orders', orderWithPayment);
-      
+
       if (response.success) {
         clearCart();
         showSuccess('ऑर्डर सफलतापूर्वक प्लेस हो गया!');
@@ -207,39 +209,36 @@ const Checkout = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="ऑर्डर प्रोसेस हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "ऑर्डर प्रोसेस हो रहा है..." : "Processing order..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-6xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-emerald-800 mb-4">चेकआउट</h1>
-          
+
           {/* Progress Steps */}
           <div className="flex items-center justify-between bg-white rounded-2xl p-6 shadow-lg">
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
-                <div className={`flex items-center justify-center w-12 h-12 rounded-full ${
-                  currentStep >= step.id 
-                    ? 'bg-emerald-500 text-white' 
-                    : 'bg-gray-200 text-gray-500'
-                }`}>
+                <div className={`flex items-center justify-center w-12 h-12 rounded-full ${currentStep >= step.id
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-gray-200 text-gray-500'
+                  }`}>
                   {currentStep > step.id ? '✓' : step.icon}
                 </div>
                 <div className="ml-3">
-                  <p className={`font-medium ${
-                    currentStep >= step.id ? 'text-emerald-600' : 'text-gray-500'
-                  }`}>
+                  <p className={`font-medium ${currentStep >= step.id ? 'text-emerald-600' : 'text-gray-500'
+                    }`}>
                     {step.name}
                   </p>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-1 mx-4 ${
-                    currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-200'
-                  }`} />
+                  <div className={`w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-200'
+                    }`} />
                 )}
               </div>
             ))}
@@ -247,26 +246,25 @@ const Checkout = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            
+
             {/* Step 1: Address Selection */}
             {currentStep === 1 && (
               <div className="bg-white rounded-2xl p-8 shadow-lg">
                 <h2 className="text-2xl font-bold text-emerald-800 mb-6">डिलीवरी पता</h2>
-                
+
                 {/* Existing Addresses */}
                 {addresses.length > 0 && (
                   <div className="space-y-4 mb-6">
                     {addresses.map((address) => (
                       <div
                         key={address.id}
-                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                          selectedAddress?.id === address.id
-                            ? 'border-emerald-500 bg-emerald-50'
-                            : 'border-gray-200 hover:border-emerald-300'
-                        }`}
+                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${selectedAddress?.id === address.id
+                          ? 'border-emerald-500 bg-emerald-50'
+                          : 'border-gray-200 hover:border-emerald-300'
+                          }`}
                         onClick={() => setSelectedAddress(address)}
                       >
                         <div className="flex items-start justify-between">
@@ -278,9 +276,8 @@ const Checkout = () => {
                               {address.city}, {address.state} - {address.pincode}
                             </p>
                           </div>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            address.type === 'home' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
-                          }`}>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${address.type === 'home' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
+                            }`}>
                             {address.type === 'home' ? '🏠 घर' : '🏢 ऑफिस'}
                           </span>
                         </div>
@@ -288,7 +285,7 @@ const Checkout = () => {
                     ))}
                   </div>
                 )}
-                
+
                 {/* Add New Address */}
                 <button
                   onClick={() => setShowAddAddress(!showAddAddress)}
@@ -296,7 +293,7 @@ const Checkout = () => {
                 >
                   + नया पता जोड़ें
                 </button>
-                
+
                 {showAddAddress && (
                   <div className="mt-6 p-6 bg-emerald-50 rounded-xl">
                     <h3 className="font-semibold text-emerald-800 mb-4">नया पता</h3>
@@ -305,54 +302,54 @@ const Checkout = () => {
                         type="text"
                         placeholder="नाम *"
                         value={newAddress.name}
-                        onChange={(e) => setNewAddress({...newAddress, name: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="tel"
                         placeholder="फोन नंबर *"
                         value={newAddress.phone}
-                        onChange={(e) => setNewAddress({...newAddress, phone: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="पता लाइन 1 *"
                         value={newAddress.addressLine1}
-                        onChange={(e) => setNewAddress({...newAddress, addressLine1: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, addressLine1: e.target.value })}
                         className="md:col-span-2 px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="पता लाइन 2"
                         value={newAddress.addressLine2}
-                        onChange={(e) => setNewAddress({...newAddress, addressLine2: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, addressLine2: e.target.value })}
                         className="md:col-span-2 px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="शहर *"
                         value={newAddress.city}
-                        onChange={(e) => setNewAddress({...newAddress, city: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="राज्य"
                         value={newAddress.state}
-                        onChange={(e) => setNewAddress({...newAddress, state: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="पिनकोड *"
                         value={newAddress.pincode}
-                        onChange={(e) => setNewAddress({...newAddress, pincode: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       />
                       <select
                         value={newAddress.type}
-                        onChange={(e) => setNewAddress({...newAddress, type: e.target.value})}
+                        onChange={(e) => setNewAddress({ ...newAddress, type: e.target.value })}
                         className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
                       >
                         <option value="home">घर</option>
@@ -382,16 +379,15 @@ const Checkout = () => {
             {currentStep === 2 && (
               <div className="bg-white rounded-2xl p-8 shadow-lg">
                 <h2 className="text-2xl font-bold text-emerald-800 mb-6">डिलीवरी विकल्प</h2>
-                
+
                 <div className="space-y-4">
                   {deliveryOptions.map((option) => (
                     <div
                       key={option.id}
-                      className={`p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                        deliveryOption === option.id
-                          ? 'border-emerald-500 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300'
-                      }`}
+                      className={`p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 ${deliveryOption === option.id
+                        ? 'border-emerald-500 bg-emerald-50'
+                        : 'border-gray-200 hover:border-emerald-300'
+                        }`}
                       onClick={() => setDeliveryOption(option.id)}
                     >
                       <div className="flex items-center justify-between">
@@ -421,14 +417,14 @@ const Checkout = () => {
                 <p className="text-gray-600 mb-6">
                   अगले स्टेप में आप अपनी पसंदीदा भुगतान विधि चुन सकेंगे।
                 </p>
-                
+
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {['UPI', 'Cards', 'NetBanking', 'Wallets'].map((method) => (
                     <div key={method} className="p-4 border border-gray-200 rounded-lg text-center">
                       <div className="text-2xl mb-2">
-                        {method === 'UPI' ? '📱' : 
-                         method === 'Cards' ? '💳' : 
-                         method === 'NetBanking' ? '🏦' : '💰'}
+                        {method === 'UPI' ? '📱' :
+                          method === 'Cards' ? '💳' :
+                            method === 'NetBanking' ? '🏦' : '💰'}
                       </div>
                       <p className="text-sm text-gray-600">{method}</p>
                     </div>
@@ -447,7 +443,7 @@ const Checkout = () => {
                   पिछला
                 </button>
               )}
-              
+
               <button
                 onClick={handleStepComplete}
                 className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-colors duration-200 ml-auto"
@@ -460,13 +456,13 @@ const Checkout = () => {
           {/* Order Summary Sidebar */}
           <div className="bg-white rounded-2xl p-6 shadow-lg h-fit">
             <h3 className="text-xl font-bold text-emerald-800 mb-6">ऑर्डर सारांश</h3>
-            
+
             <div className="space-y-4 mb-6">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center space-x-3">
-                  <img 
-                    src={item.image} 
-                    alt={item.name} 
+                  <img
+                    src={item.image}
+                    alt={item.name}
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   <div className="flex-1">
@@ -488,11 +484,11 @@ const Checkout = () => {
               <div className="flex justify-between">
                 <span>डिलीवरी:</span>
                 <span>
-                  {deliveryOption ? 
-                    (deliveryOptions.find(opt => opt.id === deliveryOption)?.price === 0 ? 
-                      'मुफ्त' : 
+                  {deliveryOption ?
+                    (deliveryOptions.find(opt => opt.id === deliveryOption)?.price === 0 ?
+                      'मुफ्त' :
                       `₹${deliveryOptions.find(opt => opt.id === deliveryOption)?.price}`
-                    ) : 
+                    ) :
                     '₹0'
                   }
                 </span>
@@ -507,7 +503,7 @@ const Checkout = () => {
                 <span>कुल राशि:</span>
                 <span>
                   ₹{(
-                    getCartSummary().total + 
+                    getCartSummary().total +
                     (deliveryOption ? deliveryOptions.find(opt => opt.id === deliveryOption)?.price || 0 : 0)
                   ).toLocaleString()}
                 </span>

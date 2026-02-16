@@ -5,9 +5,15 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 
 const ShippingSettings = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [shippingData, setShippingData] = useState({
@@ -86,7 +92,7 @@ const ShippingSettings = () => {
     try {
       setSaving(true);
       const response = await apiService.put('/vendor/shipping-settings', shippingData);
-      
+
       if (response.success) {
         trackEvent('shipping_settings_updated');
         alert('शिपिंग सेटिंग्स सफलतापूर्वक अपडेट हुईं!');
@@ -164,7 +170,7 @@ const ShippingSettings = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="शिपिंग सेटिंग्स लोड हो रही हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "शिपिंग सेटिंग्स लोड हो रही हैं..." : "Loading shipping settings..."} />
       </div>
     );
   }
@@ -310,7 +316,7 @@ const ShippingSettings = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h2 className="text-xl font-bold text-gray-900 mb-4">शिपिंग रेट्स</h2>
-                
+
                 {/* Add New Rate */}
                 <div className="bg-gray-50 rounded-lg p-4 mb-4">
                   <h3 className="font-semibold text-gray-900 mb-3">नई रेट जोड़ें</h3>
@@ -318,7 +324,7 @@ const ShippingSettings = () => {
                     <div>
                       <select
                         value={newRate.zone}
-                        onChange={(e) => setNewRate({...newRate, zone: e.target.value})}
+                        onChange={(e) => setNewRate({ ...newRate, zone: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">जोन चुनें</option>
@@ -332,7 +338,7 @@ const ShippingSettings = () => {
                         type="number"
                         placeholder="वेट फ्रॉम (kg)"
                         value={newRate.weightFrom}
-                        onChange={(e) => setNewRate({...newRate, weightFrom: parseFloat(e.target.value)})}
+                        onChange={(e) => setNewRate({ ...newRate, weightFrom: parseFloat(e.target.value) })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         step="0.1"
                       />
@@ -342,7 +348,7 @@ const ShippingSettings = () => {
                         type="number"
                         placeholder="वेट टू (kg)"
                         value={newRate.weightTo}
-                        onChange={(e) => setNewRate({...newRate, weightTo: parseFloat(e.target.value)})}
+                        onChange={(e) => setNewRate({ ...newRate, weightTo: parseFloat(e.target.value) })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         step="0.1"
                       />
@@ -352,7 +358,7 @@ const ShippingSettings = () => {
                         type="number"
                         placeholder="रेट (₹)"
                         value={newRate.rate}
-                        onChange={(e) => setNewRate({...newRate, rate: parseInt(e.target.value)})}
+                        onChange={(e) => setNewRate({ ...newRate, rate: parseInt(e.target.value) })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -408,7 +414,7 @@ const ShippingSettings = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h2 className="text-xl font-bold text-gray-900 mb-4">शिपिंग लिमिटेशन्स</h2>
-                
+
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -594,13 +600,13 @@ const ShippingSettings = () => {
                   शिपिंग सेटअप में मदद चाहिए? हमारी टीम से संपर्क करें।
                 </p>
                 <div className="space-y-2">
-                  <a 
+                  <a
                     href="mailto:shipping@bharatshaala.com"
                     className="block text-yellow-600 hover:text-yellow-800 text-sm font-medium"
                   >
                     📧 shipping@bharatshaala.com
                   </a>
-                  <a 
+                  <a
                     href="tel:+91-XXXX-XXXXXX"
                     className="block text-yellow-600 hover:text-yellow-800 text-sm font-medium"
                   >

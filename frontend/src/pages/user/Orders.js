@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useLanguage } from '../../context/LanguageContext';
 import UserSidebar from "../../components/UserSidebar";
 import "../../App.css";
 
@@ -16,6 +17,7 @@ const UserOrders = () => {
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { language } = useLanguage();
 
   const orderStatuses = [
     { id: 'all', name: 'सभी ऑर्डर', icon: '📦', color: 'gray' },
@@ -161,19 +163,19 @@ const UserOrders = () => {
     let filtered = orders.filter(order => {
       // Status filter
       const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
-      
+
       // Search filter
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch = searchTerm === '' ||
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.items.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+
       // Period filter
       let matchesPeriod = true;
       if (selectedPeriod !== 'all') {
         const orderDate = new Date(order.date);
         const now = new Date();
         const daysDiff = (now - orderDate) / (1000 * 60 * 60 * 24);
-        
+
         switch (selectedPeriod) {
           case '7days': matchesPeriod = daysDiff <= 7; break;
           case '30days': matchesPeriod = daysDiff <= 30; break;
@@ -182,13 +184,13 @@ const UserOrders = () => {
           case '1year': matchesPeriod = daysDiff <= 365; break;
         }
       }
-      
+
       return matchesStatus && matchesSearch && matchesPeriod;
     });
 
     // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
+
     setFilteredOrders(filtered);
   };
 
@@ -238,21 +240,21 @@ const UserOrders = () => {
     const pending = orders.filter(o => ['pending', 'confirmed', 'processing', 'shipped'].includes(o.status)).length;
     const cancelled = orders.filter(o => o.status === 'cancelled').length;
     const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
-    
+
     return { total, delivered, pending, cancelled, totalSpent };
   };
 
   const stats = getOrderStats();
 
   if (loading) {
-    return <LoadingSpinner message="आपके ऑर्डर लोड हो रहे हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "आपके ऑर्डर लोड हो रहे हैं..." : "Loading your orders..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-emerald-800 mb-2">
@@ -271,7 +273,7 @@ const UserOrders = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-8">
-              
+
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
@@ -325,7 +327,7 @@ const UserOrders = () => {
 
               {/* Filters */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                
+
                 {/* Search */}
                 <div className="mb-6">
                   <div className="relative max-w-md">
@@ -350,11 +352,10 @@ const UserOrders = () => {
                       <button
                         key={status.id}
                         onClick={() => setSelectedStatus(status.id)}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                          selectedStatus === status.id
-                            ? `bg-${status.color}-500 text-white shadow-lg scale-105`
-                            : `bg-${status.color}-100 text-${status.color}-700 hover:bg-${status.color}-200 border border-${status.color}-300`
-                        }`}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${selectedStatus === status.id
+                          ? `bg-${status.color}-500 text-white shadow-lg scale-105`
+                          : `bg-${status.color}-100 text-${status.color}-700 hover:bg-${status.color}-200 border border-${status.color}-300`
+                          }`}
                       >
                         <span>{status.icon}</span>
                         <span className='font-medium'>{status.name}</span>
@@ -371,11 +372,10 @@ const UserOrders = () => {
                       <button
                         key={period.id}
                         onClick={() => setSelectedPeriod(period.id)}
-                        className={`px-4 py-2 rounded-full transition-all duration-300 ${
-                          selectedPeriod === period.id
-                            ? 'bg-emerald-500 text-white shadow-lg scale-105'
-                            : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border border-emerald-300'
-                        }`}
+                        className={`px-4 py-2 rounded-full transition-all duration-300 ${selectedPeriod === period.id
+                          ? 'bg-emerald-500 text-white shadow-lg scale-105'
+                          : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border border-emerald-300'
+                          }`}
                       >
                         {period.name}
                       </button>
@@ -395,7 +395,7 @@ const UserOrders = () => {
                     const statusInfo = getStatusInfo(order.status);
                     return (
                       <div key={order.id} className="bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-                        
+
                         {/* Order Header */}
                         <div className={`bg-gradient-to-r from-${statusInfo.color}-500 to-${statusInfo.color}-600 p-6 text-white`}>
                           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -419,13 +419,13 @@ const UserOrders = () => {
 
                         {/* Order Content */}
                         <div className="p-6">
-                          
+
                           {/* Items */}
                           <div className="space-y-4 mb-6">
                             {order.items.map((item, itemIndex) => (
                               <div key={itemIndex} className="flex items-center space-x-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-                                <img 
-                                  src={item.image} 
+                                <img
+                                  src={item.image}
                                   alt={item.name}
                                   className="w-16 h-16 object-cover rounded-lg"
                                 />
@@ -497,7 +497,7 @@ const UserOrders = () => {
                                 <span>ट्रैक करें</span>
                               </button>
                             )}
-                            
+
                             {['pending', 'confirmed'].includes(order.status) && (
                               <button
                                 onClick={() => handleOrderAction(order.id, 'cancel')}
@@ -507,7 +507,7 @@ const UserOrders = () => {
                                 <span>कैंसल करें</span>
                               </button>
                             )}
-                            
+
                             {order.status === 'delivered' && (
                               <button
                                 onClick={() => handleOrderAction(order.id, 'return')}
@@ -517,7 +517,7 @@ const UserOrders = () => {
                                 <span>रिटर्न करें</span>
                               </button>
                             )}
-                            
+
                             <button
                               onClick={() => handleOrderAction(order.id, 'reorder')}
                               className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors duration-200 flex items-center space-x-2"
@@ -525,7 +525,7 @@ const UserOrders = () => {
                               <span>🔄</span>
                               <span>फिर से ऑर्डर करें</span>
                             </button>
-                            
+
                             <button
                               onClick={() => {
                                 setSelectedOrder(order);
@@ -550,8 +550,8 @@ const UserOrders = () => {
                     {orders.length === 0 ? 'अभी तक कोई ऑर्डर नहीं' : 'कोई ऑर्डर नहीं मिला'}
                   </h3>
                   <p className="text-emerald-600 mb-6">
-                    {orders.length === 0 
-                      ? 'भारतशाला से अपनी पहली खरीदारी करें' 
+                    {orders.length === 0
+                      ? 'भारतशाला से अपनी पहली खरीदारी करें'
                       : 'अपने फ़िल्टर बदलकर देखें'
                     }
                   </p>

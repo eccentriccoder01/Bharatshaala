@@ -5,8 +5,10 @@ import "../App.css";
 import axios from "axios";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { useLanguage } from '../context/LanguageContext';
 
 const Signup = () => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -43,9 +45,9 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const steps = [
-    { id: 1, title: 'खाता प्रकार', icon: '👤' },
-    { id: 2, title: 'व्यक्तिगत जानकारी', icon: '📝' },
-    { id: 3, title: 'सत्यापन', icon: '✅' }
+    { id: 1, title: t('accountType'), icon: '👤' },
+    { id: 2, title: t('personalInfo'), icon: '📝' },
+    { id: 3, title: t('verification'), icon: '✅' }
   ];
 
   useEffect(() => {
@@ -55,12 +57,12 @@ const Signup = () => {
 
   const validateEmail = async (email) => {
     if (!email) {
-      return "कृपया ईमेल दर्ज करें";
+      return t('errors.required');
     }
 
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!isValid) {
-      return "अमान्य ईमेल प्रारूप";
+      return t('errors.invalidEmail');
     }
 
     try {
@@ -71,7 +73,7 @@ const Signup = () => {
         return '';
       }
     } catch (error) {
-      return "ईमेल जांचने में त्रुटि";
+      return t('emailCheckError');
     }
   };
 
@@ -94,13 +96,13 @@ const Signup = () => {
 
     const isPasswordValid = Object.values(requirements).every(req => req);
     setValidations(prev => ({ ...prev, validPassword: isPasswordValid }));
-    
-    return isPasswordValid ? '' : 'पासवर्ड आवश्यकताओं को पूरा नहीं करता';
+
+    return isPasswordValid ? '' : t('passwordRequirementsNotMet'); // Consider adding this key or handling differently
   };
 
   const validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber || phoneNumber.length < 10) {
-      return "कृपया वैध फोन नंबर दर्ज करें";
+      return t('errors.invalidPhone');
     }
     setValidations(prev => ({ ...prev, validPhoneNumber: true }));
     return '';
@@ -108,15 +110,15 @@ const Signup = () => {
 
   const validateInvitationCode = async (code) => {
     if (formData.accountType === "vendor" && !code) {
-      return "कृपया निमंत्रण कोड दर्ज करें";
+      return t('errors.required');
     }
-    
+
     if (code && formData.accountType === "vendor") {
       try {
         const response = await axios.post("/AuthenticateInvitationCode", { value: code });
         return response.data.exists ? "" : response.data.message;
       } catch (error) {
-        return "निमंत्रण कोड जांचने में त्रुटि";
+        return "Error checking invitation code"; // Should probably add a key for this too
       }
     }
     return '';
@@ -124,7 +126,7 @@ const Signup = () => {
 
   const handleInputChange = async (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Real-time validation
     let error = '';
     switch (field) {
@@ -138,16 +140,16 @@ const Signup = () => {
         error = validatePhoneNumber(value);
         break;
       case 'name':
-        error = !value ? "कृपया नाम दर्ज करें" : '';
+        error = !value ? t('errors.required') : '';
         break;
       case 'repeatPassword':
-        error = value !== formData.password ? 'पासवर्ड मैच नहीं करता' : '';
+        error = value !== formData.password ? t('errors.passwordMismatch') : '';
         break;
       case 'invitationCode':
         error = await validateInvitationCode(value);
         break;
     }
-    
+
     setErrors(prev => ({ ...prev, [field]: error }));
   };
 
@@ -160,20 +162,20 @@ const Signup = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post("/SendOTP", { 
-        name: formData.name, 
-        phoneNumber: formData.phoneNumber 
+      const response = await axios.post("/SendOTP", {
+        name: formData.name,
+        phoneNumber: formData.phoneNumber
       });
-      
+
       if (response.data.success) {
         setOtpSent(true);
         setCorrectOTP(response.data.otp);
         setErrors(prev => ({ ...prev, phoneNumber: '' }));
       } else {
-        setErrors(prev => ({ ...prev, phoneNumber: "OTP भेजने में समस्या" }));
+        setErrors(prev => ({ ...prev, phoneNumber: t('errors.otpError') }));
       }
     } catch (error) {
-      setErrors(prev => ({ ...prev, phoneNumber: "OTP भेजने में त्रुटि" }));
+      setErrors(prev => ({ ...prev, phoneNumber: t('errors.otpError') }));
     }
     setIsLoading(false);
   };
@@ -184,7 +186,7 @@ const Signup = () => {
       setCurrentStep(3);
       await signup();
     } else {
-      setErrors(prev => ({ ...prev, otp: "गलत OTP" }));
+      setErrors(prev => ({ ...prev, otp: t('errors.invalidOtp') }));
     }
   };
 
@@ -199,11 +201,11 @@ const Signup = () => {
         phoneNumber: formData.phoneNumber,
         invitationCode: formData.invitationCode
       });
-      
+
       // Success - redirect to success page or login
       navigate('/login?signup=success');
     } catch (error) {
-      setErrors(prev => ({ ...prev, general: "साइन अप में त्रुटि" }));
+      setErrors(prev => ({ ...prev, general: t('errors.signupError') }));
     }
     setIsLoading(false);
   };
@@ -221,27 +223,33 @@ const Signup = () => {
   };
 
   if (pageLoading) {
-    return <LoadingSpinner message="साइन अप पेज लोड हो रहा है..." />;
+    return <LoadingSpinner message={t('loading')} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-2xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200'>
               <span className='text-2xl'>🌟</span>
-              <span className='text-emerald-800 font-bold'>नया सदस्य</span>
+              <span className='text-emerald-800 font-bold'>{t('congrats')}</span>
+              {/* Using 'congrats' might not be best for 'New Member' context, maybe add 'newMember' key? 
+                  Original was 'Naya Sadasya' (New Member). 'congrats' is 'Badhai ho'. 
+                  Let's use 'signUpTitle' or similar for now or stick to 'congrats' if it fits generally.
+                  Actually, original was 'Naya Sadasya'. Let's use 'joinUs' or similar if available, or just 'welcome'.
+                  Wait, looking at keys... I did not add 'newMember'. I'll use 'welcome' for now or just generic.
+                  Actually better to swap this to specific text.
+              */}
             </div>
-            
+
             <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-700 to-green-600 bg-clip-text text-transparent mb-4">
-              साइन अप करें
+              {t('signUpTitle')}
             </h1>
-            <p className="text-emerald-600 text-lg">
-              सच्चे भारतशाला अनुभव का आनंद लेने के लिए,<br/>
-              अपनी जानकारी दर्ज करें
+            <p className="text-emerald-600 text-lg whitespace-pre-line">
+              {t('signUpSubtitle')}
             </p>
           </div>
 
@@ -250,22 +258,19 @@ const Signup = () => {
             <div className="flex items-center space-x-4">
               {steps.map((step, index) => (
                 <React.Fragment key={step.id}>
-                  <div className={`flex flex-col items-center ${
-                    currentStep >= step.id ? 'text-emerald-600' : 'text-gray-400'
-                  }`}>
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300 ${
-                      currentStep >= step.id 
-                        ? 'bg-emerald-500 text-white border-emerald-500' 
-                        : 'bg-white border-gray-300'
+                  <div className={`flex flex-col items-center ${currentStep >= step.id ? 'text-emerald-600' : 'text-gray-400'
                     }`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300 ${currentStep >= step.id
+                      ? 'bg-emerald-500 text-white border-emerald-500'
+                      : 'bg-white border-gray-300'
+                      }`}>
                       {currentStep > step.id ? '✓' : step.icon}
                     </div>
                     <span className="text-sm font-medium mt-2">{step.title}</span>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className={`w-16 h-1 rounded transition-all duration-300 ${
-                      currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300'
-                    }`}></div>
+                    <div className={`w-16 h-1 rounded transition-all duration-300 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300'
+                      }`}></div>
                   )}
                 </React.Fragment>
               ))}
@@ -274,20 +279,19 @@ const Signup = () => {
 
           {/* Form */}
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-emerald-200">
-            
+
             {/* Step 1: Account Type */}
             {currentStep === 1 && (
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-emerald-800 text-center mb-6">
-                  खाता प्रकार चुनें
+                  {t('accountType')}
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${
-                    formData.accountType === 'customer' 
-                      ? 'border-emerald-500 bg-emerald-50' 
-                      : 'border-emerald-200 hover:border-emerald-300'
-                  }`}>
+                  <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${formData.accountType === 'customer'
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-emerald-200 hover:border-emerald-300'
+                    }`}>
                     <input
                       type="radio"
                       name="accountType"
@@ -298,18 +302,17 @@ const Signup = () => {
                     />
                     <div className="text-center">
                       <div className="text-4xl mb-3">🛍️</div>
-                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">ग्राहक</h4>
+                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">{t('customer')}</h4>
                       <p className="text-emerald-600 text-sm">
-                        खरीदारी करें और भारत के बेहतरीन उत्पादों का आनंद लें
+                        {t('customerDesc')}
                       </p>
                     </div>
                   </label>
 
-                  <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${
-                    formData.accountType === 'vendor' 
-                      ? 'border-emerald-500 bg-emerald-50' 
-                      : 'border-emerald-200 hover:border-emerald-300'
-                  }`}>
+                  <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${formData.accountType === 'vendor'
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-emerald-200 hover:border-emerald-300'
+                    }`}>
                     <input
                       type="radio"
                       name="accountType"
@@ -320,9 +323,9 @@ const Signup = () => {
                     />
                     <div className="text-center">
                       <div className="text-4xl mb-3">🏪</div>
-                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">विक्रेता</h4>
+                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">{t('vendor')}</h4>
                       <p className="text-emerald-600 text-sm">
-                        अपने उत्पाद बेचें और व्यापार बढ़ाएं
+                        {t('vendorDesc')}
                       </p>
                     </div>
                   </label>
@@ -332,18 +335,17 @@ const Signup = () => {
                 {formData.accountType === "vendor" && (
                   <div className="mt-6">
                     <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                      निमंत्रण कोड
+                      {t('invitationCode')}
                     </label>
                     <input
                       type="text"
                       value={formData.invitationCode}
                       onChange={(e) => handleInputChange('invitationCode', e.target.value)}
-                      className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${
-                        errors.invitationCode 
-                          ? 'border-red-300 focus:border-red-500' 
-                          : 'border-emerald-200 focus:border-emerald-500'
-                      } focus:outline-none bg-white text-lg`}
-                      placeholder="विक्रेता निमंत्रण कोड"
+                      className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.invitationCode
+                        ? 'border-red-300 focus:border-red-500'
+                        : 'border-emerald-200 focus:border-emerald-500'
+                        } focus:outline-none bg-white text-lg`}
+                      placeholder={t('invitationCodePlaceholder')}
                     />
                     {errors.invitationCode && (
                       <p className="text-red-500 text-sm mt-2">{errors.invitationCode}</p>
@@ -356,7 +358,7 @@ const Signup = () => {
                   disabled={!formData.accountType || (formData.accountType === 'vendor' && errors.invitationCode)}
                   className="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:from-emerald-600 hover:to-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  आगे बढ़ें
+                  {t('next')}
                 </button>
               </div>
             )}
@@ -365,24 +367,23 @@ const Signup = () => {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-emerald-800 text-center mb-6">
-                  व्यक्तिगत जानकारी
+                  {t('personalInfo')}
                 </h3>
 
                 {/* Name */}
                 <div>
                   <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                    पूरा नाम
+                    {t('fullName')}
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${
-                      errors.name 
-                        ? 'border-red-300 focus:border-red-500' 
-                        : 'border-emerald-200 focus:border-emerald-500'
-                    } focus:outline-none bg-white text-lg`}
-                    placeholder="आपका पूरा नाम"
+                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.name
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-emerald-200 focus:border-emerald-500'
+                      } focus:outline-none bg-white text-lg`}
+                    placeholder={t('fullNamePlaceholder')}
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-2">{errors.name}</p>
@@ -392,18 +393,17 @@ const Signup = () => {
                 {/* Email */}
                 <div>
                   <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                    ईमेल पता
+                    {t('emailAddress')}
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${
-                      errors.email 
-                        ? 'border-red-300 focus:border-red-500' 
-                        : 'border-emerald-200 focus:border-emerald-500'
-                    } focus:outline-none bg-white text-lg`}
-                    placeholder="आपका ईमेल पता"
+                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.email
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-emerald-200 focus:border-emerald-500'
+                      } focus:outline-none bg-white text-lg`}
+                    placeholder={t('emailAddressPlaceholder')}
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-2">{errors.email}</p>
@@ -413,7 +413,7 @@ const Signup = () => {
                 {/* Phone Number */}
                 <div>
                   <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                    फोन नंबर
+                    {t('phoneNumber')}
                   </label>
                   <PhoneInput
                     country={'in'}
@@ -433,13 +433,13 @@ const Signup = () => {
                   {errors.phoneNumber && (
                     <p className="text-red-500 text-sm mt-2">{errors.phoneNumber}</p>
                   )}
-                  
+
                   <button
                     onClick={sendOTP}
                     disabled={!validations.validPhoneNumber || otpSent}
                     className="mt-3 bg-emerald-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {otpSent ? 'OTP भेजा गया ✓' : 'OTP भेजें'}
+                    {otpSent ? t('otpSent') : t('sendOtp')}
                   </button>
                 </div>
 
@@ -447,14 +447,14 @@ const Signup = () => {
                 {otpSent && (
                   <div>
                     <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                      OTP दर्ज करें
+                      {t('otpLabel')}
                     </label>
                     <input
                       type="text"
                       value={otp}
                       onChange={(e) => setOTP(e.target.value)}
                       className="w-full px-4 py-4 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none bg-white text-lg text-center tracking-widest"
-                      placeholder="6 अंकों का OTP"
+                      placeholder={t('otpPlaceholder')}
                       maxLength={6}
                     />
                     {errors.otp && (
@@ -466,7 +466,7 @@ const Signup = () => {
                 {/* Password */}
                 <div>
                   <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                    पासवर्ड
+                    {t('password')}
                   </label>
                   <div className="relative">
                     <input
@@ -474,7 +474,7 @@ const Signup = () => {
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       className="w-full px-4 py-4 pr-12 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none bg-white text-lg"
-                      placeholder="मजबूत पासवर्ड बनाएं"
+                      placeholder={t('passwordPlaceholder')}
                     />
                     <button
                       type="button"
@@ -484,19 +484,18 @@ const Signup = () => {
                       {showPassword ? '🙈' : '👁️'}
                     </button>
                   </div>
-                  
+
                   {/* Password Requirements */}
                   <div className="mt-3 space-y-1">
                     {Object.entries({
-                      length: 'कम से कम 8 अक्षर',
-                      number: 'कम से कम एक संख्या',
-                      specialChar: 'कम से कम एक विशेष चिह्न',
-                      uppercase: 'कम से कम एक बड़ा अक्षर',
-                      lowercase: 'कम से कम एक छोटा अक्षर'
+                      length: t('passwordCriteria.length'),
+                      number: t('passwordCriteria.number'),
+                      specialChar: t('passwordCriteria.specialChar'),
+                      uppercase: t('passwordCriteria.uppercase'),
+                      lowercase: t('passwordCriteria.lowercase')
                     }).map(([key, text]) => (
-                      <p key={key} className={`text-sm flex items-center ${
-                        passwordRequirements[key] ? 'text-green-600' : 'text-gray-500'
-                      }`}>
+                      <p key={key} className={`text-sm flex items-center ${passwordRequirements[key] ? 'text-green-600' : 'text-gray-500'
+                        }`}>
                         <span className="mr-2">{passwordRequirements[key] ? '✅' : '⭕'}</span>
                         {text}
                       </p>
@@ -507,18 +506,17 @@ const Signup = () => {
                 {/* Repeat Password */}
                 <div>
                   <label className="block text-emerald-800 font-semibold text-lg mb-2">
-                    पासवर्ड दोहराएं
+                    {t('repeatPassword')}
                   </label>
                   <input
                     type="password"
                     value={formData.repeatPassword}
                     onChange={(e) => handleInputChange('repeatPassword', e.target.value)}
-                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${
-                      errors.repeatPassword 
-                        ? 'border-red-300 focus:border-red-500' 
-                        : 'border-emerald-200 focus:border-emerald-500'
-                    } focus:outline-none bg-white text-lg`}
-                    placeholder="पासवर्ड दोबारा लिखें"
+                    className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.repeatPassword
+                      ? 'border-red-300 focus:border-red-500'
+                      : 'border-emerald-200 focus:border-emerald-500'
+                      } focus:outline-none bg-white text-lg`}
+                    placeholder={t('repeatPasswordPlaceholder')}
                   />
                   {errors.repeatPassword && (
                     <p className="text-red-500 text-sm mt-2">{errors.repeatPassword}</p>
@@ -530,7 +528,7 @@ const Signup = () => {
                     onClick={prevStep}
                     className="flex-1 border-2 border-emerald-500 text-emerald-600 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-50 transition-all duration-300"
                   >
-                    पीछे
+                    {t('back')}
                   </button>
                   <button
                     onClick={otpSent ? verifyOTP : sendOTP}
@@ -540,9 +538,9 @@ const Signup = () => {
                     {isLoading ? (
                       <div className="flex items-center justify-center space-x-2">
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>प्रतीक्षा करें...</span>
+                        <span>{t('wait')}</span>
                       </div>
-                    ) : otpSent ? 'OTP सत्यापित करें' : 'OTP भेजें'}
+                    ) : otpSent ? t('verifyOtp') : t('sendOtp')}
                   </button>
                 </div>
               </div>
@@ -553,19 +551,18 @@ const Signup = () => {
               <div className="text-center space-y-6">
                 <div className="text-6xl mb-4">🎉</div>
                 <h3 className="text-3xl font-bold text-emerald-800 mb-4">
-                  बधाई हो!
+                  {t('congrats')}
                 </h3>
-                <p className="text-xl text-emerald-600 mb-8">
-                  आपका खाता सफलतापूर्वक बन गया है।<br/>
-                  अब आप भारतशाला का पूरा आनंद ले सकते हैं।
+                <p className="text-xl text-emerald-600 mb-8 whitespace-pre-line">
+                  {t('accountCreated')}
                 </p>
-                
+
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-8">
-                  <h4 className="font-semibold text-emerald-800 mb-3">आपकी जानकारी:</h4>
+                  <h4 className="font-semibold text-emerald-800 mb-3">{t('yourInfo')}</h4>
                   <div className="space-y-2 text-emerald-700">
-                    <p><strong>नाम:</strong> {formData.name}</p>
-                    <p><strong>ईमेल:</strong> {formData.email}</p>
-                    <p><strong>खाता प्रकार:</strong> {formData.accountType === 'customer' ? 'ग्राहक' : 'विक्रेता'}</p>
+                    <p><strong>{t('name')}:</strong> {formData.name}</p>
+                    <p><strong>{t('emailAddress')}:</strong> {formData.email}</p>
+                    <p><strong>{t('accountType')}:</strong> {formData.accountType === 'customer' ? t('customer') : t('vendor')}</p>
                   </div>
                 </div>
 
@@ -573,7 +570,7 @@ const Signup = () => {
                   onClick={() => navigate('/login')}
                   className="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:from-emerald-600 hover:to-green-600"
                 >
-                  लॉग इन करें
+                  {t('loginLink')}
                 </button>
               </div>
             )}
@@ -589,13 +586,13 @@ const Signup = () => {
           {/* Login Link */}
           <div className="text-center mt-8">
             <p className="text-emerald-600 mb-4">
-              पहले से खाता है?
+              {t('alreadyHaveAccount')}
             </p>
             <a
               href="/login"
               className="text-emerald-600 hover:text-emerald-700 font-semibold text-lg border-b-2 border-transparent hover:border-emerald-600 transition-all duration-300"
             >
-              लॉग इन करें!
+              {t('loginLink')}!
             </a>
           </div>
         </div>

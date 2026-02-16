@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAPI } from '../hooks/useAPI';
 import { useDebounce } from '../hooks/useDebounce';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../context/NotificationContext';
 import { useCart } from '../hooks/useCart';
 import ProductCard from '../components/ProductCard';
 import FilterPanel from '../components/FilterPanel';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +15,7 @@ const SearchResults = () => {
   const { get } = useAPI();
   const { showError } = useNotification();
   const { addToCart } = useCart();
+  const { language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState([]);
@@ -78,11 +80,11 @@ const SearchResults = () => {
 
   const saveToSearchHistory = (query) => {
     if (!query.trim()) return;
-    
+
     const history = JSON.parse(localStorage.getItem('bharatshaala_search_history') || '[]');
     const filtered = history.filter(item => item.query !== query);
     const updated = [{ query, timestamp: new Date().toISOString() }, ...filtered].slice(0, 10);
-    
+
     localStorage.setItem('bharatshaala_search_history', JSON.stringify(updated));
     setSearchHistory(updated);
   };
@@ -106,7 +108,7 @@ const SearchResults = () => {
       };
 
       const response = await get('/search', { params: searchFilters });
-      
+
       if (response.success) {
         setResults(response.results);
         setTotalResults(response.totalResults);
@@ -189,7 +191,7 @@ const SearchResults = () => {
     ];
 
     // Filter results based on query
-    return baseProducts.filter(product => 
+    return baseProducts.filter(product =>
       product.name.toLowerCase().includes(query.toLowerCase()) ||
       product.nameEn.toLowerCase().includes(query.toLowerCase()) ||
       product.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ||
@@ -199,7 +201,7 @@ const SearchResults = () => {
 
   const updateURL = () => {
     const params = new URLSearchParams();
-    
+
     if (debouncedSearchQuery) params.set('q', debouncedSearchQuery);
     if (currentPage > 1) params.set('page', currentPage.toString());
     if (sortBy !== 'relevance') params.set('sort', sortBy);
@@ -261,11 +263,11 @@ const SearchResults = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Search Header */}
         <div className="mb-8">
           <div className="bg-white rounded-2xl p-6 shadow-lg">
-            
+
             {/* Search Bar */}
             <div className="relative mb-6">
               <input
@@ -332,32 +334,30 @@ const SearchResults = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-emerald-800">
-                    <span className="font-bold">{totalResults.toLocaleString()}</span> परिणाम मिले 
+                    <span className="font-bold">{totalResults.toLocaleString()}</span> परिणाम मिले
                     <span className="font-semibold"> "{searchQuery}"</span> के लिए
                   </p>
                   {loading && <p className="text-emerald-600 text-sm">खोज रही है...</p>}
                 </div>
-                
+
                 <div className="flex items-center space-x-4">
                   {/* View Mode Toggle */}
                   <div className="flex bg-emerald-100 rounded-lg p-1">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`p-2 rounded-lg transition-all duration-200 ${
-                        viewMode === 'grid' 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'text-emerald-600 hover:bg-emerald-200'
-                      }`}
+                      className={`p-2 rounded-lg transition-all duration-200 ${viewMode === 'grid'
+                        ? 'bg-emerald-500 text-white'
+                        : 'text-emerald-600 hover:bg-emerald-200'
+                        }`}
                     >
                       ⊞
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`p-2 rounded-lg transition-all duration-200 ${
-                        viewMode === 'list' 
-                          ? 'bg-emerald-500 text-white' 
-                          : 'text-emerald-600 hover:bg-emerald-200'
-                      }`}
+                      className={`p-2 rounded-lg transition-all duration-200 ${viewMode === 'list'
+                        ? 'bg-emerald-500 text-white'
+                        : 'text-emerald-600 hover:bg-emerald-200'
+                        }`}
                     >
                       ☰
                     </button>
@@ -379,9 +379,8 @@ const SearchResults = () => {
                   {/* Filter Toggle */}
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                      showFilters ? 'bg-emerald-500 text-white' : 'border border-emerald-500 text-emerald-600 hover:bg-emerald-50'
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${showFilters ? 'bg-emerald-500 text-white' : 'border border-emerald-500 text-emerald-600 hover:bg-emerald-50'
+                      }`}
                   >
                     <span>🔧</span>
                     <span>फ़िल्टर</span>
@@ -394,7 +393,7 @@ const SearchResults = () => {
 
         {searchQuery ? (
           <div className="flex gap-8">
-            
+
             {/* Filters Sidebar */}
             {showFilters && (
               <div className="w-80">
@@ -409,12 +408,12 @@ const SearchResults = () => {
             {/* Results */}
             <div className="flex-1">
               {loading ? (
-                <LoadingSpinner message="खोज रही है..." />
+                <LoadingSpinner message={language === 'hi' ? "खोज परिणाम लोड हो रहे हैं..." : "Loading search results..."} />
               ) : results.length > 0 ? (
                 <>
                   {/* Results Grid */}
-                  <div className={viewMode === 'grid' 
-                    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8' 
+                  <div className={viewMode === 'grid'
+                    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8'
                     : 'space-y-4 mb-8'
                   }>
                     {results.map((product) => (
@@ -443,11 +442,10 @@ const SearchResults = () => {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 ${
-                            currentPage === page
-                              ? 'bg-emerald-500 text-white'
-                              : 'border border-emerald-200 text-emerald-600 hover:bg-emerald-50'
-                          }`}
+                          className={`px-4 py-2 rounded-lg transition-all duration-200 ${currentPage === page
+                            ? 'bg-emerald-500 text-white'
+                            : 'border border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+                            }`}
                         >
                           {page}
                         </button>
@@ -491,7 +489,7 @@ const SearchResults = () => {
                   <p className="text-emerald-600 text-lg mb-8">
                     "{searchQuery}" के लिए कोई उत्पाद नहीं मिला
                   </p>
-                  
+
                   <div className="max-w-md mx-auto space-y-4">
                     <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
                       <h3 className="font-semibold text-blue-800 mb-2">खोज सुझाव:</h3>
@@ -502,7 +500,7 @@ const SearchResults = () => {
                         <li>• फ़िल्टर हटाकर देखें</li>
                       </ul>
                     </div>
-                    
+
                     <button
                       onClick={() => navigate('/markets')}
                       className="bg-emerald-500 text-white px-8 py-3 rounded-lg hover:bg-emerald-600 transition-colors duration-200"
@@ -524,7 +522,7 @@ const SearchResults = () => {
             <p className="text-emerald-600 text-lg mb-8">
               लाखों उत्पादों में से अपनी पसंद का सामान खोजें
             </p>
-            
+
             <div className="max-w-2xl mx-auto">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {['jewelry', 'clothing', 'handicrafts', 'books'].map((category, index) => (
@@ -535,13 +533,13 @@ const SearchResults = () => {
                   >
                     <div className="text-3xl mb-2">
                       {category === 'jewelry' ? '💎' :
-                       category === 'clothing' ? '👗' :
-                       category === 'handicrafts' ? '🎨' : '📚'}
+                        category === 'clothing' ? '👗' :
+                          category === 'handicrafts' ? '🎨' : '📚'}
                     </div>
                     <p className="text-emerald-800 font-medium">
                       {category === 'jewelry' ? 'आभूषण' :
-                       category === 'clothing' ? 'कपड़े' :
-                       category === 'handicrafts' ? 'हस्तशिल्प' : 'किताबें'}
+                        category === 'clothing' ? 'कपड़े' :
+                          category === 'handicrafts' ? 'हस्तशिल्प' : 'किताबें'}
                     </p>
                   </button>
                 ))}

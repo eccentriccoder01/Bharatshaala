@@ -1,10 +1,13 @@
 import React from "react";
 import '../App.css';
+import { useLanguage } from '../context/LanguageContext';
 
 var date = new Date();
 var currYear = date.getFullYear();
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
     <React.StrictMode>
       <footer className="relative bg-gradient-to-br from-emerald-900 via-green-800 to-emerald-950 overflow-hidden">
@@ -18,25 +21,25 @@ const Footer = () => {
         {/* Main Footer Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            
+
             {/* Brand Section */}
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
                   <svg className="w-6 h-6 text-emerald-900" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </div>
                 <h2 className="text-3xl font-bold text-white tracking-wide">भारतशाला</h2>
               </div>
               <p className="text-emerald-100 text-lg leading-relaxed mb-6">
-                भारत की सांस्कृतिक विरासत को डिजिटल रूप में संजोते हुए, हम पारंपरिक बाजारों को आधुनिक तकनीक से जोड़ते हैं।
+                {t('footerDesc')}
               </p>
               <div className="flex space-x-4">
                 {['facebook', 'twitter', 'instagram', 'youtube'].map((social) => (
                   <div key={social} className="w-10 h-10 bg-emerald-700 hover:bg-emerald-600 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110">
                     <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                      <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
                     </svg>
                   </div>
                 ))}
@@ -45,15 +48,15 @@ const Footer = () => {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-xl font-semibold text-white mb-6 border-b-2 border-yellow-400 pb-2">त्वरित लिंक</h3>
+              <h3 className="text-xl font-semibold text-white mb-6 border-b-2 border-yellow-400 pb-2">{t('quickLinks')}</h3>
               <ul className="space-y-3">
                 {[
-                  { name: 'बाजार', href: '/markets' },
-                  { name: 'श्रेणियां', href: '/categories' },
-                  { name: 'खाता', href: '/account' },
-                  { name: 'ऑर्डर', href: '/orders' },
+                  { name: t('markets'), href: '/markets' },
+                  { name: t('categories'), href: '/categories' },
+                  { name: t('account'), href: '/account' },
+                  { name: t('orders'), href: '/orders' },
                 ].map((link) => (
-                  <li key={link.name}>
+                  <li key={link.href}>
                     <a href={link.href} className="text-emerald-100 hover:text-yellow-400 transition-colors duration-200 text-sm flex items-center group">
                       <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                       {link.name}
@@ -65,15 +68,15 @@ const Footer = () => {
 
             {/* Support */}
             <div>
-              <h3 className="text-xl font-semibold text-white mb-6 border-b-2 border-yellow-400 pb-2">सहायता</h3>
+              <h3 className="text-xl font-semibold text-white mb-6 border-b-2 border-yellow-400 pb-2">{t('support')}</h3>
               <ul className="space-y-3">
                 {[
-                  { name: 'हमारे बारे में', href: '/about' },
-                  { name: 'संपर्क', href: '/contact' },
-                  { name: 'सहायता केंद्र', href: '/support' },
-                  { name: 'नीतियां', href: '/policies' },
+                  { name: t('about'), href: '/about' },
+                  { name: t('contact'), href: '/contact' },
+                  { name: t('support'), href: '/support' },
+                  { name: t('policies'), href: '/policies' },
                 ].map((link) => (
-                  <li key={link.name}>
+                  <li key={link.href}>
                     <a href={link.href} className="text-emerald-100 hover:text-yellow-400 transition-colors duration-200 text-sm flex items-center group">
                       <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                       {link.name}
@@ -90,12 +93,12 @@ const Footer = () => {
           {/* Bottom Section */}
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-emerald-200 text-sm">
-              &copy; {currYear} Bharatshaala Inc. सभी अधिकार सुरक्षित।
+              &copy; {currYear} {t('allRightsReserved')}
             </div>
             <div className="flex items-center space-x-6 text-sm text-emerald-200">
-              <span>🇮🇳 Made in India with ❤️</span>
+              <span>🇮🇳 {t('madeInIndia')}</span>
               <span>|</span>
-              <span>डिजिटल इंडिया</span>
+              <span>{t('digitalIndia')}</span>
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import CartItem from "../components/CartItem";
 import OrderSummary from "../components/OrderSummary";
 import PaymentGateway from "../components/PaymentGateway";
+import { useLanguage } from "../context/LanguageContext";
 import "../App.css";
 
 function loadScript(src) {
@@ -17,6 +18,7 @@ function loadScript(src) {
 }
 
 const Bag = () => {
+  const { t, language } = useLanguage();
   const [profileData, setProfileData] = useState(null);
   const [subtotal, setSubtotal] = useState(0);
   const [shipCost, setShipCost] = useState(0);
@@ -28,15 +30,15 @@ const Bag = () => {
   const [notification, setNotification] = useState(null);
 
   const deliveryOptions = [
-    { id: 'standard', name: 'स्टैंडर्ड डिलीवरी', time: '5-7 दिन', cost: 0, description: 'मुफ्त डिलीवरी ₹999+ ऑर्डर पर' },
-    { id: 'express', name: 'एक्सप्रेस डिलीवरी', time: '2-3 दिन', cost: 150, description: 'तेज़ डिलीवरी' },
-    { id: 'overnight', name: 'ओवरनाइट डिलीवरी', time: '1 दिन', cost: 300, description: 'अगले दिन डिलीवरी' }
+    { id: 'standard', name: t('standardDelivery'), time: `5-7 ${t('days')}`, cost: 0, description: t('freeDeliveryMsg') },
+    { id: 'express', name: t('expressDelivery'), time: `2-3 ${t('days')}`, cost: 150, description: t('fastDeliveryMsg') },
+    { id: 'overnight', name: t('overnightDelivery'), time: `1 ${t('days').slice(0, -1)}`, cost: 300, description: t('nextDayDeliveryMsg') }
   ];
 
   const coupons = [
-    { code: 'BHARATSHAALA10', discount: 10, minOrder: 1000, description: '10% छूट ₹1000+ ऑर्डर पर' },
-    { code: 'FIRST25', discount: 25, minOrder: 500, description: '25% छूट पहले ऑर्डर पर' },
-    { code: 'HERITAGE15', discount: 15, minOrder: 1500, description: '15% छूट हेरिटेज प्रोडक्ट्स पर' }
+    { code: 'BHARATSHAALA10', discount: 10, minOrder: 1000, description: '10% OFF' }, // Example descriptions, ideally these should also be keys if dynamic
+    { code: 'FIRST25', discount: 25, minOrder: 500, description: '25% OFF' },
+    { code: 'HERITAGE15', discount: 15, minOrder: 1500, description: '15% OFF' }
   ];
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const Bag = () => {
     ]).finally(() => {
       setTimeout(() => setLoading(false), 1000);
     });
-  }, []);
+  }, [language]);
 
   function getAmount() {
     return axios({
@@ -71,10 +73,10 @@ const Bag = () => {
       .then((response) => {
         getData();
         getAmount();
-        showNotification('मात्रा अपडेट की गई', 'success');
+        showNotification(t('quantityUpdated'), 'success');
       })
       .catch((error) => {
-        showNotification('मात्रा अपडेट में समस्या', 'error');
+        showNotification(t('quantityUpdateError'), 'error');
       });
   }
 
@@ -84,10 +86,10 @@ const Bag = () => {
       .then((response) => {
         getData();
         getAmount();
-        showNotification('आइटम हटा दिया गया', 'success');
+        showNotification(t('itemRemoved'), 'success');
       })
       .catch((error) => {
-        showNotification('आइटम हटाने में समस्या', 'error');
+        showNotification(t('itemRemoveError'), 'error');
       });
   }
 
@@ -118,10 +120,10 @@ const Bag = () => {
           Customer_Id: item[2],
           Quantity: item[3],
           Price: item[4],
-          ItemName: item[5],
+          ItemName: language === 'hi' ? (item[5] || 'उत्पाद') : (item[9] || item[5] || 'Product'), // Assuming item[9] might be English name in future, fallback to item[5]
           image: item[6] || '/images/items/earrings.jpg',
-          description: item[7] || 'पारंपरिक हस्तनिर्मित उत्पाद',
-          seller: item[8] || 'भारतशाला विक्रेता'
+          description: language === 'hi' ? (item[7] || 'पारंपरिक हस्तनिर्मित उत्पाद') : (item[10] || item[7] || 'Traditional handmade product'),
+          seller: language === 'hi' ? (item[8] || 'भारतशाला विक्रेता') : (item[11] || item[8] || 'Bharatshaala Seller')
         }));
 
         setProfileData(profileDataArray);
@@ -129,7 +131,7 @@ const Bag = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
         // Mock data for demo
-        setProfileData([
+        const mockItems = [
           {
             store_Id: 1,
             Item_Id: 1,
@@ -137,9 +139,12 @@ const Bag = () => {
             Quantity: 2,
             Price: 2500,
             ItemName: "कुंदन हार",
+            ItemNameEn: "Kundan Necklace",
             image: '/images/items/kundan-necklace-1.jpg',
             description: 'पारंपरिक कुंदन और मीनाकारी से सजा हुआ खूबसूरत हार',
-            seller: 'राजस्थानी रत्न भंडार'
+            descriptionEn: 'Beautiful necklace adorned with traditional Kundan and Meenakari work',
+            seller: 'राजस्थानी रत्न भंडार',
+            sellerEn: 'Rajasthani Gems Palace'
           },
           {
             store_Id: 1,
@@ -148,11 +153,24 @@ const Bag = () => {
             Quantity: 1,
             Price: 1500,
             ItemName: "चांदी के झुमके",
+            ItemNameEn: "Silver Earrings",
             image: '/images/items/earrings.jpg',
             description: 'हाथ से बने चांदी के झुमके, मीनाकारी के साथ',
-            seller: 'राजस्थानी रत्न भंडार'
+            descriptionEn: 'Handmade silver earrings with Meenakari work',
+            seller: 'राजस्थानी रत्न भंडार',
+            sellerEn: 'Rajasthani Gems Palace'
           }
-        ]);
+        ];
+
+        // Transform mock data based on language
+        const localizedMockItems = mockItems.map(item => ({
+          ...item,
+          ItemName: language === 'hi' ? item.ItemName : item.ItemNameEn,
+          description: language === 'hi' ? item.description : item.descriptionEn,
+          seller: language === 'hi' ? item.seller : item.sellerEn
+        }));
+
+        setProfileData(localizedMockItems);
       });
   }
 
@@ -174,9 +192,9 @@ const Bag = () => {
     const coupon = coupons.find(c => c.code === couponCode);
     if (coupon && subtotal >= coupon.minOrder) {
       setDiscount((subtotal * coupon.discount) / 100);
-      showNotification(`कूपन लागू! ${coupon.discount}% छूट मिली`, 'success');
+      showNotification(`${t('couponApplied')} ${coupon.discount}% ${t('discountReceived')}`, 'success');
     } else {
-      showNotification('अमान्य कूपन कोड या न्यूनतम ऑर्डर पूरा नहीं', 'error');
+      showNotification(t('invalidCoupon'), 'error');
     }
   }
 
@@ -193,13 +211,13 @@ const Bag = () => {
     }
 
     const finalAmount = subtotal - discount + getDeliveryCost();
-    
+
     const options = {
       key: "rzp_test_BXNSan3NdLPrPa",
       amount: (finalAmount * 100).toString(),
       currency: "INR",
-      name: "भारतशाला",
-      description: "पारंपरिक भारतीय उत्पादों की खरीदारी",
+      name: "Bharatshaala",
+      description: t('paymentDesc'),
       image: "/favicon.ico",
       order_id: orderData?.id,
       callback_url: "/authenticate",
@@ -228,18 +246,17 @@ const Bag = () => {
   const finalTotal = subtotal - discount + getDeliveryCost();
 
   if (loading) {
-    return <LoadingSpinner message="आपका शॉपिंग बैग लोड हो रहा है..." />;
+    return <LoadingSpinner message={t('loading')} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
-        
+
         {/* Notification */}
         {notification && (
-          <div className={`fixed top-24 right-6 z-50 p-4 rounded-lg shadow-lg ${
-            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          } text-white animate-fade-in`}>
+          <div className={`fixed top-24 right-6 z-50 p-4 rounded-lg shadow-lg ${notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white animate-fade-in`}>
             {notification.message}
           </div>
         )}
@@ -248,27 +265,27 @@ const Bag = () => {
         <div className='max-w-7xl mx-auto px-6 py-8'>
           <div className='text-center mb-12'>
             <h1 className='text-4xl md:text-5xl font-bold text-emerald-800 mb-4'>
-              शॉपिंग बैग
+              {t('shoppingBag')}
             </h1>
             <p className='text-xl text-emerald-600 max-w-2xl mx-auto'>
-              आपकी यात्रा से चुने गए आइटम्स देखें और जो चाहिए उन्हें चेकआउट के लिए तैयार करें
+              {t('bagSubtitle')}
             </p>
           </div>
 
           {profileData && profileData.length > 0 ? (
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-              
+
               {/* Cart Items */}
               <div className='lg:col-span-2 space-y-6'>
                 <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
                   <h2 className='text-2xl font-bold text-emerald-800 mb-6 flex items-center space-x-3'>
                     <span>🛍️</span>
-                    <span>आपके आइटम्स ({profileData.length})</span>
+                    <span>{t('yourItems')} ({profileData.length})</span>
                   </h2>
-                  
+
                   <div className='space-y-4'>
                     {profileData.map((item, index) => (
-                      <CartItem 
+                      <CartItem
                         key={index}
                         item={item}
                         onQuantityChange={handleChange}
@@ -282,9 +299,9 @@ const Bag = () => {
                 <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
                   <h3 className='text-xl font-bold text-emerald-800 mb-4 flex items-center space-x-2'>
                     <span>🚚</span>
-                    <span>डिलीवरी विकल्प</span>
+                    <span>{t('deliveryOptions')}</span>
                   </h3>
-                  
+
                   <div className='space-y-3'>
                     {deliveryOptions.map((option) => (
                       <label key={option.id} className='flex items-center space-x-3 p-4 border border-emerald-200 rounded-xl cursor-pointer hover:bg-emerald-50 transition-colors duration-200'>
@@ -300,7 +317,7 @@ const Bag = () => {
                           <div className='flex justify-between items-center'>
                             <span className='font-semibold text-emerald-800'>{option.name}</span>
                             <span className='font-bold text-emerald-600'>
-                              {option.cost === 0 ? 'मुफ्त' : `₹${option.cost}`}
+                              {option.cost === 0 ? t('free') : `₹${option.cost}`}
                             </span>
                           </div>
                           <div className='text-emerald-600 text-sm'>{option.time} • {option.description}</div>
@@ -314,27 +331,27 @@ const Bag = () => {
                 <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
                   <h3 className='text-xl font-bold text-emerald-800 mb-4 flex items-center space-x-2'>
                     <span>🎫</span>
-                    <span>कूपन कोड</span>
+                    <span>{t('couponCode')}</span>
                   </h3>
-                  
+
                   <div className='flex gap-3 mb-4'>
                     <input
                       type="text"
-                      placeholder="कूपन कोड डालें"
+                      placeholder={t('enterCouponCode')}
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                       className="flex-1 px-4 py-3 border border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none"
                     />
                     <button
                       onClick={applyCoupon}
-                      className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                      className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
                     >
-                      लागू करें
+                      {t('apply')}
                     </button>
                   </div>
 
                   <div className='space-y-2'>
-                    <p className='text-emerald-600 text-sm font-medium'>उपलब्ध कूपन:</p>
+                    <p className='text-emerald-600 text-sm font-medium'>{t('availableCoupons')}</p>
                     {coupons.map((coupon, index) => (
                       <div key={index} className='text-emerald-600 text-sm bg-emerald-50 p-2 rounded-lg border border-emerald-200'>
                         <span className='font-semibold'>{coupon.code}</span> - {coupon.description}
@@ -359,14 +376,14 @@ const Bag = () => {
             /* Empty Cart */
             <div className='text-center py-20'>
               <div className='text-8xl mb-6'>🛒</div>
-              <h2 className='text-3xl font-bold text-emerald-800 mb-4'>आपका बैग खाली है</h2>
-              <p className='text-xl text-emerald-600 mb-8'>भारतशाला में कुछ खूबसूरत चीजें खोजें</p>
+              <h2 className='text-3xl font-bold text-emerald-800 mb-4'>{t('emptyBag')}</h2>
+              <p className='text-xl text-emerald-600 mb-8'>{t('emptyBagDesc')}</p>
               <a
                 href="/markets"
                 className="inline-flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 <span>🛍️</span>
-                <span>खरीदारी शुरू करें</span>
+                <span>{t('startShopping')}</span>
               </a>
             </div>
           )}

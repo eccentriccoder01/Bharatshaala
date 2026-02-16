@@ -9,11 +9,13 @@ import Modal from '../components/Modal';
 import apiService from '../apiService';
 import { helpers } from '../helpers';
 import { ORDER_STATUS } from '../constants';
+import { useLanguage } from '../../context/LanguageContext';
 
 const OrderManagement = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +99,7 @@ const OrderManagement = () => {
         showSuccess('ऑर्डर स्टेटस अपडेट हो गया');
         loadOrders();
         loadOrderStats();
-        
+
         trackEvent('order_status_updated', {
           orderId,
           newStatus,
@@ -112,11 +114,11 @@ const OrderManagement = () => {
   const handleViewDetails = async (orderId) => {
     try {
       const response = await apiService.get(`/admin/orders/${orderId}`);
-      
+
       if (response.success) {
         setSelectedOrder(response.data);
         setShowDetailsModal(true);
-        
+
         trackEvent('order_details_viewed', {
           orderId,
           adminId: user.id
@@ -139,15 +141,15 @@ const OrderManagement = () => {
 
   const handleTrackingSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await apiService.patch(`/admin/orders/${selectedOrder.id}/tracking`, trackingInfo);
-      
+
       if (response.success) {
         showSuccess('ट्रैकिंग जानकारी अपडेट हो गई');
         setShowTrackingModal(false);
         loadOrders();
-        
+
         trackEvent('order_tracking_updated', {
           orderId: selectedOrder.id,
           trackingNumber: trackingInfo.trackingNumber
@@ -219,7 +221,7 @@ const OrderManagement = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="ऑर्डर लोड हो रहे हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "ऑर्डर लोड हो रहे हैं..." : "Loading orders..."} />;
   }
 
   return (
@@ -353,7 +355,7 @@ const OrderManagement = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          
+
           <div>
             <select
               value={filterStatus}
@@ -369,7 +371,7 @@ const OrderManagement = () => {
               <option value="cancelled">कैंसल्ड</option>
             </select>
           </div>
-          
+
           <div>
             <select
               value={filterPayment}
@@ -383,7 +385,7 @@ const OrderManagement = () => {
               <option value="refunded">रिफंडेड</option>
             </select>
           </div>
-          
+
           <div>
             <select
               value={dateRange}
@@ -399,7 +401,7 @@ const OrderManagement = () => {
               <option value="lastmonth">पिछले महीने</option>
             </select>
           </div>
-          
+
           <div>
             <button
               onClick={() => {
@@ -474,7 +476,7 @@ const OrderManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900">
-                        {order.items?.length > 1 
+                        {order.items?.length > 1
                           ? `${order.items[0].productName} और ${order.items.length - 1} अन्य`
                           : order.items?.[0]?.productName
                         }
@@ -657,7 +659,7 @@ const OrderManagement = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-3">भुगतान जानकारी</h3>
               <div className="space-y-2 text-sm">
                 <div><span className="font-medium">भुगतान विधि:</span> {selectedOrder.paymentMethod}</div>
-                <div><span className="font-medium">भुगतान स्टेटस:</span> 
+                <div><span className="font-medium">भुगतान स्टेटस:</span>
                   <span className={`ml-2 px-2 py-1 rounded text-xs bg-${getPaymentStatusColor(selectedOrder.paymentStatus)}-100 text-${getPaymentStatusColor(selectedOrder.paymentStatus)}-800`}>
                     {getPaymentStatusLabel(selectedOrder.paymentStatus)}
                   </span>
@@ -676,7 +678,7 @@ const OrderManagement = () => {
                   <div><span className="font-medium">ट्रैकिंग नंबर:</span> {selectedOrder.trackingNumber}</div>
                   <div><span className="font-medium">कूरियर:</span> {selectedOrder.courier}</div>
                   {selectedOrder.estimatedDelivery && (
-                    <div><span className="font-medium">अनुमानित डिलीवरी:</span> 
+                    <div><span className="font-medium">अनुमानित डिलीवरी:</span>
                       {helpers.date.formatDate(selectedOrder.estimatedDelivery, 'DD MMM YYYY')}
                     </div>
                   )}

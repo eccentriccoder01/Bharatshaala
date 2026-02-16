@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import ImageUploader from "../../components/ImageUploader";
 import "../../App.css";
 
 const AddItem = () => {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
@@ -94,7 +96,7 @@ const AddItem = () => {
       ...prev,
       [field]: value
     }));
-    
+
     // Clear error for this field
     if (errors[field]) {
       setErrors(prev => ({
@@ -117,7 +119,7 @@ const AddItem = () => {
   const handleArrayInputChange = (field, value, action = 'add') => {
     setFormData(prev => ({
       ...prev,
-      [field]: action === 'add' 
+      [field]: action === 'add'
         ? [...prev[field], value]
         : prev[field].filter(item => item !== value)
     }));
@@ -185,7 +187,7 @@ const AddItem = () => {
       generateSEOData();
 
       const response = await axios.post('/vendor/add-item', formData);
-      
+
       if (response.data.success) {
         navigate('/vendor/items?success=item-added');
       } else {
@@ -198,14 +200,14 @@ const AddItem = () => {
   };
 
   if (pageLoading) {
-    return <LoadingSpinner message="नया उत्पाद जोड़ने का पेज लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "नया उत्पाद जोड़ने का पेज लोड हो रहा है..." : "Loading new product page..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-emerald-800 mb-2">
@@ -224,20 +226,18 @@ const AddItem = () => {
 
             {/* Main Content */}
             <div className="flex-1">
-              
+
               {/* Progress Steps */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg mb-8">
                 <div className="flex items-center justify-between">
                   {steps.map((step, index) => (
                     <React.Fragment key={step.id}>
-                      <div className={`flex flex-col items-center text-center ${
-                        currentStep >= step.id ? 'text-emerald-600' : 'text-gray-400'
-                      }`}>
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300 mb-2 ${
-                          currentStep >= step.id 
-                            ? 'bg-emerald-500 text-white border-emerald-500' 
-                            : 'bg-white border-gray-300'
+                      <div className={`flex flex-col items-center text-center ${currentStep >= step.id ? 'text-emerald-600' : 'text-gray-400'
                         }`}>
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300 mb-2 ${currentStep >= step.id
+                          ? 'bg-emerald-500 text-white border-emerald-500'
+                          : 'bg-white border-gray-300'
+                          }`}>
                           {currentStep > step.id ? '✅' : step.icon}
                         </div>
                         <div className="max-w-[120px]">
@@ -246,9 +246,8 @@ const AddItem = () => {
                         </div>
                       </div>
                       {index < steps.length - 1 && (
-                        <div className={`flex-1 h-1 mx-4 rounded transition-all duration-300 ${
-                          currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300'
-                        }`}></div>
+                        <div className={`flex-1 h-1 mx-4 rounded transition-all duration-300 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300'
+                          }`}></div>
                       )}
                     </React.Fragment>
                   ))}
@@ -257,12 +256,12 @@ const AddItem = () => {
 
               {/* Form Content */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-                
+
                 {/* Step 1: Basic Information */}
                 {currentStep === 1 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-emerald-800 mb-6">बेसिक जानकारी</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-emerald-800 font-semibold mb-2">
@@ -272,9 +271,8 @@ const AddItem = () => {
                           type="text"
                           value={formData.name}
                           onChange={(e) => handleInputChange('name', e.target.value)}
-                          className={`w-full px-4 py-3 border-2 rounded-xl ${
-                            errors.name ? 'border-red-300' : 'border-emerald-200'
-                          } focus:border-emerald-500 focus:outline-none`}
+                          className={`w-full px-4 py-3 border-2 rounded-xl ${errors.name ? 'border-red-300' : 'border-emerald-200'
+                            } focus:border-emerald-500 focus:outline-none`}
                           placeholder="जैसे: कुंदन हार"
                         />
                         {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -302,9 +300,8 @@ const AddItem = () => {
                         value={formData.description}
                         onChange={(e) => handleInputChange('description', e.target.value)}
                         rows={4}
-                        className={`w-full px-4 py-3 border-2 rounded-xl ${
-                          errors.description ? 'border-red-300' : 'border-emerald-200'
-                        } focus:border-emerald-500 focus:outline-none`}
+                        className={`w-full px-4 py-3 border-2 rounded-xl ${errors.description ? 'border-red-300' : 'border-emerald-200'
+                          } focus:border-emerald-500 focus:outline-none`}
                         placeholder="उत्पाद का विस्तृत विवरण लिखें..."
                       />
                       {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -331,9 +328,8 @@ const AddItem = () => {
                         <select
                           value={formData.category}
                           onChange={(e) => handleInputChange('category', e.target.value)}
-                          className={`w-full px-4 py-3 border-2 rounded-xl ${
-                            errors.category ? 'border-red-300' : 'border-emerald-200'
-                          } focus:border-emerald-500 focus:outline-none`}
+                          className={`w-full px-4 py-3 border-2 rounded-xl ${errors.category ? 'border-red-300' : 'border-emerald-200'
+                            } focus:border-emerald-500 focus:outline-none`}
                         >
                           <option value="">श्रेणी चुनें</option>
                           {categories.map(category => (
@@ -412,7 +408,7 @@ const AddItem = () => {
                 {currentStep === 2 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-emerald-800 mb-6">मूल्य और स्टॉक</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
                         <label className="block text-emerald-800 font-semibold mb-2">
@@ -422,9 +418,8 @@ const AddItem = () => {
                           type="number"
                           value={formData.price}
                           onChange={(e) => handleInputChange('price', e.target.value)}
-                          className={`w-full px-4 py-3 border-2 rounded-xl ${
-                            errors.price ? 'border-red-300' : 'border-emerald-200'
-                          } focus:border-emerald-500 focus:outline-none`}
+                          className={`w-full px-4 py-3 border-2 rounded-xl ${errors.price ? 'border-red-300' : 'border-emerald-200'
+                            } focus:border-emerald-500 focus:outline-none`}
                           placeholder="2500"
                         />
                         {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
@@ -456,9 +451,8 @@ const AddItem = () => {
                           type="number"
                           value={formData.quantity}
                           onChange={(e) => handleInputChange('quantity', e.target.value)}
-                          className={`w-full px-4 py-3 border-2 rounded-xl ${
-                            errors.quantity ? 'border-red-300' : 'border-emerald-200'
-                          } focus:border-emerald-500 focus:outline-none`}
+                          className={`w-full px-4 py-3 border-2 rounded-xl ${errors.quantity ? 'border-red-300' : 'border-emerald-200'
+                            } focus:border-emerald-500 focus:outline-none`}
                           placeholder="10"
                         />
                         {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity}</p>}
@@ -515,7 +509,7 @@ const AddItem = () => {
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-emerald-800 mb-6">छवियां और मीडिया</h3>
-                    
+
                     <div>
                       <label className="block text-emerald-800 font-semibold mb-4">
                         उत्पाद की छवियां * (अधिकतम 8 छवियां)
@@ -546,7 +540,7 @@ const AddItem = () => {
                 {currentStep === 4 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-emerald-800 mb-6">विशेषताएं</h3>
-                    
+
                     <div>
                       <label className="block text-emerald-800 font-semibold mb-3">
                         सामग्री
@@ -627,7 +621,7 @@ const AddItem = () => {
                 {currentStep === 5 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-emerald-800 mb-6">शिपिंग और SEO</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="flex items-center space-x-3 p-4 border-2 border-emerald-200 rounded-xl cursor-pointer hover:bg-emerald-50">

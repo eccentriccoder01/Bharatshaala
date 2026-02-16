@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const UserSidebar = ({ user }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { t } = useLanguage();
+
 
     const menuItems = [
-        { id: 'dashboard', name: 'डैशबोर्ड', icon: '🏠', href: '/user/dashboard' },
-        { id: 'orders', name: 'मेरे ऑर्डर', icon: '📦', href: '/user/orders', badge: '3' },
-        { id: 'wishlist', name: 'पसंदीदा', icon: '❤️', href: '/user/wishlist', badge: '12' },
-        { id: 'addresses', name: 'पते', icon: '📍', href: '/user/addresses' },
-        { id: 'payments', name: 'पेमेंट विधि', icon: '💳', href: '/user/payments' },
-        { id: 'rewards', name: 'रिवॉर्ड पॉइंट्स', icon: '🎁', href: '/user/rewards' },
-        { id: 'notifications', name: 'अधिसूचनाएं', icon: '🔔', href: '/user/notifications' },
-        { id: 'settings', name: 'सेटिंग्स', icon: '⚙️', href: '/user/settings' },
-        { id: 'support', name: 'सहायता', icon: '💬', href: '/user/support' }
+        { id: 'dashboard', name: t('dashboard'), icon: '🏠', href: '/user/dashboard' },
+        { id: 'orders', name: t('myOrders'), icon: '📦', href: '/user/orders', badge: '3' },
+        { id: 'wishlist', name: t('wishlist'), icon: '❤️', href: '/user/wishlist', badge: '12' },
+        { id: 'addresses', name: t('addresses'), icon: '📍', href: '/user/addresses' },
+        { id: 'payments', name: t('paymentMethods'), icon: '💳', href: '/user/payments' },
+        { id: 'rewards', name: t('rewards'), icon: '🎁', href: '/user/rewards' },
+        { id: 'notifications', name: t('notifications'), icon: '🔔', href: '/user/notifications' },
+        { id: 'settings', name: t('settings'), icon: '⚙️', href: '/user/settings' },
+        { id: 'support', name: t('support'), icon: '💬', href: '/user/support' }
     ];
 
     const handleLogout = () => {
@@ -24,10 +27,9 @@ const UserSidebar = ({ user }) => {
     };
 
     return (
-        <div className={`bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-emerald-200 transition-all duration-300 ${
-            isCollapsed ? 'w-20' : 'w-80'
-        }`}>
-            
+        <div className={`bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-emerald-200 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-80'
+            }`}>
+
             {/* Header */}
             <div className='p-6 border-b border-emerald-200'>
                 <div className='flex items-center justify-between'>
@@ -37,7 +39,7 @@ const UserSidebar = ({ user }) => {
                                 {user?.name?.charAt(0) || 'U'}
                             </div>
                             <div>
-                                <h3 className='font-bold text-emerald-800'>{user?.name || 'उपयोगकर्ता'}</h3>
+                                <h3 className='font-bold text-emerald-800'>{user?.name || t('user')}</h3>
                                 <p className='text-emerald-600 text-sm'>{user?.email}</p>
                             </div>
                         </div>
@@ -60,22 +62,20 @@ const UserSidebar = ({ user }) => {
                             <li key={item.id}>
                                 <a
                                     href={item.href}
-                                    className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 group ${
-                                        isActive
-                                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
-                                            : 'text-emerald-700 hover:bg-emerald-50'
-                                    }`}
+                                    className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 group ${isActive
+                                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
+                                        : 'text-emerald-700 hover:bg-emerald-50'
+                                        }`}
                                 >
                                     <span className='text-xl'>{item.icon}</span>
                                     {!isCollapsed && (
                                         <>
                                             <span className='font-medium flex-1'>{item.name}</span>
                                             {item.badge && (
-                                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                                    isActive 
-                                                        ? 'bg-white/20 text-white' 
-                                                        : 'bg-emerald-500 text-white'
-                                                }`}>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${isActive
+                                                    ? 'bg-white/20 text-white'
+                                                    : 'bg-emerald-500 text-white'
+                                                    }`}>
                                                     {item.badge}
                                                 </span>
                                             )}
@@ -94,15 +94,15 @@ const UserSidebar = ({ user }) => {
                     <div className='space-y-3'>
                         {/* Quick Stats */}
                         <div className='bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                            <h4 className='font-semibold text-emerald-800 mb-3 text-sm'>आपकी गतिविधि</h4>
+                            <h4 className='font-semibold text-emerald-800 mb-3 text-sm'>{t('yourActivity')}</h4>
                             <div className='grid grid-cols-2 gap-3 text-center'>
                                 <div>
                                     <div className='text-lg font-bold text-emerald-600'>8</div>
-                                    <div className='text-xs text-emerald-600'>कुल ऑर्डर</div>
+                                    <div className='text-xs text-emerald-600'>{t('totalOrders')}</div>
                                 </div>
                                 <div>
                                     <div className='text-lg font-bold text-emerald-600'>₹15,420</div>
-                                    <div className='text-xs text-emerald-600'>कुल खर्च</div>
+                                    <div className='text-xs text-emerald-600'>{t('totalSpend')}</div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +113,7 @@ const UserSidebar = ({ user }) => {
                             className='w-full flex items-center justify-center space-x-2 p-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-200'
                         >
                             <span>🚪</span>
-                            <span className='font-medium'>लॉग आउट</span>
+                            <span className='font-medium'>{t('logout')}</span>
                         </button>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../hooks/useNotification';
 import { useAnalytics } from '../analytics';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import Modal from '../components/Modal';
 import RichTextEditor from '../components/RichTextEditor';
 import ImageUpload from '../components/ImageUpload';
@@ -78,7 +79,7 @@ const ContentManagement = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue
@@ -131,7 +132,7 @@ const ContentManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSubmitting(true);
@@ -144,12 +145,12 @@ const ContentManagement = () => {
         publishedAt: formData.status === 'published' ? new Date().toISOString() : null
       };
 
-      const endpoint = editingContent 
+      const endpoint = editingContent
         ? `/admin/contents/${editingContent.id}`
         : '/admin/contents';
-      
+
       const method = editingContent ? 'put' : 'post';
-      
+
       const response = await apiService[method](endpoint, submitData);
 
       if (response.success) {
@@ -157,7 +158,7 @@ const ContentManagement = () => {
         setShowModal(false);
         resetForm();
         loadContents();
-        
+
         trackEvent(editingContent ? 'content_updated' : 'content_created', {
           contentId: response.data.id,
           contentType: activeTab,
@@ -197,11 +198,11 @@ const ContentManagement = () => {
 
     try {
       const response = await apiService.delete(`/admin/contents/${contentId}`);
-      
+
       if (response.success) {
         showSuccess('कंटेंट डिलीट हो गया');
         loadContents();
-        
+
         trackEvent('content_deleted', { contentId });
       }
     } catch (error) {
@@ -219,7 +220,7 @@ const ContentManagement = () => {
       if (response.success) {
         showSuccess('स्टेटस अपडेट हो गया');
         loadContents();
-        
+
         trackEvent('content_status_changed', {
           contentId,
           newStatus
@@ -279,7 +280,7 @@ const ContentManagement = () => {
   });
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="कंटेंट लोड हो रहा है..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "कंटेंट लोड हो रहा है..." : "Loading content..."} />;
   }
 
   return (
@@ -306,11 +307,10 @@ const ContentManagement = () => {
               <button
                 key={type.key}
                 onClick={() => setActiveTab(type.key)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                  activeTab === type.key
-                    ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${activeTab === type.key
+                  ? 'border-emerald-500 text-emerald-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
               >
                 <span className="mr-2">{type.icon}</span>
                 {type.label}
@@ -331,7 +331,7 @@ const ContentManagement = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
-            
+
             <div>
               <select
                 value={filterStatus}
@@ -344,7 +344,7 @@ const ContentManagement = () => {
                 <option value="archived">संग्रहीत</option>
               </select>
             </div>
-            
+
             <div>
               <button
                 onClick={() => {
@@ -380,13 +380,13 @@ const ContentManagement = () => {
                         {getStatusLabel(content.status)}
                       </span>
                     </div>
-                    
+
                     {content.excerpt && (
                       <p className="text-gray-600 mt-1 line-clamp-2">
                         {content.excerpt}
                       </p>
                     )}
-                    
+
                     <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                       <span>लेखक: {content.authorName}</span>
                       <span>•</span>
@@ -399,7 +399,7 @@ const ContentManagement = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     {/* Status Change Dropdown */}
                     <select
@@ -411,14 +411,14 @@ const ContentManagement = () => {
                       <option value="published">प्रकाशित</option>
                       <option value="archived">संग्रहीत</option>
                     </select>
-                    
+
                     <button
                       onClick={() => handleEdit(content)}
                       className="text-emerald-600 hover:text-emerald-900 px-3 py-1 text-sm"
                     >
                       संपादित करें
                     </button>
-                    
+
                     <button
                       onClick={() => handleDelete(content.id)}
                       className="text-red-600 hover:text-red-900 px-3 py-1 text-sm"
@@ -430,7 +430,7 @@ const ContentManagement = () => {
               </motion.div>
             ))}
           </AnimatePresence>
-          
+
           {filteredContents.length === 0 && (
             <div className="p-12 text-center text-gray-500">
               <div className="text-4xl mb-4">📝</div>
@@ -459,9 +459,8 @@ const ContentManagement = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.title ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.title ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="कंटेंट का शीर्षक..."
               />
               {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -477,9 +476,8 @@ const ContentManagement = () => {
                 name="slug"
                 value={formData.slug}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.slug ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.slug ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="content-slug"
               />
               {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug}</p>}
@@ -514,9 +512,8 @@ const ContentManagement = () => {
                 value={formData.excerpt}
                 onChange={handleInputChange}
                 rows={3}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.excerpt ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.excerpt ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="कंटेंट का संक्षिप्त विवरण..."
               />
               {errors.excerpt && <p className="text-red-500 text-sm mt-1">{errors.excerpt}</p>}
@@ -553,7 +550,7 @@ const ContentManagement = () => {
           {/* SEO Fields */}
           <div className="border-t pt-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">SEO सेटिंग्स</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

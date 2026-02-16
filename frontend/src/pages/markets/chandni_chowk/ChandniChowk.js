@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import ShopCard from '../../../components/ShopCard';
 import '../../../App.css';
-
+import { useLanguage } from '../../../context/LanguageContext';
 import map from '../../../images/markets/chandni_map.jpeg';
 
 const ChandniChowk = () => {
+  const { language, t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [selectedShop, setSelectedShop] = useState(null);
   const [hoveredShop, setHoveredShop] = useState(null);
@@ -21,176 +22,176 @@ const ChandniChowk = () => {
   const shops = [
     {
       id: 'spice-market',
-      name: 'खादी राम मसाला भंडार',
-      nameEn: 'Khari Ram Spice Emporium',
-      specialty: 'प्रामाणिक भारतीय मसाले, हर्बल चाय और आयुर्वेदिक सामग्री',
-      specialtyEn: 'Authentic Indian spices, herbal teas and Ayurvedic ingredients',
+      name: language === 'hi' ? 'खादी राम मसाला भंडार' : 'Khari Ram Spice Emporium',
+      specialty: language === 'hi' ? 'प्रामाणिक भारतीय मसाले, हर्बल चाय और आयुर्वेदिक सामग्री' : 'Authentic Indian spices, herbal teas and Ayurvedic ingredients',
       rating: 4.9,
       reviews: 487,
       established: '1923',
       products: 280,
-      owner: 'श्री रामेश्वर गुप्ता',
-      experience: '35 साल',
+      owner: language === 'hi' ? 'श्री रामेश्वर गुप्ता' : 'Mr. Rameshwar Gupta',
+      experience: language === 'hi' ? '35 साल' : '35 Years',
       category: 'spices',
-      specialty_items: ['गरम मसाला', 'केसर', 'इलायची', 'दालचीनी', 'काली मिर्च'],
+      specialty_items: language === 'hi'
+        ? ['गरम मसाला', 'केसर', 'इलायची', 'दालचीनी', 'काली मिर्च']
+        : ['Garam Masala', 'Saffron', 'Cardamom', 'Cinnamon', 'Black Pepper'],
       href: '/markets/chandni_chowk/spice-market',
       image: '/images/shops/spice-market.jpg',
-      badge: '🌶️ मसाला राजा',
-      timings: 'सुबह 8:00 - रात 8:00',
-      languages: ['हिंदी', 'अंग्रेजी', 'उर्दू'],
-      payment_methods: ['नकद', 'UPI', 'कार्ड'],
+      badge: language === 'hi' ? '🌶️ मसाला राजा' : '🌶️ Spice King',
+      timings: language === 'hi' ? 'सुबह 8:00 - रात 8:00' : '8:00 AM - 8:00 PM',
+      languages: language === 'hi' ? ['हिंदी', 'अंग्रेजी', 'उर्दू'] : ['Hindi', 'English', 'Urdu'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI', 'कार्ड'] : ['Cash', 'UPI', 'Card'],
       delivery_available: true,
       wholesale_available: true
     },
     {
       id: 'silver-jewelry',
-      name: 'पुराना क्विल्ला ज्वेलर्स',
-      nameEn: 'Purana Qila Jewellers',
-      specialty: 'हस्तनिर्मित चांदी के गहने, पारंपरिक डिज़ाइन और कुंदन का काम',
-      specialtyEn: 'Handcrafted silver jewelry, traditional designs and Kundan work',
+      name: language === 'hi' ? 'पुराना क्विल्ला ज्वेलर्स' : 'Purana Qila Jewellers',
+      specialty: language === 'hi' ? 'हस्तनिर्मित चांदी के गहने, पारंपरिक डिज़ाइन और कुंदन का काम' : 'Handcrafted silver jewelry, traditional designs and Kundan work',
       rating: 4.8,
       reviews: 342,
       established: '1947',
       products: 450,
-      owner: 'श्री मुकेश सोनी',
-      experience: '42 साल',
+      owner: language === 'hi' ? 'श्री मुकेश सोनी' : 'Mr. Mukesh Soni',
+      experience: language === 'hi' ? '42 साल' : '42 Years',
       category: 'jewelry',
-      specialty_items: ['चांदी के हार', 'कुंदन झुमके', 'पायल', 'कड़े', 'अंगूठियां'],
+      specialty_items: language === 'hi'
+        ? ['चांदी के हार', 'कुंदन झुमके', 'पायल', 'कड़े', 'अंगूठियां']
+        : ['Silver Necklaces', 'Kundan Earrings', 'Anklets', 'Bangles', 'Rings'],
       href: '/markets/chandni_chowk/silver-jewelry',
       image: '/images/shops/silver-jewelry.jpg',
-      badge: '💎 HallMark प्रमाणित',
-      timings: 'सुबह 10:00 - रात 8:30',
-      languages: ['हिंदी', 'अंग्रेजी', 'पंजाबी'],
-      payment_methods: ['नकद', 'UPI', 'कार्ड', 'चेक'],
+      badge: language === 'hi' ? '💎 बानगी प्रमाणित' : '💎 HallMark Certified',
+      timings: language === 'hi' ? 'सुबह 10:00 - रात 8:30' : '10:00 AM - 8:30 PM',
+      languages: language === 'hi' ? ['हिंदी', 'अंग्रेजी', 'पंजाबी'] : ['Hindi', 'English', 'Punjabi'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI', 'कार्ड', 'चेक'] : ['Cash', 'UPI', 'Card', 'Cheque'],
       delivery_available: true,
       wholesale_available: false
     },
     {
       id: 'textile-hub',
-      name: 'बनारसी साड़ी पैलेस',
-      nameEn: 'Banarasi Saree Palace',
-      specialty: 'बनारसी साड़ी, सिल्क फैब्रिक और पारंपरिक भारतीय वस्त्र',
-      specialtyEn: 'Banarasi sarees, silk fabrics and traditional Indian textiles',
+      name: language === 'hi' ? 'बनारसी साड़ी पैलेस' : 'Banarasi Saree Palace',
+      specialty: language === 'hi' ? 'बनारसी साड़ी, सिल्क फैब्रिक और पारंपरिक भारतीय वस्त्र' : 'Banarasi sarees, silk fabrics and traditional Indian textiles',
       rating: 4.7,
       reviews: 298,
       established: '1965',
       products: 320,
-      owner: 'श्री विजय कुमार अग्रवाल',
-      experience: '38 साल',
+      owner: language === 'hi' ? 'श्री विजय कुमार अग्रवाल' : 'Mr. Vijay Kumar Agarwal',
+      experience: language === 'hi' ? '38 साल' : '38 Years',
       category: 'textiles',
-      specialty_items: ['बनारसी साड़ी', 'सिल्क दुपट्टा', 'कांजीवरम साड़ी', 'लहंगा', 'शॉल'],
+      specialty_items: language === 'hi'
+        ? ['बनारसी साड़ी', 'सिल्क दुपट्टा', 'कांजीवरम साड़ी', 'लहंगा', 'शॉल']
+        : ['Banarasi Saree', 'Silk Dupatta', 'Kanjivaram Saree', 'Lehenga', 'Shawl'],
       href: '/markets/chandni_chowk/textile-hub',
       image: '/images/shops/textile-hub.jpg',
-      badge: '🧵 प्योर सिल्क',
-      timings: 'सुबह 10:00 - रात 9:00',
-      languages: ['हिंदी', 'अंग्रेजी', 'बंगाली'],
-      payment_methods: ['नकद', 'UPI', 'कार्ड'],
+      badge: language === 'hi' ? '🧵 प्योर सिल्क' : '🧵 Pure Silk',
+      timings: language === 'hi' ? 'सुबह 10:00 - रात 9:00' : '10:00 AM - 9:00 PM',
+      languages: language === 'hi' ? ['हिंदी', 'अंग्रेजी', 'बंगाली'] : ['Hindi', 'English', 'Bengali'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI', 'कार्ड'] : ['Cash', 'UPI', 'Card'],
       delivery_available: true,
       wholesale_available: true
     },
     {
       id: 'traditional-sweets',
-      name: 'घंटेवाला हलवाई',
-      nameEn: 'Ghantewala Halwai',
-      specialty: 'पारंपरिक भारतीय मिठाइयां, नमकीन और त्योहारी व्यंजन',
-      specialtyEn: 'Traditional Indian sweets, savories and festival delicacies',
+      name: language === 'hi' ? 'घंटेवाला हलवाई' : 'Ghantewala Halwai',
+      specialty: language === 'hi' ? 'पारंपरिक भारतीय मिठाइयां, नमकीन और त्योहारी व्यंजन' : 'Traditional Indian sweets, savories and festival delicacies',
       rating: 4.9,
       reviews: 612,
       established: '1790',
       products: 85,
-      owner: 'श्री संजय गोयल',
-      experience: '45 साल',
+      owner: language === 'hi' ? 'श्री संजय गोयल' : 'Mr. Sanjay Goyal',
+      experience: language === 'hi' ? '45 साल' : '45 Years',
       category: 'food',
-      specialty_items: ['सोहन हलवा', 'गाजर हलवा', 'रबड़ी', 'जलेबी', 'समोसा'],
+      specialty_items: language === 'hi'
+        ? ['सोहन हलवा', 'गाजर हलवा', 'रबड़ी', 'जलेबी', 'समोसा']
+        : ['Sohan Halwa', 'Gajar Halwa', 'Rabri', 'Jalebi', 'Samosa'],
       href: '/markets/chandni_chowk/traditional-sweets',
       image: '/images/shops/sweets.jpg',
-      badge: '🍯 230+ साल पुराना',
-      timings: 'सुबह 7:00 - रात 10:00',
-      languages: ['हिंदी', 'अंग्रेजी'],
-      payment_methods: ['नकद', 'UPI'],
+      badge: language === 'hi' ? '🍯 230+ साल पुराना' : '🍯 230+ Years Old',
+      timings: language === 'hi' ? 'सुबह 7:00 - रात 10:00' : '7:00 AM - 10:00 PM',
+      languages: language === 'hi' ? ['हिंदी', 'अंग्रेजी'] : ['Hindi', 'English'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI'] : ['Cash', 'UPI'],
       delivery_available: true,
       wholesale_available: true
     },
     {
       id: 'books-stationery',
-      name: 'गीता प्रेस बुक डिपो',
-      nameEn: 'Gita Press Book Depot',
-      specialty: 'धार्मिक पुस्तकें, उर्दू साहित्य और पारंपरिक लेखन सामग्री',
-      specialtyEn: 'Religious books, Urdu literature and traditional writing materials',
+      name: language === 'hi' ? 'गीता प्रेस बुक डिपो' : 'Gita Press Book Depot',
+      specialty: language === 'hi' ? 'धार्मिक पुस्तकें, उर्दू साहित्य और पारंपरिक लेखन सामग्री' : 'Religious books, Urdu literature and traditional writing materials',
       rating: 4.6,
       reviews: 189,
       established: '1955',
       products: 520,
-      owner: 'श्री आनंद प्रकाश शर्मा',
-      experience: '40 साल',
+      owner: language === 'hi' ? 'श्री आनंद प्रकाश शर्मा' : 'Mr. Anand Prakash Sharma',
+      experience: language === 'hi' ? '40 साल' : '40 Years',
       category: 'books',
-      specialty_items: ['गीता', 'रामायण', 'उर्दू शायरी', 'हस्तलिखित कॉपी', 'कलम'],
+      specialty_items: language === 'hi'
+        ? ['गीता', 'रामायण', 'उर्दू शायरी', 'हस्तलिखित कॉपी', 'कलम']
+        : ['Gita', 'Ramayana', 'Urdu Poetry', 'Handwritten Copy', 'Pen'],
       href: '/markets/chandni_chowk/books-stationery',
       image: '/images/shops/books.jpg',
-      badge: '📚 दुर्लभ संग्रह',
-      timings: 'सुबह 9:00 - रात 8:00',
-      languages: ['हिंदी', 'उर्दू', 'संस्कृत', 'अंग्रेजी'],
-      payment_methods: ['नकद', 'UPI'],
+      badge: language === 'hi' ? '📚 दुर्लभ संग्रह' : '📚 Rare Collection',
+      timings: language === 'hi' ? 'सुबह 9:00 - रात 8:00' : '9:00 AM - 8:00 PM',
+      languages: language === 'hi' ? ['हिंदी', 'उर्दू', 'संस्कृत', 'अंग्रेजी'] : ['Hindi', 'Urdu', 'Sanskrit', 'English'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI'] : ['Cash', 'UPI'],
       delivery_available: false,
       wholesale_available: true
     },
     {
       id: 'electronics-gadgets',
-      name: 'गफ्फार मार्केट इलेक्ट्रॉनिक्स',
-      nameEn: 'Gaffar Market Electronics',
-      specialty: 'इलेक्ट्रॉनिक सामान, मोबाइल एक्सेसरीज और तकनीकी उपकरण',
-      specialtyEn: 'Electronic goods, mobile accessories and technical equipment',
+      name: language === 'hi' ? 'गफ्फार मार्केट इलेक्ट्रॉनिक्स' : 'Gaffar Market Electronics',
+      specialty: language === 'hi' ? 'इलेक्ट्रॉनिक सामान, मोबाइल एक्सेसरीज और तकनीकी उपकरण' : 'Electronic goods, mobile accessories and technical equipment',
       rating: 4.4,
       reviews: 234,
       established: '1980',
       products: 680,
-      owner: 'श्री मोहम्मद अली',
-      experience: '30 साल',
+      owner: language === 'hi' ? 'श्री मोहम्मद अली' : 'Mr. Mohammed Ali',
+      experience: language === 'hi' ? '30 साल' : '30 Years',
       category: 'electronics',
-      specialty_items: ['मोबाइल केस', 'चार्जर', 'हेडफोन', 'स्पीकर', 'पावर बैंक'],
+      specialty_items: language === 'hi'
+        ? ['मोबाइल केस', 'चार्जर', 'हेडफोन', 'स्पीकर', 'पावर बैंक']
+        : ['Mobile Case', 'Charger', 'Headphone', 'Speaker', 'Power Bank'],
       href: '/markets/chandni_chowk/electronics-gadgets',
       image: '/images/shops/electronics.jpg',
-      badge: '📱 लेटेस्ट टेक',
-      timings: 'सुबह 10:00 - रात 9:00',
-      languages: ['हिंदी', 'अंग्रेजी', 'उर्दू'],
-      payment_methods: ['नकद', 'UPI', 'कार्ड', 'EMI'],
+      badge: language === 'hi' ? '📱 लेटेस्ट टेक' : '📱 Latest Tech',
+      timings: language === 'hi' ? 'सुबह 10:00 - रात 9:00' : '10:00 AM - 9:00 PM',
+      languages: language === 'hi' ? ['हिंदी', 'अंग्रेजी', 'उर्दू'] : ['Hindi', 'English', 'Urdu'],
+      payment_methods: language === 'hi' ? ['नकद', 'UPI', 'कार्ड', 'EMI'] : ['Cash', 'UPI', 'Card', 'EMI'],
       delivery_available: true,
       wholesale_available: true
     }
   ];
 
   const marketInfo = {
-    name: 'Chandni Chowk',
-    nameHindi: 'चांदनी चौक',
-    city: 'Delhi',
-    cityHindi: 'नई दिल्ली',
     established: '1650',
     totalShops: 9000,
     totalVendors: 350,
-    specialties: ['मसाले', 'चांदी के आभूषण', 'कपड़े', 'मिठाइयां', 'पुस्तकें', 'इलेक्ट्रॉनिक्स'],
-    openingHours: 'सुबह 8:00 - रात 9:00',
-    bestTime: 'अक्टूबर से मार्च',
-    nearbyAttractions: ['लाल किला', 'जामा मस्जिद', 'राज घाट', 'इंडिया गेट'],
-    transport: ['मेट्रो: चांदनी चौक', 'बस स्टैंड', 'रिक्शा', 'ऑटो'],
+    specialties: [t('spices'), t('silverJewelry'), t('textiles'), t('sweets'), t('books'), t('electronics')],
+    openingHours: '8:00 AM - 9:00 PM',
+    bestTime: t('market.info.bestTime', 'October to March'),
+    nearbyAttractions: language === 'hi'
+      ? ['लाल किला', 'जामा मस्जिद', 'राज घाट', 'इंडिया गेट']
+      : ['Red Fort', 'Jama Masjid', 'Raj Ghat', 'India Gate'],
+    transport: language === 'hi'
+      ? ['मेट्रो: चांदनी चौक', 'बस स्टैंड', 'रिक्शा', 'ऑटो']
+      : ['Metro: Chandni Chowk', 'Bus Stand', 'Rickshaw', 'Auto'],
     parkingAvailable: true
   };
 
   const categories = [
-    { id: 'all', name: 'सभी दुकानें', icon: '🏪', count: shops.length },
-    { id: 'spices', name: 'मसाले', icon: '🌶️', count: shops.filter(s => s.category === 'spices').length },
-    { id: 'jewelry', name: 'आभूषण', icon: '💎', count: shops.filter(s => s.category === 'jewelry').length },
-    { id: 'textiles', name: 'कपड़े', icon: '🧵', count: shops.filter(s => s.category === 'textiles').length },
-    { id: 'food', name: 'खाना', icon: '🍯', count: shops.filter(s => s.category === 'food').length },
-    { id: 'books', name: 'पुस्तकें', icon: '📚', count: shops.filter(s => s.category === 'books').length },
-    { id: 'electronics', name: 'इलेक्ट्रॉनिक्स', icon: '📱', count: shops.filter(s => s.category === 'electronics').length }
+    { id: 'all', name: t('allCategories'), icon: '🏪', count: shops.length },
+    { id: 'spices', name: t('spices'), icon: '🌶️', count: shops.filter(s => s.category === 'spices').length },
+    { id: 'jewelry', name: t('silverJewelry'), icon: '💎', count: shops.filter(s => s.category === 'jewelry').length },
+    { id: 'textiles', name: t('textiles'), icon: '🧵', count: shops.filter(s => s.category === 'textiles').length },
+    { id: 'food', name: t('sweets'), icon: '🍯', count: shops.filter(s => s.category === 'food').length },
+    { id: 'books', name: t('books', 'Books'), icon: '📚', count: shops.filter(s => s.category === 'books').length },
+    { id: 'electronics', name: t('electronics', 'Electronics'), icon: '📱', count: shops.filter(s => s.category === 'electronics').length }
   ];
 
-  const filteredShops = activeFilter === 'all' 
-    ? shops 
+  const filteredShops = activeFilter === 'all'
+    ? shops
     : shops.filter(shop => shop.category === activeFilter);
 
   if (loading) {
-    return <LoadingSpinner message="Chandni Chowk लोड हो रहा है..." />;
+    return <LoadingSpinner message={`${t('market_chandni_chowk')} ${t('loading')}...`} />;
   }
 
   return (
@@ -212,39 +213,37 @@ const ChandniChowk = () => {
               {/* Historical Badge */}
               <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-amber-200'>
                 <span className='text-2xl'>🏛️</span>
-                <span className='text-amber-800 font-bold'>मुगल काल से</span>
+                <span className='text-amber-800 font-bold'>{t('market_chandni_chowk_hero_title')}</span>
               </div>
-              
+
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-red-600 via-orange-500 to-red-700 bg-clip-text text-transparent mb-4 leading-tight'>
-                {marketInfo.nameHindi}
+                {t('market_chandni_chowk')}
               </h1>
               <h2 className='text-2xl md:text-3xl text-emerald-700 font-semibold mb-6'>
-                Chandni Chowk, {marketInfo.cityHindi}
+                {t('market_chandni_chowk_subtitle')}
               </h2>
-              
+
               <p className='text-xl text-emerald-600 max-w-4xl mx-auto leading-relaxed mb-8'>
-                भारत के सबसे पुराने और व्यस्त बाजारों में से एक, इसकी संकरी गलियों और भीड़भाड़ के माहौल की खोज करें। 
-                मुगल सम्राट शाहजहाँ द्वारा बसाया गया यह बाजार आज भी अपनी पुरानी रौनक बनाए हुए है। 
-                यहाँ आपको मसालों की सुगंध, चांदी के गहनों की चमक और पारंपरिक मिठाइयों का स्वाद मिलेगा।
+                {t('market_chandni_chowk_desc')}
               </p>
 
               {/* Market Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12'>
                 <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
                   <div className='text-2xl font-bold text-red-600'>{marketInfo.established}</div>
-                  <div className='text-red-600 text-sm font-medium'>स्थापना</div>
+                  <div className='text-red-600 text-sm font-medium'>{t('established')}</div>
                 </div>
                 <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
                   <div className='text-2xl font-bold text-red-600'>{marketInfo.totalShops.toLocaleString()}+</div>
-                  <div className='text-red-600 text-sm font-medium'>कुल दुकानें</div>
+                  <div className='text-red-600 text-sm font-medium'>{t('totalShops')}</div>
                 </div>
                 <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
                   <div className='text-2xl font-bold text-red-600'>{marketInfo.totalVendors}+</div>
-                  <div className='text-red-600 text-sm font-medium'>विक्रेता</div>
+                  <div className='text-red-600 text-sm font-medium'>{t('totalVendors')}</div>
                 </div>
                 <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
                   <div className='text-2xl font-bold text-red-600'>375</div>
-                  <div className='text-red-600 text-sm font-medium'>साल पुराना</div>
+                  <div className='text-red-600 text-sm font-medium'>{t('yearsOld')}</div>
                 </div>
               </div>
             </div>
@@ -256,35 +255,35 @@ const ChandniChowk = () => {
           <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
             <h3 className='text-2xl font-bold text-emerald-800 mb-6 text-center flex items-center justify-center space-x-3'>
               <span>🗺️</span>
-              <span>चांदनी चौक का नक्शा</span>
+              <span>{t('market_map_title')}</span>
             </h3>
             <div className='relative flex justify-center'>
-              <img 
-                src={map} 
-                alt='Chandni Chowk Map' 
-                className='rounded-2xl w-full max-w-4xl shadow-lg hover:scale-105 transition-transform duration-500' 
+              <img
+                src={map}
+                alt='Chandni Chowk Map'
+                className='rounded-2xl w-full max-w-4xl shadow-lg hover:scale-105 transition-transform duration-500'
               />
               <div className='absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-medium'>
-                🚇 मेट्रो: चांदनी चौक
+                🚇 Metro: Chandni Chowk
               </div>
             </div>
-            
+
             {/* Market Info */}
             <div className='mt-8 grid grid-cols-1 md:grid-cols-3 gap-6'>
               <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>⏰ समय</h4>
+                <h4 className='font-semibold text-emerald-800 mb-2'>⏰ {t('openingHours')}</h4>
                 <p className='text-emerald-700'>{marketInfo.openingHours}</p>
-                <p className='text-emerald-600 text-sm mt-1'>सोमवार से रविवार</p>
+                <p className='text-emerald-600 text-sm mt-1'>{t('openDaily') || 'Open Daily'}</p>
               </div>
               <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>🌤️ बेस्ट टाइम</h4>
-                <p className='text-emerald-700'>{marketInfo.bestTime}</p>
-                <p className='text-emerald-600 text-sm mt-1'>ठंडा मौसम</p>
+                <h4 className='font-semibold text-emerald-800 mb-2'>🌤️ {t('bestTime')}</h4>
+                <p className='text-emerald-700'>{t('bestTimeValue')}</p>
+                <p className='text-emerald-600 text-sm mt-1'>{t('weatherDesc')}</p>
               </div>
               <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>🅿️ पार्किंग</h4>
-                <p className='text-emerald-700'>उपलब्ध</p>
-                <p className='text-emerald-600 text-sm mt-1'>मेट्रो पार्किंग</p>
+                <h4 className='font-semibold text-emerald-800 mb-2'>🅿️ {t('parking')}</h4>
+                <p className='text-emerald-700'>{t('parkingAvailable')}</p>
+                <p className='text-emerald-600 text-sm mt-1'>{t('parkingType')}</p>
               </div>
             </div>
           </div>
@@ -293,25 +292,23 @@ const ChandniChowk = () => {
         {/* Category Filter */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
           <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
-            <h3 className='text-xl font-bold text-emerald-800 mb-4 text-center'>दुकान श्रेणियां</h3>
+            <h3 className='text-xl font-bold text-emerald-800 mb-4 text-center'>{t('shopCategories')}</h3>
             <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3'>
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
-                  className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${
-                    activeFilter === category.id
-                      ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
-                      : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
-                  }`}
+                  className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
+                    ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
+                    : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
+                    }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    activeFilter === category.id 
-                      ? 'bg-white/20 text-white' 
-                      : 'bg-emerald-100 text-emerald-600'
-                  }`}>
+                  <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
+                    ? 'bg-white/20 text-white'
+                    : 'bg-emerald-100 text-emerald-600'
+                    }`}>
                     {category.count}
                   </span>
                 </button>
@@ -323,11 +320,11 @@ const ChandniChowk = () => {
         {/* Shops Grid */}
         <div className='max-w-7xl mx-auto px-6 pb-20'>
           <div className='text-center mb-12'>
-            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 mb-4'>प्रमुख दुकानें</h3>
+            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 mb-4'>{t('featuredShops')}</h3>
             <p className='text-xl text-emerald-600'>
-              {activeFilter === 'all' 
-                ? 'चांदनी चौक की सभी प्रसिद्ध दुकानें' 
-                : `${categories.find(c => c.id === activeFilter)?.name} की दुकानें`
+              {activeFilter === 'all'
+                ? t('allShopsDesc', 'All famous shops of Chandni Chowk')
+                : `${categories.find(c => c.id === activeFilter)?.name} Shops`
               }
             </p>
           </div>
@@ -348,41 +345,41 @@ const ChandniChowk = () => {
           ) : (
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 mb-2'>कोई दुकान नहीं मिली</h3>
-              <p className='text-emerald-600'>इस श्रेणी में कोई दुकान उपलब्ध नहीं है</p>
+              <h3 className='text-2xl font-bold text-emerald-800 mb-2'>{t('noShopsFound')}</h3>
+              <p className='text-emerald-600'>{t('noShopsFoundDesc')}</p>
             </div>
           )}
 
           {/* Historical Information */}
           <div className='mt-20 bg-gradient-to-r from-red-600 to-orange-600 rounded-3xl p-12 text-white'>
             <div className='text-center mb-8'>
-              <h3 className='text-3xl font-bold mb-4'>चांदनी चौक का इतिहास</h3>
+              <h3 className='text-3xl font-bold mb-4'>{t('market_history_title')}</h3>
               <p className='text-xl text-red-100 max-w-3xl mx-auto'>
-                मुगल सम्राट शाहजहाँ की बेटी जहांआरा बेगम द्वारा डिज़ाइन किया गया यह बाजार
+                {t('market_history_desc')}
               </p>
             </div>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
               <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🏛️</div>
-                <h4 className='text-lg font-semibold mb-2'>मुगल विरासत</h4>
-                <p className='text-red-100 text-sm'>375 साल का समृद्ध इतिहास</p>
+                <h4 className='text-lg font-semibold mb-2'>{t('heritage', 'Mughal Heritage')}</h4>
+                <p className='text-red-100 text-sm'>375 {t('yearsOld')}</p>
               </div>
               <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🕌</div>
-                <h4 className='text-lg font-semibold mb-2'>लाल किला</h4>
-                <p className='text-red-100 text-sm'>500 मीटर की दूरी पर</p>
+                <h4 className='text-lg font-semibold mb-2'>{t('redFort')}</h4>
+                <p className='text-red-100 text-sm'>{t('nearDistance')}</p>
               </div>
               <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🚇</div>
-                <h4 className='text-lg font-semibold mb-2'>मेट्रो कनेक्टिविटी</h4>
-                <p className='text-red-100 text-sm'>रेड लाइन और यलो लाइन</p>
+                <h4 className='text-lg font-semibold mb-2'>{t('metroConnectivity')}</h4>
+                <p className='text-red-100 text-sm'>{t('metroLines')}</p>
               </div>
             </div>
-            
+
             <div className='text-center mt-8'>
               <button className='bg-white text-red-600 px-8 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 transform hover:scale-105'>
-                और जानें
+                {t('knowMore')}
               </button>
             </div>
           </div>

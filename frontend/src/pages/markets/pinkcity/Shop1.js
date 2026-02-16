@@ -3,6 +3,7 @@ import axios from "axios";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import ProductCard from "../../../components/ProductCard";
 import QuantitySelector from "../../../components/QuantitySelector";
+import { useLanguage } from "../../../context/LanguageContext";
 import "../../../App.css";
 
 import necklace from "../../../images/items/kundan-necklace.jpg";
@@ -12,6 +13,7 @@ import ring from "../../../images/items/ring.jpg";
 import set from "../../../images/items/set.jpeg";
 
 const Shop1 = () => {
+  const { language, t } = useLanguage();
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
@@ -107,12 +109,12 @@ const Shop1 = () => {
       });
   }
 
-  const filteredData = profileData ? profileData.filter(item => 
+  const filteredData = profileData ? profileData.filter(item =>
     selectedCategory === 'all' || item.category === selectedCategory
   ) : [];
 
   const sortedData = filteredData.sort((a, b) => {
-    switch(sortBy) {
+    switch (sortBy) {
       case 'price-low': return a.price - b.price;
       case 'price-high': return b.price - a.price;
       case 'name': return a.name.localeCompare(b.name);
@@ -121,18 +123,17 @@ const Shop1 = () => {
   });
 
   if (loading) {
-    return <LoadingSpinner message="दुकान लोड हो रही है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "दुकान लोड हो रही है..." : "Shop is loading..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
-        
+
         {/* Notification */}
         {notification && (
-          <div className={`fixed top-24 right-6 z-50 p-4 rounded-lg shadow-lg ${
-            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          } text-white animate-fade-in`}>
+          <div className={`fixed top-24 right-6 z-50 p-4 rounded-lg shadow-lg ${notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white animate-fade-in`}>
             {notification.message}
           </div>
         )}
@@ -141,7 +142,7 @@ const Shop1 = () => {
         <div className='bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 py-16'>
           <div className='max-w-7xl mx-auto px-6'>
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 items-center'>
-              
+
               {/* Shop Info */}
               <div className='lg:col-span-2'>
 
@@ -149,12 +150,12 @@ const Shop1 = () => {
                   <span className='text-yellow-900'>🏆</span>
                   <span className='text-yellow-900 font-medium text-sm'>प्रमाणित विक्रेता</span>
                 </div>
-                
+
                 <h1 className='text-4xl md:text-5xl font-bold text-yellow-900 mb-2'>
                   {shopInfo.name}
                 </h1>
                 <h2 className='text-xl text-yellow-800 mb-4'>{shopInfo.nameEn}</h2>
-                
+
                 <p className='text-lg text-yellow-800 mb-6 leading-relaxed'>
                   {shopInfo.description}
                 </p>
@@ -209,7 +210,7 @@ const Shop1 = () => {
         <div className='bg-white/80 backdrop-blur-sm border-b border-emerald-200'>
           <div className='max-w-7xl mx-auto px-6 py-6'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              
+
               {/* Specialties */}
               <div>
                 <h3 className='font-semibold text-emerald-800 mb-3'>विशेषताएं</h3>
@@ -255,7 +256,7 @@ const Shop1 = () => {
         <div className='max-w-7xl mx-auto px-6 py-8'>
           <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg mb-8'>
             <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-6'>
-              
+
               {/* Categories */}
               <div>
                 <h3 className='text-lg font-semibold text-emerald-800 mb-4'>श्रेणी चुनें</h3>
@@ -264,11 +265,10 @@ const Shop1 = () => {
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                        selectedCategory === category.id
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg scale-105'
-                          : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200'
-                      }`}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${selectedCategory === category.id
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg scale-105'
+                        : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200'
+                        }`}
                     >
                       <span>{category.icon}</span>
                       <span className='font-medium'>{category.name}</span>
@@ -298,15 +298,15 @@ const Shop1 = () => {
             {sortedData.map((item, index) => (
               <div key={item.id} className='group'>
                 <div className='bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2'>
-                  
+
                   {/* Product Image */}
                   <div className='relative h-64 overflow-hidden'>
-                    <img 
-                      className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' 
-                      src={item.image} 
+                    <img
+                      className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
+                      src={item.image}
                       alt={item.name}
                     />
-                    
+
                     {/* Discount Badge */}
                     {item.discount > 0 && (
                       <div className='absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium'>
@@ -316,11 +316,10 @@ const Shop1 = () => {
 
                     {/* Stock Status */}
                     <div className='absolute top-4 right-4'>
-                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        item.inStock 
-                          ? 'bg-green-500 text-white' 
-                          : 'bg-red-500 text-white'
-                      }`}>
+                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${item.inStock
+                        ? 'bg-green-500 text-white'
+                        : 'bg-red-500 text-white'
+                        }`}>
                         {item.inStock ? 'उपलब्ध' : 'स्टॉक खत्म'}
                       </div>
                     </div>
@@ -358,11 +357,10 @@ const Shop1 = () => {
                     <button
                       onClick={() => SendData(item)}
                       disabled={!item.inStock}
-                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
-                        item.inStock
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg transform hover:scale-105'
-                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${item.inStock
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg transform hover:scale-105'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
                     >
                       {item.inStock ? 'कार्ट में जोड़ें' : 'स्टॉक में नहीं'}
                     </button>
@@ -387,7 +385,7 @@ const Shop1 = () => {
               <h3 className='text-3xl font-bold mb-4'>संपर्क करें</h3>
               <p className='text-xl text-emerald-100'>किसी भी प्रश्न के लिए हमसे जुड़ें</p>
             </div>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-3 gap-8 text-center'>
               <div className='bg-white/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>📞</div>

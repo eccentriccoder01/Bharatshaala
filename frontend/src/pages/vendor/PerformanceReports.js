@@ -5,10 +5,16 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 
 const PerformanceReports = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('last_30_days');
   const [reportData, setReportData] = useState({
@@ -114,7 +120,7 @@ const PerformanceReports = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="रिपोर्ट लोड हो रही है..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "रिपोर्ट लोड हो रही है..." : "Loading report..."} />
       </div>
     );
   }
@@ -181,7 +187,7 @@ const PerformanceReports = () => {
                   <input
                     type="date"
                     value={customDates.startDate}
-                    onChange={(e) => setCustomDates({...customDates, startDate: e.target.value})}
+                    onChange={(e) => setCustomDates({ ...customDates, startDate: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -192,7 +198,7 @@ const PerformanceReports = () => {
                   <input
                     type="date"
                     value={customDates.endDate}
-                    onChange={(e) => setCustomDates({...customDates, endDate: e.target.value})}
+                    onChange={(e) => setCustomDates({ ...customDates, endDate: e.target.value })}
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -215,7 +221,7 @@ const PerformanceReports = () => {
                     {formatCurrency(reportData.summary?.totalSales || 0)}
                   </p>
                   <p className={`text-sm ${getPerformanceColor(reportData.summary?.salesGrowth || 0, 10)}`}>
-                    {reportData.summary?.salesGrowth > 0 ? '↗' : '↘'} 
+                    {reportData.summary?.salesGrowth > 0 ? '↗' : '↘'}
                     {Math.abs(reportData.summary?.salesGrowth || 0).toFixed(1)}%
                   </p>
                 </div>
@@ -238,7 +244,7 @@ const PerformanceReports = () => {
                     {reportData.summary?.totalOrders || 0}
                   </p>
                   <p className={`text-sm ${getPerformanceColor(reportData.summary?.orderGrowth || 0, 5)}`}>
-                    {reportData.summary?.orderGrowth > 0 ? '↗' : '↘'} 
+                    {reportData.summary?.orderGrowth > 0 ? '↗' : '↘'}
                     {Math.abs(reportData.summary?.orderGrowth || 0).toFixed(1)}%
                   </p>
                 </div>
@@ -261,7 +267,7 @@ const PerformanceReports = () => {
                     {formatCurrency(reportData.summary?.averageOrderValue || 0)}
                   </p>
                   <p className={`text-sm ${getPerformanceColor(reportData.summary?.aovGrowth || 0, 5)}`}>
-                    {reportData.summary?.aovGrowth > 0 ? '↗' : '↘'} 
+                    {reportData.summary?.aovGrowth > 0 ? '↗' : '↘'}
                     {Math.abs(reportData.summary?.aovGrowth || 0).toFixed(1)}%
                   </p>
                 </div>
@@ -284,7 +290,7 @@ const PerformanceReports = () => {
                     {reportData.summary?.newCustomers || 0}
                   </p>
                   <p className={`text-sm ${getPerformanceColor(reportData.summary?.customerGrowth || 0, 10)}`}>
-                    {reportData.summary?.customerGrowth > 0 ? '↗' : '↘'} 
+                    {reportData.summary?.customerGrowth > 0 ? '↗' : '↘'}
                     {Math.abs(reportData.summary?.customerGrowth || 0).toFixed(1)}%
                   </p>
                 </div>
@@ -303,11 +309,10 @@ const PerformanceReports = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                      activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
+                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 ${activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
                   >
                     <span>{tab.icon}</span>
                     <span>{tab.name}</span>
@@ -342,10 +347,9 @@ const PerformanceReports = () => {
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-gray-600">Growth</span>
-                          <span className={`font-semibold ${
-                            calculateGrowth(reportData.trends?.thisMonth, reportData.trends?.lastMonth) > 0 
-                              ? 'text-green-600' : 'text-red-600'
-                          }`}>
+                          <span className={`font-semibold ${calculateGrowth(reportData.trends?.thisMonth, reportData.trends?.lastMonth) > 0
+                            ? 'text-green-600' : 'text-red-600'
+                            }`}>
                             {calculateGrowth(reportData.trends?.thisMonth, reportData.trends?.lastMonth).toFixed(1)}%
                           </span>
                         </div>
@@ -447,8 +451,8 @@ const PerformanceReports = () => {
                           <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                             <td className="border border-gray-300 px-4 py-2">
                               <div className="flex items-center space-x-3">
-                                <img 
-                                  src={product.image || '/placeholder-product.png'} 
+                                <img
+                                  src={product.image || '/placeholder-product.png'}
                                   alt={product.name}
                                   className="w-10 h-10 object-cover rounded"
                                 />

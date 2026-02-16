@@ -2,17 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../../context/NotificationContext';
 import { useAnalytics } from '../analytics';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 import apiService from '../apiService';
 import { helpers } from '../helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 const SecurityLogs = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,7 @@ const SecurityLogs = () => {
   const handleViewDetails = (log) => {
     setSelectedLog(log);
     setShowDetailsModal(true);
-    
+
     trackEvent('security_log_viewed', {
       logId: log.id,
       logType: log.type,
@@ -121,7 +123,7 @@ const SecurityLogs = () => {
       if (response.success) {
         showSuccess('IP address ब्लॉक हो गया');
         loadSecurityLogs();
-        
+
         trackEvent('ip_blocked_manual', {
           ipAddress,
           adminId: user.id
@@ -142,7 +144,7 @@ const SecurityLogs = () => {
       if (response.success) {
         showSuccess('अलर्ट रिज़ॉल्व हो गया');
         loadSecurityLogs();
-        
+
         trackEvent('security_alert_resolved', {
           logId,
           adminId: user.id
@@ -174,7 +176,7 @@ const SecurityLogs = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="सिक्योरिटी लॉग्स लोड हो रहे हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "सिक्योरिटी लॉग्स लोड हो रहे हैं..." : "Loading security logs..."} />;
   }
 
   return (
@@ -280,7 +282,7 @@ const SecurityLogs = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          
+
           <div>
             <select
               value={filterSeverity}
@@ -295,7 +297,7 @@ const SecurityLogs = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
             <select
               value={filterType}
@@ -310,7 +312,7 @@ const SecurityLogs = () => {
               ))}
             </select>
           </div>
-          
+
           <div>
             <select
               value={dateRange}
@@ -323,7 +325,7 @@ const SecurityLogs = () => {
               <option value="thismonth">इस महीने</option>
             </select>
           </div>
-          
+
           <div>
             <button
               onClick={() => {
@@ -482,7 +484,7 @@ const SecurityLogs = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">बेसिक जानकारी</h3>
                 <div className="space-y-2 text-sm">
                   <div><span className="font-medium">टाइप:</span> {getLogTypeLabel(selectedLog.type)}</div>
-                  <div><span className="font-medium">सेवेरिटी:</span> 
+                  <div><span className="font-medium">सेवेरिटी:</span>
                     <span className={`ml-2 px-2 py-1 rounded text-xs bg-${getSeverityColor(selectedLog.severity)}-100 text-${getSeverityColor(selectedLog.severity)}-800`}>
                       {getSeverityLabel(selectedLog.severity)}
                     </span>

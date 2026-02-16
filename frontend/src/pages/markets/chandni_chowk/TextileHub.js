@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const TextileHub = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [textiles, setTextiles] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -21,80 +23,79 @@ const TextileHub = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const hubInfo = {
-    name: 'चांदनी चौक वस्त्र केंद्र',
-    nameEn: 'Chandni Chowk Textile Hub',
-    description: 'भारत के सबसे पुराने वस्त्र बाजार में पारंपरिक और आधुनिक कपड़ों का अनूठा संग्रह',
+    name: t('textileHubTitle'),
+    description: t('textileHubDescription'),
     established: '1650s',
-    speciality: 'साड़ी, लहंगा, सलवार कमीज',
-    location: 'किनारी बाजार, चांदनी चौक',
+    speciality: t('sareeLehenga'),
+    location: t('kinariBazar'),
     heroImage: '/images/markets/chandni-chowk-textile.jpg'
   };
 
   const textileCategories = [
-    { id: 'all', name: 'सभी वस्त्र', icon: '👗' },
-    { id: 'sarees', name: 'साड़ियां', icon: '🥻' },
-    { id: 'lehengas', name: 'लहंगे', icon: '👑' },
-    { id: 'suits', name: 'सलवार सूट', icon: '👘' },
-    { id: 'fabrics', name: 'कपड़े', icon: '🧵' },
-    { id: 'accessories', name: 'एक्सेसरीज', icon: '💎' },
-    { id: 'men-wear', name: 'पुरुष वस्त्र', icon: '👔' }
+    { id: 'all', name: t('allTextiles'), icon: '👗' },
+    { id: 'sarees', name: t('sarees'), icon: '🥻' },
+    { id: 'lehengas', name: t('lehengas'), icon: '👑' },
+    { id: 'suits', name: t('suits'), icon: '👘' },
+    { id: 'fabrics', name: t('fabrics'), icon: '🧵' },
+    { id: 'accessories', name: t('accessories', 'Accessories'), icon: '💎' },
+    { id: 'men-wear', name: t('menWear'), icon: '👔' }
   ];
 
   const featuredTextiles = [
     {
-      name: 'बनारसी साड़ी',
-      description: 'हस्तनिर्मित सोने के धागे से बुनी गई बनारसी साड़ी',
+      name: t('banarasiSaree'),
+      description: t('banarasiDesc'),
       price: '₹15,000 - ₹50,000',
-      specialty: 'शुद्ध सिल्क, जरी का काम',
-      vendor: 'अग्रवाल साड़ी हाउस'
+      specialty: t('pureSilkZari'),
+      vendor: t('agrawalSareeHouse')
     },
     {
-      name: 'राजस्थानी लहंगा',
-      description: 'पारंपरिक राजस्थानी कढ़ाई के साथ ब्राइडल लहंगा',
+      name: t('rajasthaniLehenga'),
+      description: t('rajasthaniDesc'),
       price: '₹25,000 - ₹1,00,000',
-      specialty: 'मिरर वर्क, जरदोजी',
-      vendor: 'महारानी कलेक्शन'
+      specialty: t('mirrorWork'),
+      vendor: t('maharaniCollection')
     },
     {
-      name: 'चंदेरी सूट',
-      description: 'हल्की और सुंदर चंदेरी सिल्क का सलवार सूट',
+      name: t('chanderiSuit'),
+      description: t('chanderiDesc'),
       price: '₹3,500 - ₹8,000',
-      specialty: 'हाथ से बुना, हल्का',
-      vendor: 'चंदेरी पैलेस'
+      specialty: t('handwovenLight'),
+      vendor: t('chanderiPalace')
     }
   ];
 
   const famousVendors = [
     {
-      name: 'अग्रवाल साड़ी हाउस',
+      name: t('agrawalSareeHouse'),
       established: '1942',
-      specialty: 'बनारसी साड़ी',
+      specialty: t('banarasiSaree'),
       rating: 4.9,
-      experience: '80+ वर्ष'
+      experience: `80+ ${t('yearsOld', 'years')}`
     },
     {
-      name: 'महारानी कलेक्शन',
+      name: t('maharaniCollection'),
       established: '1955',
-      specialty: 'ब्राइडल वेयर',
+      specialty: t('bridalWear'),
       rating: 4.8,
-      experience: '68+ वर्ष'
+      experience: `68+ ${t('yearsOld', 'years')}`
     },
     {
-      name: 'चंदेरी पैलेस',
+      name: t('chanderiPalace'),
       established: '1960',
-      specialty: 'चंदेरी व कोटा सिल्क',
+      specialty: t('chanderiKotaSilk'),
       rating: 4.7,
-      experience: '63+ वर्ष'
+      experience: `63+ ${t('yearsOld', 'years')}`
     }
   ];
 
   const fabricTypes = [
-    { name: 'बनारसी सिल्क', origin: 'वाराणसी', feature: 'जरी का काम' },
-    { name: 'चंदेरी', origin: 'मध्य प्रदेश', feature: 'हल्का और पारदर्शी' },
-    { name: 'कांजीवरम्', origin: 'तमिलनाडु', feature: 'शुद्ध सिल्क' },
-    { name: 'मुलमुल', origin: 'बंगाल', feature: 'मुलायम कॉटन' },
-    { name: 'इकत', origin: 'ओडिशा', feature: 'बांधनी पैटर्न' },
-    { name: 'पटोला', origin: 'गुजरात', feature: 'डबल इकत' }
+    { name: t('banarasiSilk'), origin: t('varanasi'), feature: t('zariWork') },
+    { name: t('chanderi'), origin: t('madhyaPradesh'), feature: t('lightTransparent') },
+    { name: t('kanjivaram'), origin: t('tamilNadu'), feature: t('pureSilk') },
+    { name: t('mulmul'), origin: t('bengal'), feature: t('softCotton') },
+    { name: t('ikat'), origin: t('odisha'), feature: t('bandhaniPattern') },
+    { name: t('patola'), origin: t('gujarat'), feature: t('doubleIkat') }
   ];
 
   useEffect(() => {
@@ -105,7 +106,7 @@ const TextileHub = () => {
   const loadHubData = async () => {
     try {
       setLoading(true);
-      
+
       const [textilesResponse, vendorsResponse] = await Promise.all([
         apiService.get('/markets/chandni-chowk/textile-hub/products'),
         apiService.get('/markets/chandni-chowk/textile-hub/vendors')
@@ -154,16 +155,16 @@ const TextileHub = () => {
     }
   };
 
-  const filteredTextiles = activeCategory === 'all' 
-    ? textiles 
+  const filteredTextiles = activeCategory === 'all'
+    ? textiles
     : textiles.filter(textile => textile.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{hubInfo.name} - भारतशाला | चांदनी चौक के पारंपरिक वस्त्र</title>
-        <meta name="description" content="चांदनी चौक के प्रसिद्ध वस्त्र बाजार से बनारसी साड़ी, राजस्थानी लहंगा, चंदेरी सूट और अन्य पारंपरिक वस्त्र।" />
-        <meta name="keywords" content="चांदनी चौक वस्त्र, बनारसी साड़ी, लहंगा, सलवार सूट, किनारी बाजार, पारंपरिक कपड़े" />
+        <title>{hubInfo.name} - {t('welcome')} | {t('textileHubDescription')}</title>
+        <meta name="description" content={t('textileHubDescription')} />
+        <meta name="keywords" content="chandni chowk textiles, banarasi saree, lehenga, salwar suits, kinari bazar" />
         <link rel="canonical" href="https://bharatshaala.com/markets/chandni-chowk/textile-hub" />
       </Helmet>
 
@@ -171,11 +172,11 @@ const TextileHub = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${hubInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -190,18 +191,18 @@ const TextileHub = () => {
                   <p className="text-xl opacity-90">{hubInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-pink-200">{hubInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('specialityLabel')}</h3>
                   <p className="text-pink-200">{hubInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('locationLabel')}</h3>
                   <p className="text-pink-200">{hubInfo.location}</p>
                 </div>
               </div>
@@ -213,13 +214,13 @@ const TextileHub = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/chandni-chowk" className="hover:text-emerald-600">चांदनी चौक</Link>
+              <Link to="/markets/chandni-chowk" className="hover:text-emerald-600">{t('market_chandni_chowk')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">वस्त्र केंद्र</span>
+              <span className="text-gray-900">{t('textileHubTitle')}</span>
             </nav>
           </div>
         </div>
@@ -227,17 +228,16 @@ const TextileHub = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">वस्त्र श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('textileCategories')}</h2>
             <div className="flex flex-wrap gap-4">
               {textileCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-purple-500 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -250,7 +250,7 @@ const TextileHub = () => {
         {/* Featured Textiles */}
         <section className="py-12 bg-purple-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">आज के विशेष वस्त्र</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredTextiles')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredTextiles.map((textile, index) => (
                 <motion.div
@@ -273,7 +273,7 @@ const TextileHub = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">{textile.vendor}</span>
                     <button className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-200">
-                      देखें
+                      {t('view', 'View')}
                     </button>
                   </div>
                 </motion.div>
@@ -285,7 +285,7 @@ const TextileHub = () => {
         {/* Fabric Types */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">कपड़ों के प्रकार</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('fabricTypes')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {fabricTypes.map((fabric, index) => (
                 <motion.div
@@ -297,8 +297,8 @@ const TextileHub = () => {
                 >
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{fabric.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600">
-                    <p><strong>मूल:</strong> {fabric.origin}</p>
-                    <p><strong>विशेषता:</strong> {fabric.feature}</p>
+                    <p><strong>{t('origin')}:</strong> {fabric.origin}</p>
+                    <p><strong>{t('feature')}:</strong> {fabric.feature}</p>
                   </div>
                 </motion.div>
               ))}
@@ -309,15 +309,15 @@ const TextileHub = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="वस्त्र लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={t('loading')} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी वस्त्र' : textileCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allTextiles') : textileCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredTextiles.map((textile) => (
                   <ProductCard
@@ -334,8 +334,8 @@ const TextileHub = () => {
               {filteredTextiles.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">👗</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई वस्त्र नहीं मिले</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noTextilesFound')}</h3>
+                  <p className="text-gray-600">{t('chooseOtherCategory')}</p>
                 </div>
               )}
             </div>
@@ -345,7 +345,7 @@ const TextileHub = () => {
         {/* Famous Vendors */}
         <section className="py-16 bg-gradient-to-r from-purple-100 to-pink-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">प्रसिद्ध वस्त्र व्यापारी</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('famousTextileVendors')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {famousVendors.map((vendor, index) => (
                 <motion.div
@@ -358,9 +358,9 @@ const TextileHub = () => {
                   <div className="text-4xl mb-4">🏪</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{vendor.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>स्थापना:</strong> {vendor.established}</p>
-                    <p><strong>विशेषता:</strong> {vendor.specialty}</p>
-                    <p><strong>अनुभव:</strong> {vendor.experience}</p>
+                    <p><strong>{t('established')}:</strong> {vendor.established}</p>
+                    <p><strong>{t('specialityLabel')}:</strong> {vendor.specialty}</p>
+                    <p><strong>{t('experience')}:</strong> {vendor.experience}</p>
                   </div>
                   <div className="flex items-center justify-center space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -371,7 +371,7 @@ const TextileHub = () => {
                     <span className="text-sm text-gray-600 ml-2">{vendor.rating}</span>
                   </div>
                   <button className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors duration-200">
-                    दुकान देखें
+                    {t('viewShop', 'View Shop')}
                   </button>
                 </motion.div>
               ))}
@@ -382,27 +382,27 @@ const TextileHub = () => {
         {/* Shopping Tips */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">खरीदारी की जानकारी</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('shoppingTips')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl mb-4">💰</div>
-                <h3 className="text-xl font-semibold mb-2">मोल-भाव</h3>
-                <p className="text-gray-600">यहाँ मोल-भाव करना सामान्य है, विनम्रता से दाम तय करें</p>
+                <h3 className="text-xl font-semibold mb-2">{t('bargaining')}</h3>
+                <p className="text-gray-600">{t('bargainingDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2">गुणवत्ता जांच</h3>
-                <p className="text-gray-600">कपड़े की बुनाई, रंग और फिनिशिंग को ध्यान से देखें</p>
+                <h3 className="text-xl font-semibold mb-2">{t('qualityCheck')}</h3>
+                <p className="text-gray-600">{t('qualityCheckDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">📏</div>
-                <h3 className="text-xl font-semibold mb-2">नाप-जोख</h3>
-                <p className="text-gray-600">सिलाई से पहले सही नाप और डिजाइन पर चर्चा करें</p>
+                <h3 className="text-xl font-semibold mb-2">{t('measurements')}</h3>
+                <p className="text-gray-600">{t('measurementsDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🚚</div>
-                <h3 className="text-xl font-semibold mb-2">डिलीवरी</h3>
-                <p className="text-gray-600">भारी सामान के लिए होम डिलीवरी की सुविधा उपलब्ध</p>
+                <h3 className="text-xl font-semibold mb-2">{t('delivery')}</h3>
+                <p className="text-gray-600">{t('deliveryHomeDesc')}</p>
               </div>
             </div>
           </div>
@@ -411,28 +411,26 @@ const TextileHub = () => {
         {/* Market Experience */}
         <section className="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">चांदनी चौक वस्त्र का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('textileHubExperience')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                सदियों से यहाँ के कारीगर भारत की समृद्ध वस्त्र परंपरा को जीवित रखे हुए हैं। 
-                किनारी बाजार से लेकर फतेहपुरी तक, यहाँ आपको मिलेगा हर तरह का पारंपरिक और आधुनिक वस्त्र। 
-                हर दुकान में छुपी है कहानियां और हर कपड़े में बुना है भारतीय संस्कृति का जादू।
+                {t('textileHubExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>किनारी बाजार, चांदनी चौक</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('locationLabel')}</h3>
+                  <p>{hubInfo.location}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 11:00 - शाम 8:00 (सोमवार बंद)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timingLabel')}</h3>
+                  <p>{t('timingDesc')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🎯</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>ब्राइडल वेयर और पारंपरिक वस्त्र</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('specialityLabel')}</h3>
+                  <p>{t('bridalWear')}</p>
                 </div>
               </div>
             </div>

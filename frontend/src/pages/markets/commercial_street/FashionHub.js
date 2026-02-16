@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const FashionHub = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [fashionItems, setFashionItems] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -21,47 +23,47 @@ const FashionHub = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const hubInfo = {
-    name: 'कमर्शियल स्ट्रीट फैशन हब',
+    name: t('fashionHubTitle'),
     nameEn: 'Commercial Street Fashion Hub',
-    description: 'बेंगलुरु का प्रसिद्ध फैशन डेस्टिनेशन - ट्रेंडी से लेकर ट्रेडिशनल तक सब कुछ',
+    description: t('fashionHubDescription'),
     established: '1980s',
-    speciality: 'मल्टी-ब्रांड फैशन स्टोर',
-    location: 'कमर्शियल स्ट्रीट, बेंगलुरु',
+    speciality: t('multiBrandStore'),
+    location: t('commercialStreetCity'),
     heroImage: '/images/markets/commercial-street-fashion.jpg'
   };
 
   const fashionCategories = [
-    { id: 'all', name: 'सभी फैशन', icon: '👗' },
-    { id: 'western-wear', name: 'वेस्टर्न वेयर', icon: '👚' },
-    { id: 'ethnic-wear', name: 'एथनिक वेयर', icon: '🥻' },
-    { id: 'casual-wear', name: 'कैजुअल वेयर', icon: '👕' },
-    { id: 'formal-wear', name: 'फॉर्मल वेयर', icon: '👔' },
-    { id: 'footwear', name: 'फुटवेयर', icon: '👠' },
-    { id: 'accessories', name: 'एक्सेसरीज', icon: '👜' }
+    { id: 'all', name: t('allFashion'), icon: '👗' },
+    { id: 'western-wear', name: t('westernWear'), icon: '👚' },
+    { id: 'ethnic-wear', name: t('ethnicWear'), icon: '🥻' },
+    { id: 'casual-wear', name: t('casualWear'), icon: '👕' },
+    { id: 'formal-wear', name: t('formalWear'), icon: '👔' },
+    { id: 'footwear', name: t('footwear'), icon: '👠' },
+    { id: 'accessories', name: t('accessories'), icon: '👜' }
   ];
 
   const featuredBrands = [
     {
       name: 'Fabindia',
-      specialty: 'एथनिक और हैंडलूम',
+      specialty: t('ethnicHandloom'),
       priceRange: '₹500 - ₹5,000',
-      style: 'ट्रेडिशनल',
+      style: t('traditional'),
       items: 250,
       discount: 'Up to 30% OFF'
     },
     {
       name: 'AND',
-      specialty: 'वेस्टर्न वेयर',
+      specialty: t('westernWear'),
       priceRange: '₹800 - ₹4,000',
-      style: 'कंटेंपररी',
+      style: t('contemporary'),
       items: 180,
       discount: 'Buy 2 Get 1 Free'
     },
     {
       name: 'W for Woman',
-      specialty: 'इंडो-वेस्टर्न',
+      specialty: t('indoWestern'),
       priceRange: '₹600 - ₹3,500',
-      style: 'फ्यूजन',
+      style: t('fusion'),
       items: 220,
       discount: 'Flat 40% OFF'
     }
@@ -69,40 +71,40 @@ const FashionHub = () => {
 
   const seasonCollections = [
     {
-      season: 'स्प्रिंग कलेक्शन 2024',
-      theme: 'फ्लोरल और पेस्टल',
+      season: t('springCollection'),
+      theme: t('floralPastel'),
       items: 150,
       brands: 8,
-      highlights: ['फ्लोरल प्रिंट्स', 'पेस्टल कलर्स', 'लाइट फैब्रिक्स']
+      highlights: [t('floralPrints'), t('pastelColors'), t('lightFabrics')]
     },
     {
-      season: 'समर एसेंशियल्स',
-      theme: 'कूल और कम्फर्ट',
+      season: t('summerEssentials'),
+      theme: t('coolComfort'),
       items: 120,
       brands: 6,
-      highlights: ['कॉटन फैब्रिक', 'ब्रीदेबल मटेरियल', 'यूवी प्रोटेक्शन']
+      highlights: [t('cottonFabric'), t('breathableMaterial'), t('uvProtection')]
     },
     {
-      season: 'फेस्टिवल स्पेशल',
-      theme: 'ट्रेडिशनल ग्लैम',
+      season: t('festivalSpecial'),
+      theme: t('traditionalGlam'),
       items: 200,
       brands: 10,
-      highlights: ['एथनिक वेयर', 'हेवी एम्ब्रॉयडरी', 'फेस्टिवल कलर्स']
+      highlights: [t('ethnicWear'), t('heavyEmbroidery'), t('festivalColors')]
     }
   ];
 
   const fashionTrends = [
-    { trend: 'सस्टेनेबल फैशन', popularity: '78%', description: 'इको-फ्रेंडली मटेरियल्स' },
-    { trend: 'मिनिमलिस्ट स्टाइल', popularity: '85%', description: 'सिंपल और एलिगेंट लुक्स' },
-    { trend: 'बोल्ड प्रिंट्स', popularity: '72%', description: 'स्टेटमेंट पैटर्न्स' },
-    { trend: 'कम्फर्ट वेयर', popularity: '90%', description: 'वर्क फ्रॉम होम फैशन' }
+    { trend: t('sustainableFashion'), popularity: '78%', description: t('ecoFriendlyMaterials') },
+    { trend: t('minimalistStyle'), popularity: '85%', description: t('simpleElegantLooks') },
+    { trend: t('boldPrints'), popularity: '72%', description: t('statementPatterns') },
+    { trend: t('comfortWear'), popularity: '90%', description: t('wfhFashion') }
   ];
 
   const shoppingTips = [
-    { tip: 'साइज़ गाइड', description: 'ऑनलाइन खरीदारी से पहले साइज़ चार्ट देखें' },
-    { tip: 'फैब्रिक केयर', description: 'वॉशिंग इंस्ट्रक्शन्स को ध्यान से पढ़ें' },
-    { tip: 'मिक्स एंड मैच', description: 'बेसिक पीसेस को अलग-अलग तरीकों से स्टाइल करें' },
-    { tip: 'इन्वेस्टमेंट पीसेस', description: 'क्वालिटी फॉर्मल वेयर में इन्वेस्ट करें' }
+    { tip: t('sizeGuide'), description: t('sizeGuideDesc') },
+    { tip: t('fabricCare'), description: t('fabricCareDesc') },
+    { tip: t('mixAndMatch'), description: t('mixAndMatchDesc') },
+    { tip: t('investmentPieces'), description: t('investmentPiecesDesc') }
   ];
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const FashionHub = () => {
   const loadHubData = async () => {
     try {
       setLoading(true);
-      
+
       const [itemsResponse, brandsResponse] = await Promise.all([
         apiService.get('/markets/commercial-street/fashion-hub/items'),
         apiService.get('/markets/commercial-street/fashion-hub/brands')
@@ -162,16 +164,16 @@ const FashionHub = () => {
     }
   };
 
-  const filteredItems = activeCategory === 'all' 
-    ? fashionItems 
+  const filteredItems = activeCategory === 'all'
+    ? fashionItems
     : fashionItems.filter(item => item.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{hubInfo.name} - भारतशाला | बेंगलुरु का प्रसिद्ध फैशन हब</title>
-        <meta name="description" content="कमर्शियल स्ट्रीट फैशन हब से ट्रेंडी और ट्रेडिशनल फैशन आइटम्स। मल्टी-ब्रांड स्टोर्स, सीजनल कलेक्शन्स और लेटेस्ट ट्रेंड्स।" />
-        <meta name="keywords" content="कमर्शियल स्ट्रीट फैशन, बेंगलुरु शॉपिंग, मल्टी-ब्रांड फैशन, ट्रेंडी कपड़े, एथनिक वेयर" />
+        <title>{hubInfo.name} - {t('bharatshaala')} | {t('bangalore')} {t('famous')} {t('fashion')} {t('hub')}</title>
+        <meta name="description" content={hubInfo.description} />
+        <meta name="keywords" content="commercial street fashion, bangalore shopping, multi-brand fashion, trendy clothes, ethnic wear" />
         <link rel="canonical" href="https://bharatshaala.com/markets/commercial-street/fashion-hub" />
       </Helmet>
 
@@ -179,11 +181,11 @@ const FashionHub = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-rose-600 to-pink-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${hubInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -198,18 +200,18 @@ const FashionHub = () => {
                   <p className="text-xl opacity-90">{hubInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-pink-200">{hubInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('speciality', 'Speciality')}</h3>
                   <p className="text-pink-200">{hubInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('location')}</h3>
                   <p className="text-pink-200">{hubInfo.location}</p>
                 </div>
               </div>
@@ -221,13 +223,13 @@ const FashionHub = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/commercial-street" className="hover:text-emerald-600">कमर्शियल स्ट्रीट</Link>
+              <Link to="/markets/commercial-street" className="hover:text-emerald-600">{t('commercialStreetTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">फैशन हब</span>
+              <span className="text-gray-900">{t('fashionHubTitle')}</span>
             </nav>
           </div>
         </div>
@@ -235,7 +237,7 @@ const FashionHub = () => {
         {/* Featured Brands */}
         <section className="py-12 bg-rose-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">फीचर्ड ब्रांड्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredBrandsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredBrands.map((brand, index) => (
                 <motion.div
@@ -246,17 +248,17 @@ const FashionHub = () => {
                   className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200"
                 >
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{brand.name}</h3>
-                  <p className="text-gray-600 mb-2"><strong>विशेषता:</strong> {brand.specialty}</p>
-                  <p className="text-gray-600 mb-2"><strong>स्टाइल:</strong> {brand.style}</p>
-                  <p className="text-gray-600 mb-2"><strong>प्राइस रेंज:</strong> {brand.priceRange}</p>
-                  <p className="text-gray-600 mb-3"><strong>आइटम्स:</strong> {brand.items}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('speciality', 'Speciality')}:</strong> {brand.specialty}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('style', 'Style')}:</strong> {brand.style}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('priceRange', 'Price Range')}:</strong> {brand.priceRange}</p>
+                  <p className="text-gray-600 mb-3"><strong>{t('items', 'Items')}:</strong> {brand.items}</p>
                   <div className="mb-4">
                     <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                       {brand.discount}
                     </span>
                   </div>
                   <button className="w-full bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors duration-200">
-                    ब्रांड देखें
+                    {t('viewBrand')}
                   </button>
                 </motion.div>
               ))}
@@ -267,17 +269,16 @@ const FashionHub = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">फैशन श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('fashionCategoriesTitle')}</h2>
             <div className="flex flex-wrap gap-4">
               {fashionCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-rose-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -290,7 +291,7 @@ const FashionHub = () => {
         {/* Seasonal Collections */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">सीजनल कलेक्शन्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('seasonalCollectionsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {seasonCollections.map((collection, index) => (
                 <motion.div
@@ -303,8 +304,8 @@ const FashionHub = () => {
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{collection.season}</h3>
                   <p className="text-gray-600 mb-3">{collection.theme}</p>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>आइटम्स:</strong> {collection.items}</p>
-                    <p><strong>ब्रांड्स:</strong> {collection.brands}</p>
+                    <p><strong>{t('items', 'Items')}:</strong> {collection.items}</p>
+                    <p><strong>{t('brands', 'Brands')}:</strong> {collection.brands}</p>
                   </div>
                   <div className="space-y-1 mb-4">
                     {collection.highlights.map((highlight, highlightIndex) => (
@@ -314,7 +315,7 @@ const FashionHub = () => {
                     ))}
                   </div>
                   <button className="w-full bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors duration-200">
-                    कलेक्शन देखें
+                    {t('viewCollection')}
                   </button>
                 </motion.div>
               ))}
@@ -325,7 +326,7 @@ const FashionHub = () => {
         {/* Fashion Trends */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">ट्रेंडिंग फैशन</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('trendingFashionTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {fashionTrends.map((trend, index) => (
                 <motion.div
@@ -338,12 +339,12 @@ const FashionHub = () => {
                   <h3 className="text-lg font-bold text-gray-900 mb-3">{trend.trend}</h3>
                   <p className="text-gray-600 mb-4 text-sm">{trend.description}</p>
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div 
-                      className="bg-rose-600 h-2 rounded-full" 
+                    <div
+                      className="bg-rose-600 h-2 rounded-full"
                       style={{ width: trend.popularity }}
                     ></div>
                   </div>
-                  <p className="text-rose-700 font-medium text-sm">{trend.popularity} लोकप्रिय</p>
+                  <p className="text-rose-700 font-medium text-sm">{trend.popularity} {t('popular')}</p>
                 </motion.div>
               ))}
             </div>
@@ -353,15 +354,15 @@ const FashionHub = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="फैशन आइटम्स लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')} ${t('fashion')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-white">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी फैशन आइटम्स' : fashionCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allFashion') : fashionCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredItems.map((item) => (
                   <ProductCard
@@ -379,8 +380,8 @@ const FashionHub = () => {
               {filteredItems.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">👗</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई आइटम नहीं मिला</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noItemsFound')}</h3>
+                  <p className="text-gray-600">{t('tryDifferentCategory', 'Please selecting a different category')}</p>
                 </div>
               )}
             </div>
@@ -390,7 +391,7 @@ const FashionHub = () => {
         {/* Shopping Tips */}
         <section className="py-16 bg-rose-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">फैशन टिप्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('fashionTipsTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {shoppingTips.map((tip, index) => (
                 <div key={index} className="text-center">
@@ -406,28 +407,26 @@ const FashionHub = () => {
         {/* Fashion Hub Experience */}
         <section className="py-16 bg-gradient-to-r from-rose-600 to-pink-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">फैशन हब का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('fashionHubExperienceTitle')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                40 साल से कमर्शियल स्ट्रीट फैशन हब बेंगलुरु की फैशन राजधानी है। 
-                यहाँ मिलता है हर स्टाइल, हर बजट और हर उम्र के लिए फैशन का भंडार। 
-                ट्रेडिशनल से लेकर कंटेंपररी तक, यहाँ है फैशन का पूरा संसार।
+                {t('fashionHubExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>कमर्शियल स्ट्रीट, बेंगलुरु</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('location')}</h3>
+                  <p>{hubInfo.location}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 10:00 - रात 9:00 (रोज़ाना)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timing')}</h3>
+                  <p>{t('timingDesc', '10 AM - 9 PM')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🛍️</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>मल्टी-ब्रांड फैशन स्टोर</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('speciality', 'Speciality')}</h3>
+                  <p>{hubInfo.speciality}</p>
                 </div>
               </div>
             </div>

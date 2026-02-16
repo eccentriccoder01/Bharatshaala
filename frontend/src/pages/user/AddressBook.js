@@ -5,9 +5,15 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 
 const AddressBook = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -62,7 +68,7 @@ const AddressBook = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       let response;
       if (editingAddress) {
@@ -127,7 +133,7 @@ const AddressBook = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="पते लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "पते लोड हो रहे हैं..." : "Loading addresses..."} />
       </div>
     );
   }
@@ -168,7 +174,7 @@ const AddressBook = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 {editingAddress ? 'पता एडिट करें' : 'नया पता जोड़ें'}
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Address Type */}
                 <div>
@@ -180,12 +186,11 @@ const AddressBook = () => {
                       <button
                         key={type.value}
                         type="button"
-                        onClick={() => setFormData({...formData, type: type.value})}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors duration-200 ${
-                          formData.type === type.value
-                            ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                        }`}
+                        onClick={() => setFormData({ ...formData, type: type.value })}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors duration-200 ${formData.type === type.value
+                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                          : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                          }`}
                       >
                         <span>{type.icon}</span>
                         <span>{type.label}</span>
@@ -204,7 +209,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.firstName}
-                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
@@ -216,7 +221,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.lastName}
-                      onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
@@ -231,7 +236,7 @@ const AddressBook = () => {
                     type="tel"
                     required
                     value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
@@ -245,7 +250,7 @@ const AddressBook = () => {
                     type="text"
                     required
                     value={formData.addressLine1}
-                    onChange={(e) => setFormData({...formData, addressLine1: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
                     placeholder="मकान नंबर, सड़क का नाम"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
@@ -258,7 +263,7 @@ const AddressBook = () => {
                   <input
                     type="text"
                     value={formData.addressLine2}
-                    onChange={(e) => setFormData({...formData, addressLine2: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
                     placeholder="इलाका, कॉलोनी"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
@@ -274,7 +279,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.city}
-                      onChange={(e) => setFormData({...formData, city: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
@@ -285,7 +290,7 @@ const AddressBook = () => {
                     <select
                       required
                       value={formData.state}
-                      onChange={(e) => setFormData({...formData, state: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       <option value="">राज्य चुनें</option>
@@ -303,7 +308,7 @@ const AddressBook = () => {
                       required
                       pattern="[0-9]{6}"
                       value={formData.pincode}
-                      onChange={(e) => setFormData({...formData, pincode: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
@@ -317,7 +322,7 @@ const AddressBook = () => {
                   <input
                     type="text"
                     value={formData.landmark}
-                    onChange={(e) => setFormData({...formData, landmark: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
                     placeholder="पास का प्रसिद्ध स्थान"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
@@ -329,7 +334,7 @@ const AddressBook = () => {
                     type="checkbox"
                     id="isDefault"
                     checked={formData.isDefault}
-                    onChange={(e) => setFormData({...formData, isDefault: e.target.checked})}
+                    onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
                     className="mr-2"
                   />
                   <label htmlFor="isDefault" className="text-sm text-gray-700">
@@ -395,7 +400,7 @@ const AddressBook = () => {
                           </span>
                         )}
                       </div>
-                      
+
                       <div className="text-gray-700 space-y-1">
                         <p className="font-medium">{address.firstName} {address.lastName}</p>
                         <p>{address.addressLine1}</p>
@@ -405,7 +410,7 @@ const AddressBook = () => {
                         <p>फोन: {address.phone}</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex space-x-2 ml-4">
                       <button
                         onClick={() => handleEdit(address)}

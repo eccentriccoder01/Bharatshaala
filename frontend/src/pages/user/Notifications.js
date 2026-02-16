@@ -5,12 +5,18 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 import { formatRelativeTime } from '../../utils/helpers';
 
 const Notifications = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [filter, setFilter] = useState('all');
   const [selectedIds, setSelectedIds] = useState([]);
 
@@ -61,7 +67,7 @@ const Notifications = () => {
     try {
       const response = await apiService.markNotificationRead(notificationId);
       if (response.success) {
-        setNotifications(notifications.map(notif => 
+        setNotifications(notifications.map(notif =>
           notif.id === notificationId ? { ...notif, read: true } : notif
         ));
         trackEvent('notification_marked_read', { notificationId });
@@ -93,12 +99,12 @@ const Notifications = () => {
     try {
       if (action === 'mark_read') {
         await Promise.all(selectedIds.map(id => apiService.markNotificationRead(id)));
-        setNotifications(notifications.map(notif => 
+        setNotifications(notifications.map(notif =>
           selectedIds.includes(notif.id) ? { ...notif, read: true } : notif
         ));
         trackEvent('bulk_notifications_marked_read', { count: selectedIds.length });
       }
-      
+
       setSelectedIds([]);
     } catch (error) {
       console.error('Failed to perform bulk action:', error);
@@ -115,8 +121,8 @@ const Notifications = () => {
   };
 
   const getFilteredNotifications = () => {
-    return filter === 'all' 
-      ? notifications 
+    return filter === 'all'
+      ? notifications
       : notifications.filter(notif => notif.type === filter);
   };
 
@@ -125,7 +131,7 @@ const Notifications = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="नोटिफिकेशन्स लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "नोटिफिकेशन्स लोड हो रहे हैं..." : "Loading notifications..."} />
       </div>
     );
   }
@@ -171,11 +177,10 @@ const Notifications = () => {
                   <button
                     key={type.value}
                     onClick={() => setFilter(type.value)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                      filter === type.value
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${filter === type.value
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <span>{type.icon}</span>
                     <span>{type.label}</span>
@@ -205,7 +210,7 @@ const Notifications = () => {
                 <div className="text-4xl mb-4">🔔</div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">कोई नोटिफिकेशन नहीं मिला</h3>
                 <p className="text-gray-600">
-                  {filter === 'all' 
+                  {filter === 'all'
                     ? 'अभी तक कोई नोटिफिकेशन नहीं आया है'
                     : `${notificationTypes.find(t => t.value === filter)?.label} श्रेणी में कोई नोटिफिकेशन नहीं`
                   }
@@ -234,9 +239,8 @@ const Notifications = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className={`p-4 hover:bg-gray-50 transition-colors duration-200 ${
-                        !notification.read ? 'bg-blue-50' : ''
-                      }`}
+                      className={`p-4 hover:bg-gray-50 transition-colors duration-200 ${!notification.read ? 'bg-blue-50' : ''
+                        }`}
                     >
                       <div className="flex items-start space-x-4">
                         {/* Checkbox */}
@@ -264,25 +268,23 @@ const Notifications = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <h3 className={`text-sm font-medium ${
-                                !notification.read ? 'text-gray-900' : 'text-gray-700'
-                              }`}>
+                              <h3 className={`text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'
+                                }`}>
                                 {notification.title}
                               </h3>
-                              <p className={`mt-1 text-sm ${
-                                !notification.read ? 'text-gray-800' : 'text-gray-600'
-                              }`}>
+                              <p className={`mt-1 text-sm ${!notification.read ? 'text-gray-800' : 'text-gray-600'
+                                }`}>
                                 {notification.message}
                               </p>
-                              
+
                               {/* Metadata */}
                               <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
                                 <span>{formatRelativeTime(notification.createdAt)}</span>
                                 {notification.priority && notification.priority !== 'normal' && (
                                   <span className={`px-2 py-1 rounded-full bg-${priorityColors[notification.priority]}-100 text-${priorityColors[notification.priority]}-800`}>
-                                    {notification.priority === 'high' ? 'उच्च' : 
-                                     notification.priority === 'urgent' ? 'अत्यावश्यक' : 
-                                     notification.priority === 'low' ? 'कम' : notification.priority}
+                                    {notification.priority === 'high' ? 'उच्च' :
+                                      notification.priority === 'urgent' ? 'अत्यावश्यक' :
+                                        notification.priority === 'low' ? 'कम' : notification.priority}
                                   </span>
                                 )}
                                 {notification.category && (
@@ -343,7 +345,7 @@ const Notifications = () => {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">SMS नोटिफिकेशन</h3>
@@ -355,7 +357,7 @@ const Notifications = () => {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">प्रमोशनल नोटिफिकेशन</h3>

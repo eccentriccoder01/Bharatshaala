@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from "axios";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import ProductCard from "../../components/ProductCard";
 import "../../App.css";
 
 const VendorItems = () => {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -63,7 +65,7 @@ const VendorItems = () => {
   const checkUrlParams = () => {
     const success = searchParams.get('success');
     const error = searchParams.get('error');
-    
+
     if (success) {
       let message = '';
       switch (success) {
@@ -74,7 +76,7 @@ const VendorItems = () => {
       }
       showNotification(message, 'success');
     }
-    
+
     if (error) {
       showNotification('कुछ गलत हुआ, कृपया पुनः प्रयास करें', 'error');
     }
@@ -159,10 +161,10 @@ const VendorItems = () => {
   const filterAndSortItems = () => {
     let filtered = items.filter(item => {
       const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.nameEn.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        item.nameEn.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-      
+
       let matchesStatus = true;
       switch (selectedStatus) {
         case 'active':
@@ -178,13 +180,13 @@ const VendorItems = () => {
           matchesStatus = item.quantity === 0;
           break;
       }
-      
+
       return matchesSearch && matchesCategory && matchesStatus;
     });
 
     // Sort items
     filtered.sort((a, b) => {
-      switch(sortBy) {
+      switch (sortBy) {
         case 'recent':
           return new Date(b.createdAt) - new Date(a.createdAt);
         case 'oldest':
@@ -214,7 +216,7 @@ const VendorItems = () => {
       const newSelection = prev.includes(itemId)
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId];
-      
+
       setShowBulkActions(newSelection.length > 0);
       return newSelection;
     });
@@ -255,7 +257,7 @@ const VendorItems = () => {
           }
           break;
       }
-      
+
       loadItems();
       setSelectedItems([]);
       setShowBulkActions(false);
@@ -275,21 +277,21 @@ const VendorItems = () => {
     const active = items.filter(item => item.isActive).length;
     const lowStock = items.filter(item => item.quantity <= 5 && item.quantity > 0).length;
     const outOfStock = items.filter(item => item.quantity === 0).length;
-    
+
     return { total, active, lowStock, outOfStock };
   };
 
   const stats = getItemStats();
 
   if (loading) {
-    return <LoadingSpinner message="आपके उत्पाद लोड हो रहे हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "आपके उत्पाद लोड हो रहे हैं..." : "Your products are loading..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -301,7 +303,7 @@ const VendorItems = () => {
                   अपने सभी उत्पादों को यहाँ देखें और प्रबंधित करें
                 </p>
               </div>
-              
+
               <a
                 href="/vendor/add-item"
                 className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
@@ -320,7 +322,7 @@ const VendorItems = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-8">
-              
+
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
@@ -374,7 +376,7 @@ const VendorItems = () => {
 
               {/* Filters and Search */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                
+
                 {/* Search Bar */}
                 <div className="mb-6">
                   <div className="relative max-w-md">
@@ -393,7 +395,7 @@ const VendorItems = () => {
 
                 {/* Filter Options */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                  
+
                   {/* Category Filter */}
                   <div>
                     <label className="block text-emerald-800 font-semibold mb-2 text-sm">श्रेणी</label>
@@ -448,21 +450,19 @@ const VendorItems = () => {
                     <div className="flex bg-emerald-100 rounded-lg p-1">
                       <button
                         onClick={() => setViewMode('grid')}
-                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          viewMode === 'grid' 
-                            ? 'bg-emerald-500 text-white' 
-                            : 'text-emerald-600 hover:bg-emerald-200'
-                        }`}
+                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'grid'
+                          ? 'bg-emerald-500 text-white'
+                          : 'text-emerald-600 hover:bg-emerald-200'
+                          }`}
                       >
                         ⊞ ग्रिड
                       </button>
                       <button
                         onClick={() => setViewMode('list')}
-                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          viewMode === 'list' 
-                            ? 'bg-emerald-500 text-white' 
-                            : 'text-emerald-600 hover:bg-emerald-200'
-                        }`}
+                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${viewMode === 'list'
+                          ? 'bg-emerald-500 text-white'
+                          : 'text-emerald-600 hover:bg-emerald-200'
+                          }`}
                       >
                         ☰ लिस्ट
                       </button>
@@ -531,8 +531,8 @@ const VendorItems = () => {
 
               {/* Items Grid/List */}
               {filteredItems.length > 0 ? (
-                <div className={viewMode === 'grid' 
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+                <div className={viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
                   : 'space-y-4'
                 }>
                   {filteredItems.map((item) => (
@@ -554,8 +554,8 @@ const VendorItems = () => {
                   <div className="text-6xl mb-4">📦</div>
                   <h3 className="text-2xl font-bold text-emerald-800 mb-2">कोई उत्पाद नहीं मिला</h3>
                   <p className="text-emerald-600 mb-6">
-                    {items.length === 0 
-                      ? 'अभी तक कोई उत्पाद नहीं जोड़ा गया है।' 
+                    {items.length === 0
+                      ? 'अभी तक कोई उत्पाद नहीं जोड़ा गया है।'
                       : 'आपके फ़िल्टर के अनुसार कोई उत्पाद नहीं मिला।'
                     }
                   </p>

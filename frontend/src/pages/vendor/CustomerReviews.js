@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
-import LoadingSpinner from '../components/LoadingSpinner';
-import VendorSidebar from '../components/VendorSidebar';
-import ReviewCard from '../components/ReviewCard';
+import { useAuth } from '../../hooks/useAuth';
+import { useAPI } from '../../hooks/useAPI';
+import { useNotification } from '../../context/NotificationContext';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import VendorSidebar from '../../components/VendorSidebar';
+import ReviewCard from '../../components/ReviewCard';
 
 const CustomerReviews = () => {
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { get, post, put } = useAPI();
@@ -370,13 +372,13 @@ const CustomerReviews = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="समीक्षाएं लोड हो रही हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "समीक्षाएं लोड हो रही हैं..." : "Reviews are loading..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-emerald-800 mb-2">
@@ -388,7 +390,7 @@ const CustomerReviews = () => {
         </div>
 
         <div className="flex gap-8">
-          
+
           {/* Sidebar */}
           <div className="hidden lg:block">
             <VendorSidebar />
@@ -396,7 +398,7 @@ const CustomerReviews = () => {
 
           {/* Main Content */}
           <div className="flex-1 space-y-8">
-            
+
             {/* Analytics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white">
@@ -477,7 +479,7 @@ const CustomerReviews = () => {
             {/* Filters and Search */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                
+
                 {/* Search */}
                 <div>
                   <label className="block text-emerald-800 font-semibold mb-2">खोजें</label>
@@ -550,7 +552,7 @@ const CustomerReviews = () => {
               <div className="space-y-6">
                 {filteredReviews.map((review) => (
                   <div key={review.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                    
+
                     {/* Review Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-4">
@@ -574,7 +576,7 @@ const CustomerReviews = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <span className={`text-2xl ${getSentimentColor(review.sentiment)}`}>
                           {getSentimentIcon(review.sentiment)}
@@ -608,7 +610,7 @@ const CustomerReviews = () => {
                         <h4 className="font-semibold text-gray-800 mb-2">{review.title}</h4>
                       )}
                       <p className="text-gray-700 leading-relaxed">{review.comment}</p>
-                      
+
                       {/* Review Images */}
                       {review.images && review.images.length > 0 && (
                         <div className="flex space-x-3 mt-3">
@@ -673,7 +675,7 @@ const CustomerReviews = () => {
                             💭 उत्तर दें
                           </button>
                         )}
-                        
+
                         {review.status !== 'flagged' && (
                           <button
                             onClick={() => handleFlagReview(review.id)}
@@ -682,7 +684,7 @@ const CustomerReviews = () => {
                             🚩 फ्लैग करें
                           </button>
                         )}
-                        
+
                         <button
                           onClick={() => navigate(`/products/${review.productId}`)}
                           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm"
@@ -708,7 +710,7 @@ const CustomerReviews = () => {
                   कोई समीक्षा नहीं मिली
                 </h2>
                 <p className="text-emerald-600 mb-8">
-                  {reviews.length === 0 
+                  {reviews.length === 0
                     ? 'अभी तक कोई ग्राहक समीक्षा नहीं आई है।'
                     : 'आपके फ़िल्टर के अनुसार कोई समीक्षा नहीं मिली।'
                   }
@@ -765,7 +767,7 @@ const CustomerReviews = () => {
                       className="w-full px-4 py-3 border-2 border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none resize-none"
                       placeholder="ग्राहक को धन्यवाद दें और उनकी समस्या का समाधान बताएं..."
                     ></textarea>
-                    
+
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <h4 className="font-semibold text-blue-800 mb-2">💡 बेहतर उत्तर के लिए टिप्स:</h4>
                       <ul className="text-blue-700 text-sm space-y-1">
