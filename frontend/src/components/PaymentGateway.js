@@ -24,8 +24,8 @@ const PaymentGateway = ({
   const [errors, setErrors] = useState({});
   const [transactionId, setTransactionId] = useState('');
   
-  const { user } = useAuth();
-  const { getCartSummary } = useCart();
+  // const { user } = useAuth();
+  // const { getCartSummary } = useCart();
   const { showSuccess, showError } = useNotification();
 
   const paymentMethods = [

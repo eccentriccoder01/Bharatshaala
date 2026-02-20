@@ -307,7 +307,6 @@ export const LanguageProvider = ({ children }) => {
       shopCategories: 'दुकान श्रेणियां',
       royalHeritage: 'शाही विरासत',
       historicMarket: 'ऐतिहासिक बाजार',
-      established: 'स्थापना',
       totalShops: 'कुल दुकानें',
       totalVendors: 'विक्रेता',
       yearsOld: 'साल पुराना',
@@ -330,7 +329,6 @@ export const LanguageProvider = ({ children }) => {
       noStallsCategory: 'इस श्रेणी में कोई स्टॉल उपलब्ध नहीं है',
       keyStalls: 'मुख्य स्टॉल्स',
       products: 'उत्पाद',
-      reviews: 'समीक्षाएं',
 
       // Signup
       createAccount: 'खाता बनाएं',
@@ -413,8 +411,6 @@ export const LanguageProvider = ({ children }) => {
       freeDeliveryMsg: 'मुफ्त डिलीवरी ₹999+ ऑर्डर पर',
       fastDeliveryMsg: 'तेज़ डिलीवरी',
       nextDayDeliveryMsg: 'अगले दिन डिलीवरी',
-      free: 'मुफ्त',
-      days: 'दिन',
       couponCode: 'कूपन कोड',
       enterCouponCode: 'कूपन कोड डालें',
       apply: 'लागू करें',
@@ -505,9 +501,7 @@ export const LanguageProvider = ({ children }) => {
       parkingType: 'मेट्रो पार्किंग',
 
       // Common Market Terms
-      established: 'स्थापना',
       totalShops: 'कुल दुकानें',
-      totalVendors: 'विक्रेता',
       yearsOld: 'साल पुराना',
       openingHours: 'समय',
       bestTime: 'बेस्ट टाइम',
@@ -1356,7 +1350,6 @@ export const LanguageProvider = ({ children }) => {
       // Markets Tags (Hindi)
       spices: 'मसाले',
       silverJewelry: 'चांदी के आभूषण',
-      clothing: 'कपड़े',
       sweets: 'मिठाइयाँ',
       jaipuriJewelry: 'जयपुरी आभूषण',
       blockPrint: 'ब्लॉक प्रिंट',
@@ -1568,7 +1561,6 @@ export const LanguageProvider = ({ children }) => {
       footerDesc: 'Preserving India\'s cultural heritage in digital form, we connect traditional markets with modern technology.',
       quickLinks: 'Quick Links',
       account: 'Account',
-      orders: 'Orders',
       policies: 'Policies',
       madeInIndia: 'Made in India with ❤️',
       digitalIndia: 'Digital India',
@@ -1720,7 +1712,6 @@ export const LanguageProvider = ({ children }) => {
       // Markets Tags (English)
       spices: 'Spices',
       silverJewelry: 'Silver Jewelry',
-      clothing: 'Clothing',
       sweets: 'Sweets',
       jaipuriJewelry: 'Jaipuri Jewelry',
       blockPrint: 'Block Print',
@@ -2499,7 +2490,6 @@ export const LanguageProvider = ({ children }) => {
       cab: 'Cab',
       colabaHistory: 'Located near Gateway of India, this market is Mumbai\'s famous shopping destination.',
       nextDayDeliveryMsg: 'Next day delivery',
-      free: 'Free',
       days: 'days',
       couponCode: 'Coupon Code',
       enterCouponCode: 'Enter Coupon Code',
@@ -2531,7 +2521,6 @@ export const LanguageProvider = ({ children }) => {
       savedAddresses: 'Saved Addresses',
       addNewAddress: 'Add New Address',
       noSavedAddresses: 'No saved addresses',
-      home: 'Home',
       office: 'Office',
       defaultAddress: 'Default',
       defaultAddressLabel: 'Make Default Address',
@@ -2567,7 +2556,6 @@ export const LanguageProvider = ({ children }) => {
       female: 'Female',
       other: 'Other',
       preferences: 'Preferences',
-      notifications: 'Notifications',
       appearance: 'Appearance',
 
       // Market Specific - Chandni Chowk
@@ -2580,9 +2568,7 @@ export const LanguageProvider = ({ children }) => {
       market_map_title: 'Map of Chandni Chowk',
 
       // Common Market Terms
-      established: 'Established',
       totalShops: 'Total Shops',
-      totalVendors: 'Vendors',
       yearsOld: 'Years Old',
       openingHours: 'Opening Hours',
       bestTime: 'Best Time',
@@ -2764,7 +2750,6 @@ export const LanguageProvider = ({ children }) => {
 
       // Common Market Terms
       totalShops: 'Total Shops',
-      totalVendors: 'Vendors',
       yearsOld: 'Years Old',
       bestTime: 'Best Time',
 
@@ -2774,7 +2759,6 @@ export const LanguageProvider = ({ children }) => {
       souvenirs: 'Souvenirs',
       perfumes: 'Perfumes',
       textiles: 'Textiles',
-      clothing: 'Clothing',
       jewelry: 'Jewelry',
       found: 'found',
     }

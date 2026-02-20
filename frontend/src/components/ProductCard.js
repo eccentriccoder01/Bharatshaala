@@ -27,6 +27,8 @@ const ProductCard = ({
   const handleActionClick = (e, action) => {
     e.stopPropagation();
     switch (action) {
+      default:
+        break;
       case 'edit':
         onEdit?.();
         break;
