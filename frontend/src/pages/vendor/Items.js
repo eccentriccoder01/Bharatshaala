@@ -56,10 +56,12 @@ const VendorItems = () => {
     checkUrlParams();
     const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     filterAndSortItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, searchTerm, selectedCategory, selectedStatus, sortBy]);
 
   const checkUrlParams = () => {
@@ -179,6 +181,7 @@ const VendorItems = () => {
         case 'out-of-stock':
           matchesStatus = item.quantity === 0;
           break;
+        default: break;
       }
 
       return matchesSearch && matchesCategory && matchesStatus;
@@ -256,6 +259,7 @@ const VendorItems = () => {
             });
           }
           break;
+        default: break;
       }
 
       loadItems();

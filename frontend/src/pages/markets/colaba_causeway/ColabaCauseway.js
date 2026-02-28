@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../../components/LoadingSpinner';
@@ -422,5 +423,3 @@ const ColabaCauseway = () => {
     </React.StrictMode>
   );
 };
-
-export default ColabaCauseway;

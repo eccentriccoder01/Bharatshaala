@@ -5,6 +5,7 @@ import MarketCard from '../components/MarketCard';
 import SearchBar from '../components/SearchBar';
 import FilterPanel from '../components/FilterPanel';
 import { useLanguage } from '../context/LanguageContext';
+
 import '../App.css';
 
 // Import actual market images based on your directory structure
@@ -16,8 +17,6 @@ import colabaImg from '../images/markets/colaba.png';
 import commercialStreetImg from '../images/markets/commercial.png';
 import dilliHaatImg from '../images/markets/dilli_haat.png';
 
-// Import a fallback placeholder image (create this if it doesn't exist)
-import placeholderImg from '../images/placeholder.png';
 
 const Markets = () => {
   const { t, language } = useLanguage();
@@ -60,6 +59,7 @@ const Markets = () => {
 
   useEffect(() => {
     filterAndSortMarkets();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markets, searchTerm, selectedState, selectedCategory, sortBy]);
 
   const loadMarketsData = () => {

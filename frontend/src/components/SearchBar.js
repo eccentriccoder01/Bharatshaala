@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 const SearchBar = ({ value, onChange, placeholder = "खोजें...", suggestions = [] }) => {
@@ -122,5 +123,3 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
     </div>
   );
 };
-
-export default SearchBar;

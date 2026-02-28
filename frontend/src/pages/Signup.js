@@ -36,7 +36,7 @@ const Signup = () => {
   const [otp, setOTP] = useState('');
   const [correctOTP, setCorrectOTP] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [otpValid, setOtpValid] = useState(false);
+  const [, setOtpValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
@@ -148,6 +148,8 @@ const Signup = () => {
       case 'invitationCode':
         error = await validateInvitationCode(value);
         break;
+      default:
+        break;
     }
 
     setErrors(prev => ({ ...prev, [field]: error }));
@@ -193,7 +195,8 @@ const Signup = () => {
   const signup = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post("/Signup", {
+      // eslint-disable-next-line no-unused-vars
+      const _response = await axios.post("/Signup", {
         email: formData.email,
         name: formData.name,
         password: formData.password,

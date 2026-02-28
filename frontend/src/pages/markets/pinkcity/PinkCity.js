@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
+
 import LoadingSpinner from '../../../components/LoadingSpinner';
-import ShopCard from '../../../components/ShopCard';
 import '../../../App.css';
 
 import map from '../../../images/markets/jaipur_map.jpeg';
 
 const PinkCity = () => {
   const [loading, setLoading] = useState(true);
-  const [selectedShop, setSelectedShop] = useState(null);
   const [hoveredShop, setHoveredShop] = useState(null);
+
   const navigate = useNavigate();
   const { language, t } = useLanguage();
 

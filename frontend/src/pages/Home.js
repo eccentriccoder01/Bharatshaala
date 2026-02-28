@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Carousel from '../components/Carousel';
-import CategoryCard from '../components/CategoryCard';
 import MarketCard from '../components/MarketCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../App.css';
@@ -30,7 +29,9 @@ const Home = () => {
   // Enhanced category data with more interactivity
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
   const [isVisible, setIsVisible] = useState({});
+
 
   // Intersection Observer for animations
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1, triggerOnce: true });
@@ -65,6 +66,7 @@ const Home = () => {
       setCurrentTestimonial((prev) => (prev + 1) % 3); // Using fixed length 3 to avoid dependency issues
     }, 4000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const featuredCategories = [
@@ -248,6 +250,7 @@ const Home = () => {
         }, 20);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statsInView]);
 
   if (loading) {

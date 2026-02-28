@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+
 import ProductCard from "../../../components/ProductCard";
 import QuantitySelector from "../../../components/QuantitySelector";
 import { useLanguage } from "../../../context/LanguageContext";
+
 import "../../../App.css";
 
 import necklace from "../../../images/items/kundan-necklace.jpg";
@@ -16,7 +18,6 @@ const Shop1 = () => {
   const { language, t } = useLanguage();
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cartItems, setCartItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [notification, setNotification] = useState(null);

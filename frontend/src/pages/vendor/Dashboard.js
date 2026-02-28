@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useLanguage } from '../../context/LanguageContext';
@@ -12,7 +11,6 @@ const VendorDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('week');
   const [quickActions, setQuickActions] = useState([]);
-  const navigate = useNavigate();
 
   const periods = [
     { id: 'today', name: 'आज', icon: '📅' },
@@ -26,6 +24,7 @@ const VendorDashboard = () => {
     setupQuickActions();
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriod]);
 
   const loadDashboardData = async () => {

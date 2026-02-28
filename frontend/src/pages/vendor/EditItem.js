@@ -46,6 +46,7 @@ const EditItem = () => {
 
   useEffect(() => {
     loadItemData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemId]);
 
   const loadItemData = async () => {
@@ -112,17 +113,6 @@ const EditItem = () => {
         [field]: ''
       }));
     }
-  };
-
-  const handleNestedInputChange = (parent, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [parent]: {
-        ...prev[parent],
-        [field]: value
-      }
-    }));
-    setHasChanges(true);
   };
 
   const handleArrayInputChange = (field, value, action = 'add') => {
