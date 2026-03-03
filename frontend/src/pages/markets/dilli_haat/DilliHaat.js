@@ -361,3 +361,5 @@ const DilliHaat = () => {
     </React.StrictMode>
   );
 };
+
+export default DilliHaat;

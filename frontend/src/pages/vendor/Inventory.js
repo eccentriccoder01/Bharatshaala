@@ -891,3 +891,5 @@ const Inventory = () => {
     </div>
   );
 };
+
+export default Inventory;

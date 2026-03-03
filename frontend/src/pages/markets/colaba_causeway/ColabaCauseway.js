@@ -423,3 +423,5 @@ const ColabaCauseway = () => {
     </React.StrictMode>
   );
 };
+
+export default ColabaCauseway;

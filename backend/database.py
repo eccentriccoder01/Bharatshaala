@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Database configuration
-DATABASE_NAME = 'sql.db'
+DATABASE_NAME = os.environ.get('DATABASE_NAME', 'sql.db')
 
 # Initialize Bcrypt
 bcrypt = Bcrypt()

@@ -438,3 +438,5 @@ const DevarajaMarket = () => {
     </React.StrictMode>
   );
 };
+
+export default DevarajaMarket;

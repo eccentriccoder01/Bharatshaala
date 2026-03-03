@@ -12,9 +12,8 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
 
   return (
     <div className='relative'>
-      <div className={`relative transition-all duration-300 ${
-        isFocused ? 'transform scale-105' : ''
-      }`}>
+      <div className={`relative transition-all duration-300 ${isFocused ? 'transform scale-105' : ''
+        }`}>
         <input
           type="text"
           placeholder={placeholder}
@@ -28,20 +27,18 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
             setIsFocused(false);
             setTimeout(() => setShowSuggestions(false), 200);
           }}
-          className={`w-full px-6 py-4 pl-14 pr-16 rounded-full border-2 transition-all duration-300 ${
-            isFocused 
-              ? 'border-emerald-500 bg-white shadow-lg' 
+          className={`w-full px-6 py-4 pl-14 pr-16 rounded-full border-2 transition-all duration-300 ${isFocused
+              ? 'border-emerald-500 bg-white shadow-lg'
               : 'border-emerald-200 bg-white/80'
-          } focus:outline-none text-lg`}
+            } focus:outline-none text-lg`}
         />
-        
+
         {/* Search Icon */}
-        <svg 
-          className={`absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 transition-colors duration-300 ${
-            isFocused ? 'text-emerald-500' : 'text-emerald-400'
-          }`} 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          className={`absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 transition-colors duration-300 ${isFocused ? 'text-emerald-500' : 'text-emerald-400'
+            }`}
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -60,15 +57,14 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
         )}
 
         {/* Animated Border */}
-        <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
-          isFocused ? 'ring-4 ring-emerald-100' : ''
-        }`}></div>
+        <div className={`absolute inset-0 rounded-full transition-all duration-300 ${isFocused ? 'ring-4 ring-emerald-100' : ''
+          }`}></div>
       </div>
 
       {/* Suggestions Dropdown */}
       {showSuggestions && (
         <div className='absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-emerald-200 overflow-hidden z-50 animate-fade-in'>
-          
+
           {/* Popular Searches */}
           <div className='p-4 border-b border-emerald-100'>
             <h4 className='text-sm font-semibold text-emerald-800 mb-3'>लोकप्रिय खोजें</h4>
@@ -123,3 +119,5 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
     </div>
   );
 };
+
+export default SearchBar;

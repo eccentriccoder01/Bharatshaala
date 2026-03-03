@@ -259,15 +259,15 @@ const CommercialStreet = () => {
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
                   className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
-                      ? 'bg-gradient-to-br from-gray-500 to-slate-500 text-white shadow-lg scale-105'
-                      : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
+                    ? 'bg-gradient-to-br from-gray-500 to-slate-500 text-white shadow-lg scale-105'
+                    : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
                     }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-emerald-100 text-emerald-600'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-emerald-100 text-emerald-600'
                     }`}>
                     {category.count}
                   </span>
@@ -314,3 +314,5 @@ const CommercialStreet = () => {
     </React.StrictMode>
   );
 };
+
+export default CommercialStreet;

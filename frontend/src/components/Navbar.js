@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
+
 import "../App.css";
 
 const Navbar = () => {
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { language, changeLanguage, isLoading, t } = useLanguage();
+  const { theme, changeTheme } = useTheme();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,8 +111,8 @@ const Navbar = () => {
                   onClick={() => handleLanguageToggle('hi')}
                   disabled={isLoading}
                   className={`px-3 py-1 text-xs font-bold rounded-full transition-all duration-200 ${language === 'hi'
-                      ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 shadow-sm'
-                      : (scrolled ? 'text-emerald-600 hover:bg-emerald-100' : 'text-white hover:bg-white/10')
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 shadow-sm'
+                    : (scrolled ? 'text-emerald-600 hover:bg-emerald-100' : 'text-white hover:bg-white/10')
                     }`}
                 >
                   हिंदी
@@ -117,13 +121,34 @@ const Navbar = () => {
                   onClick={() => handleLanguageToggle('en')}
                   disabled={isLoading}
                   className={`px-3 py-1 text-xs font-bold rounded-full transition-all duration-200 ${language === 'en'
-                      ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 shadow-sm'
-                      : (scrolled ? 'text-emerald-600 hover:bg-emerald-100' : 'text-white hover:bg-white/10')
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 shadow-sm'
+                    : (scrolled ? 'text-emerald-600 hover:bg-emerald-100' : 'text-white hover:bg-white/10')
                     }`}
                 >
                   ENG
                 </button>
               </div>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={() => changeTheme(theme === 'light' ? 'dark' : 'light')}
+                className={`p-2 rounded-full transition-all duration-300 ${scrolled
+                  ? 'text-emerald-600 hover:bg-emerald-50'
+                  : 'text-white hover:bg-white/10'
+                  }`}
+                title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              >
+                {theme === 'light' ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.95 16.95l.707.707M7.05 7.05l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                  </svg>
+                )}
+              </button>
+
 
               {/* Markets Button */}
               <a href="/markets" className={`hidden sm:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${scrolled

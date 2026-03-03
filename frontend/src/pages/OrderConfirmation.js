@@ -333,3 +333,5 @@ const OrderConfirmation = () => {
     </div>
   );
 };
+
+export default OrderConfirmation;

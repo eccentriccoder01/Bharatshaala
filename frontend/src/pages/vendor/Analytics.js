@@ -521,3 +521,5 @@ const VendorAnalytics = () => {
     </React.StrictMode>
   );
 };
+
+export default VendorAnalytics;
