@@ -4,7 +4,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('hi'); // Default to Hindi
+  const [language, setLanguage] = useState(() => {
+    const saved = localStorage.getItem('bharatshaala_language');
+    return saved || 'hi';
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   // Language options
@@ -1367,6 +1370,14 @@ export const LanguageProvider = ({ children }) => {
       antiques: 'प्राचीन वस्तुएं',
       fashion: 'फैशन',
       cafes: 'कैफे',
+      heroCarouselTitle: 'भारतीय संस्कृति का डिजिटल बाजार',
+      heroCarouselSubtitle: 'पारंपरिक शिल्प से लेकर आधुनिक नवाचार तक, सभी कुछ एक ही स्थान पर',
+      goToSlide: 'स्लाइड {0} पर जाएं',
+      slide: 'स्लाइड {0}',
+      previousSlide: 'पिछली स्लाइड',
+      nextSlide: 'अगली स्लाइड',
+      pause: 'रोकें',
+      play: 'चलाएं',
     },
     en: {
       // Common UI
@@ -1598,6 +1609,14 @@ export const LanguageProvider = ({ children }) => {
       otpSentMsg: 'OTP sent to',
       rememberMe: 'Remember Me',
       forgotPassword: 'Forgot Password?',
+      heroCarouselTitle: 'Digital Market of Indian Culture',
+      heroCarouselSubtitle: 'From traditional crafts to modern innovations, everything in one place',
+      goToSlide: 'Go to slide {0}',
+      slide: 'Slide {0}',
+      previousSlide: 'Previous slide',
+      nextSlide: 'Next slide',
+      pause: 'Pause',
+      play: 'Play',
       loginButton: 'Log In',
       sendOtpButton: 'Send OTP',
       wait: 'Please Wait...',
