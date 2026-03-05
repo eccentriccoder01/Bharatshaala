@@ -46,7 +46,7 @@ const ShopCard = ({
       onMouseLeave={() => onHover(null)}
       onClick={onClick}
     >
-      <div className={`relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${isHovered ? 'scale-[1.02]' : ''
+      <div className={`relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${isHovered ? 'scale-[1.02]' : ''
         }`}>
 
         {/* Header Section */}
@@ -79,7 +79,7 @@ const ShopCard = ({
               </div>
               <div className='flex items-center space-x-1'>
                 <span>📦</span>
-                <span>{shop.products}+ {t('products', 'Products')}</span>
+                <span>{shop.products}+ {t('products')}</span>
               </div>
             </div>
           </div>
@@ -88,33 +88,33 @@ const ShopCard = ({
         {/* Content Section */}
         <div className='p-8'>
           {/* Specialty Description */}
-          <p className='text-gray-600 leading-relaxed mb-6 text-lg'>
+          <p className='text-gray-600 dark:text-gray-300 leading-relaxed mb-6 text-lg'>
             {displaySpecialty}
           </p>
 
           {/* Shop Details Grid */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
             {/* Owner Info */}
-            <div className='bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-              <div className='text-emerald-600 text-sm font-medium mb-1'>{t('shopOwner')}</div>
-              <div className='text-emerald-800 font-semibold'>{displayOwner}</div>
-              <div className='text-emerald-600 text-sm'>{displayExperience} {t('experience')}</div>
+            <div className='bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+              <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium mb-1'>{t('shopOwner')}</div>
+              <div className='text-emerald-800 dark:text-emerald-200 font-semibold'>{displayOwner}</div>
+              <div className='text-emerald-600 dark:text-emerald-400 text-sm'>{displayExperience} {t('experience')}</div>
             </div>
 
             {/* Timing Info */}
-            <div className={`bg-${themeColors.secondary}-50 rounded-xl p-4 border border-${themeColors.secondary}-200`}>
-              <div className={`text-${themeColors.secondary}-600 text-sm font-medium mb-1`}>{t('openingHours')}</div>
-              <div className={`text-${themeColors.secondary}-800 font-semibold`}>{displayTimings}</div>
-              <div className={`text-${themeColors.secondary}-600 text-sm`}>{t('openDaily')}</div>
+            <div className={`bg-${themeColors.secondary}-50 dark:bg-${themeColors.secondary}-900/30 rounded-xl p-4 border border-${themeColors.secondary}-200 dark:border-${themeColors.secondary}-700`}>
+              <div className={`text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 text-sm font-medium mb-1`}>{t('openingHours')}</div>
+              <div className={`text-${themeColors.secondary}-800 dark:text-${themeColors.secondary}-200 font-semibold`}>{displayTimings}</div>
+              <div className={`text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 text-sm`}>{t('openDaily')}</div>
             </div>
           </div>
 
           {/* Specialty Items */}
           <div className='mb-6'>
-            <h4 className='text-sm font-semibold text-gray-700 mb-3'>{t('specialtyItems')}:</h4>
+            <h4 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>{t('specialtyItems')}:</h4>
             <div className='flex flex-wrap gap-2'>
               {displayItems?.slice(0, 5).map((item, idx) => (
-                <span key={idx} className='bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm border border-orange-200 flex items-center space-x-1'>
+                <span key={idx} className='bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 text-orange-700 dark:text-orange-400 px-3 py-1 rounded-full text-sm border border-orange-200 dark:border-orange-700 flex items-center space-x-1'>
                   <span>✨</span>
                   <span>{item}</span>
                 </span>
@@ -126,10 +126,10 @@ const ShopCard = ({
           <div className='grid grid-cols-2 gap-4 mb-6'>
             {/* Languages */}
             <div>
-              <h5 className='text-xs font-semibold text-gray-600 mb-2'>{t('languages')}:</h5>
+              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>{t('languages')}:</h5>
               <div className='flex flex-wrap gap-1'>
                 {displayLanguages?.map((lang, idx) => (
-                  <span key={idx} className='bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs'>
+                  <span key={idx} className='bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs'>
                     {lang}
                   </span>
                 ))}
@@ -138,10 +138,10 @@ const ShopCard = ({
 
             {/* Payment Methods */}
             <div>
-              <h5 className='text-xs font-semibold text-gray-600 mb-2'>{t('payment')}:</h5>
+              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>{t('payment')}:</h5>
               <div className='flex flex-wrap gap-1'>
                 {displayPayment?.map((method, idx) => (
-                  <span key={idx} className='bg-green-100 text-green-700 px-2 py-1 rounded text-xs'>
+                  <span key={idx} className='bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-1 rounded text-xs'>
                     {method}
                   </span>
                 ))}
@@ -152,13 +152,13 @@ const ShopCard = ({
           {/* Services */}
           <div className='flex flex-wrap gap-3 mb-6'>
             {shop.delivery_available && (
-              <div className='flex items-center space-x-2 bg-green-50 text-green-700 px-3 py-2 rounded-full border border-green-200'>
+              <div className='flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-2 rounded-full border border-green-200 dark:border-green-700'>
                 <span>🚚</span>
                 <span className='text-sm font-medium'>{t('homeDelivery')}</span>
               </div>
             )}
             {shop.wholesale_available && (
-              <div className='flex items-center space-x-2 bg-purple-50 text-purple-700 px-3 py-2 rounded-full border border-purple-200'>
+              <div className='flex items-center space-x-2 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 px-3 py-2 rounded-full border border-purple-200 dark:border-purple-700'>
                 <span>📦</span>
                 <span className='text-sm font-medium'>{t('wholesale')}</span>
               </div>
@@ -169,7 +169,7 @@ const ShopCard = ({
           <div className={`flex items-center justify-between transition-all duration-300 ${isHovered ? 'transform translate-x-2' : ''
             }`}>
             <div className='flex items-center space-x-3'>
-              <span className='text-emerald-600 font-semibold group-hover:text-emerald-700'>
+              <span className='text-emerald-600 dark:text-emerald-400 font-semibold group-hover:text-emerald-700 dark:group-hover:text-emerald-300'>
                 {t('visitShop')}
               </span>
               <div className='flex items-center space-x-1'>
@@ -182,7 +182,7 @@ const ShopCard = ({
             {/* Quick Actions */}
             <div className='flex items-center space-x-2'>
               <button
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
                 title={language === 'hi' ? "फोन करें" : "Call"}
                 onClick={(e) => {
                   e.preventDefault();
@@ -193,7 +193,7 @@ const ShopCard = ({
                 📞
               </button>
               <button
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
                 title={language === 'hi' ? "दिशा" : "Direction"}
                 onClick={(e) => {
                   e.preventDefault();
@@ -204,7 +204,7 @@ const ShopCard = ({
                 📍
               </button>
               <button
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
                 title={language === 'hi' ? "शेयर करें" : "Share"}
                 onClick={(e) => {
                   e.preventDefault();

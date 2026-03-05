@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
@@ -17,7 +16,7 @@ const Checkout = () => {
   const { post } = useAPI();
   const { showSuccess, showError } = useNotification();
   const { deliveryAddress, setDeliveryFromCurrentLocation } = useGeolocation();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -39,31 +38,31 @@ const Checkout = () => {
   const [orderData, setOrderData] = useState(null);
 
   const steps = [
-    { id: 1, name: 'पता', icon: '📍' },
-    { id: 2, name: 'डिलीवरी', icon: '🚚' },
-    { id: 3, name: 'भुगतान', icon: '💳' },
-    { id: 4, name: 'पुष्टि', icon: '✅' }
+    { id: 1, name: t('address'), icon: '📍' },
+    { id: 2, name: t('delivery'), icon: '🚚' },
+    { id: 3, name: t('payment'), icon: '💳' },
+    { id: 4, name: t('confirmation'), icon: '✅' }
   ];
 
   const deliveryOptions = [
     {
       id: 'standard',
-      name: 'स्टैंडर्ड डिलीवरी',
-      description: '5-7 कार्यदिवस',
+      name: t('standardDelivery'),
+      description: `5-7 ${t('days')}`,
       price: 0,
       icon: '📦'
     },
     {
       id: 'express',
-      name: 'एक्सप्रेस डिलीवरी',
-      description: '2-3 कार्यदिवस',
+      name: t('expressDelivery'),
+      description: `2-3 ${t('days')}`,
       price: 99,
       icon: '⚡'
     },
     {
       id: 'same_day',
-      name: 'सेम डे डिलीवरी',
-      description: 'आज ही (चुनिंदा शहरों में)',
+      name: t('sameDayDelivery'),
+      description: t('today'),
       price: 199,
       icon: '🏃'
     }
@@ -85,7 +84,6 @@ const Checkout = () => {
 
   const loadAddresses = async () => {
     try {
-      // In real app, this would be an API call
       const savedAddresses = JSON.parse(localStorage.getItem('user_addresses') || '[]');
       setAddresses(savedAddresses);
 
@@ -99,7 +97,7 @@ const Checkout = () => {
 
   const handleAddAddress = async () => {
     if (!newAddress.name || !newAddress.phone || !newAddress.addressLine1 || !newAddress.city || !newAddress.pincode) {
-      showError('कृपया सभी आवश्यक फील्ड भरें');
+      showError(t('fillAllFields'));
       return;
     }
 
@@ -126,22 +124,21 @@ const Checkout = () => {
       type: 'home'
     });
 
-    showSuccess('पता सफलतापूर्वक जोड़ा गया');
+    showSuccess(t('addressAdded'));
   };
 
   const handleStepComplete = () => {
     if (currentStep === 1 && !selectedAddress) {
-      showError('कृपया डिलीवरी पता चुनें');
+      showError(t('selectAddressError'));
       return;
     }
 
     if (currentStep === 2 && !deliveryOption) {
-      showError('कृपया डिलीवरी विकल्प चुनें');
+      showError(t('selectDeliveryError'));
       return;
     }
 
     if (currentStep === 3) {
-      // Prepare order and show payment
       prepareOrder();
       return;
     }
@@ -189,56 +186,55 @@ const Checkout = () => {
         orderDate: new Date().toISOString()
       };
 
-      // Create order
       const response = await post('/orders', orderWithPayment);
 
       if (response.success) {
         clearCart();
-        showSuccess('ऑर्डर सफलतापूर्वक प्लेस हो गया!');
+        showSuccess(t('orderPlaced'));
         navigate(`/order-confirmation/${response.orderId}`);
       }
     } catch (error) {
-      showError('ऑर्डर प्लेस करने में त्रुटि');
+      showError(t('orderError'));
     } finally {
       setLoading(false);
     }
   };
 
   const handlePaymentFailure = (error) => {
-    showError('भुगतान असफल। कृपया पुनः प्रयास करें।');
+    showError(t('paymentError'));
     setShowPaymentGateway(false);
   };
 
   if (loading) {
-    return <LoadingSpinner message={language === 'hi' ? "ऑर्डर प्रोसेस हो रहा है..." : "Processing order..."} />;
+    return <LoadingSpinner message={t('processingOrder')} />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 pt-20">
       <div className="max-w-6xl mx-auto px-6 py-8">
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-emerald-800 mb-4">चेकआउट</h1>
+          <h1 className="text-4xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">{t('checkout')}</h1>
 
           {/* Progress Steps */}
-          <div className="flex items-center justify-between bg-white rounded-2xl p-6 shadow-lg">
+          <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
                 <div className={`flex items-center justify-center w-12 h-12 rounded-full ${currentStep >= step.id
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-200 text-gray-500'
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
                   }`}>
                   {currentStep > step.id ? '✓' : step.icon}
                 </div>
                 <div className="ml-3">
-                  <p className={`font-medium ${currentStep >= step.id ? 'text-emerald-600' : 'text-gray-500'
+                  <p className={`font-medium ${currentStep >= step.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'
                     }`}>
                     {step.name}
                   </p>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-200'
+                  <div className={`w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-600'
                     }`} />
                 )}
               </div>
@@ -253,8 +249,8 @@ const Checkout = () => {
 
             {/* Step 1: Address Selection */}
             {currentStep === 1 && (
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-emerald-800 mb-6">डिलीवरी पता</h2>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">{t('deliveryAddress')}</h2>
 
                 {/* Existing Addresses */}
                 {addresses.length > 0 && (
@@ -263,23 +259,23 @@ const Checkout = () => {
                       <div
                         key={address.id}
                         className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${selectedAddress?.id === address.id
-                          ? 'border-emerald-500 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300'
+                            ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                           }`}
                         onClick={() => setSelectedAddress(address)}
                       >
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-semibold text-emerald-800">{address.name}</h3>
-                            <p className="text-gray-600">{address.phone}</p>
-                            <p className="text-gray-700 mt-1">
+                            <h3 className="font-semibold text-emerald-800 dark:text-emerald-200">{address.name}</h3>
+                            <p className="text-gray-600 dark:text-gray-300">{address.phone}</p>
+                            <p className="text-gray-700 dark:text-gray-300 mt-1">
                               {address.addressLine1}, {address.addressLine2 && `${address.addressLine2}, `}
                               {address.city}, {address.state} - {address.pincode}
                             </p>
                           </div>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${address.type === 'home' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${address.type === 'home' ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' : 'bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400'
                             }`}>
-                            {address.type === 'home' ? '🏠 घर' : '🏢 ऑफिस'}
+                            {address.type === 'home' ? `🏠 ${t('home')}` : `🏢 ${t('office')}`}
                           </span>
                         </div>
                       </div>
@@ -290,71 +286,71 @@ const Checkout = () => {
                 {/* Add New Address */}
                 <button
                   onClick={() => setShowAddAddress(!showAddAddress)}
-                  className="w-full p-4 border-2 border-dashed border-emerald-300 rounded-xl text-emerald-600 hover:border-emerald-500 hover:bg-emerald-50 transition-all duration-200"
+                  className="w-full p-4 border-2 border-dashed border-emerald-300 dark:border-emerald-700 rounded-xl text-emerald-600 dark:text-emerald-400 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-all duration-200"
                 >
-                  + नया पता जोड़ें
+                  + {t('addNewAddress')}
                 </button>
 
                 {showAddAddress && (
-                  <div className="mt-6 p-6 bg-emerald-50 rounded-xl">
-                    <h3 className="font-semibold text-emerald-800 mb-4">नया पता</h3>
+                  <div className="mt-6 p-6 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl">
+                    <h3 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-4">{t('newAddress')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <input
                         type="text"
-                        placeholder="नाम *"
+                        placeholder={`${t('name')} *`}
                         value={newAddress.name}
                         onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="tel"
-                        placeholder="फोन नंबर *"
+                        placeholder={`${t('phone')} *`}
                         value={newAddress.phone}
                         onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="text"
-                        placeholder="पता लाइन 1 *"
+                        placeholder={`${t('addressLine1')} *`}
                         value={newAddress.addressLine1}
                         onChange={(e) => setNewAddress({ ...newAddress, addressLine1: e.target.value })}
-                        className="md:col-span-2 px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="md:col-span-2 px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="text"
-                        placeholder="पता लाइन 2"
+                        placeholder={t('addressLine2')}
                         value={newAddress.addressLine2}
                         onChange={(e) => setNewAddress({ ...newAddress, addressLine2: e.target.value })}
-                        className="md:col-span-2 px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="md:col-span-2 px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="text"
-                        placeholder="शहर *"
+                        placeholder={`${t('city')} *`}
                         value={newAddress.city}
                         onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="text"
-                        placeholder="राज्य"
+                        placeholder={t('state')}
                         value={newAddress.state}
                         onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <input
                         type="text"
-                        placeholder="पिनकोड *"
+                        placeholder={`${t('pincode')} *`}
                         value={newAddress.pincode}
                         onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       />
                       <select
                         value={newAddress.type}
                         onChange={(e) => setNewAddress({ ...newAddress, type: e.target.value })}
-                        className="px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none"
+                        className="px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none dark:bg-gray-700 dark:text-white"
                       >
-                        <option value="home">घर</option>
-                        <option value="office">ऑफिस</option>
+                        <option value="home">{t('home')}</option>
+                        <option value="office">{t('office')}</option>
                       </select>
                     </div>
                     <div className="flex space-x-3 mt-4">
@@ -362,13 +358,13 @@ const Checkout = () => {
                         onClick={handleAddAddress}
                         className="bg-emerald-500 text-white px-6 py-2 rounded-lg hover:bg-emerald-600 transition-colors duration-200"
                       >
-                        सहेजें
+                        {t('save')}
                       </button>
                       <button
                         onClick={() => setShowAddAddress(false)}
-                        className="border border-emerald-500 text-emerald-600 px-6 py-2 rounded-lg hover:bg-emerald-50 transition-colors duration-200"
+                        className="border border-emerald-500 dark:border-emerald-400 text-emerald-600 dark:text-emerald-400 px-6 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors duration-200"
                       >
-                        रद्द करें
+                        {t('cancel')}
                       </button>
                     </div>
                   </div>
@@ -378,16 +374,16 @@ const Checkout = () => {
 
             {/* Step 2: Delivery Options */}
             {currentStep === 2 && (
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-emerald-800 mb-6">डिलीवरी विकल्प</h2>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">{t('deliveryOptions')}</h2>
 
                 <div className="space-y-4">
                   {deliveryOptions.map((option) => (
                     <div
                       key={option.id}
                       className={`p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 ${deliveryOption === option.id
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-emerald-300'
+                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                         }`}
                       onClick={() => setDeliveryOption(option.id)}
                     >
@@ -395,13 +391,13 @@ const Checkout = () => {
                         <div className="flex items-center space-x-4">
                           <span className="text-2xl">{option.icon}</span>
                           <div>
-                            <h3 className="font-semibold text-emerald-800">{option.name}</h3>
-                            <p className="text-gray-600">{option.description}</p>
+                            <h3 className="font-semibold text-emerald-800 dark:text-emerald-200">{option.name}</h3>
+                            <p className="text-gray-600 dark:text-gray-300">{option.description}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-emerald-800">
-                            {option.price === 0 ? 'मुफ्त' : `₹${option.price}`}
+                          <p className="font-bold text-emerald-800 dark:text-emerald-200">
+                            {option.price === 0 ? t('free') : `₹${option.price}`}
                           </p>
                         </div>
                       </div>
@@ -413,21 +409,21 @@ const Checkout = () => {
 
             {/* Step 3: Payment Method */}
             {currentStep === 3 && (
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <h2 className="text-2xl font-bold text-emerald-800 mb-6">भुगतान विधि</h2>
-                <p className="text-gray-600 mb-6">
-                  अगले स्टेप में आप अपनी पसंदीदा भुगतान विधि चुन सकेंगे।
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                <h2 className="text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">{t('paymentMethod')}</h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  {t('paymentRedirectMsg')}
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {['UPI', 'Cards', 'NetBanking', 'Wallets'].map((method) => (
-                    <div key={method} className="p-4 border border-gray-200 rounded-lg text-center">
+                  {['UPI', t('cards'), t('netBanking'), t('wallets')].map((method) => (
+                    <div key={method} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg text-center">
                       <div className="text-2xl mb-2">
                         {method === 'UPI' ? '📱' :
-                          method === 'Cards' ? '💳' :
-                            method === 'NetBanking' ? '🏦' : '💰'}
+                          method === t('cards') ? '💳' :
+                            method === t('netBanking') ? '🏦' : '💰'}
                       </div>
-                      <p className="text-sm text-gray-600">{method}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{method}</p>
                     </div>
                   ))}
                 </div>
@@ -441,7 +437,7 @@ const Checkout = () => {
                   onClick={() => setCurrentStep(currentStep - 1)}
                   className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200"
                 >
-                  पिछला
+                  {t('previous')}
                 </button>
               )}
 
@@ -449,14 +445,14 @@ const Checkout = () => {
                 onClick={handleStepComplete}
                 className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-colors duration-200 ml-auto"
               >
-                {currentStep === 3 ? 'भुगतान करें' : 'अगला'}
+                {currentStep === 3 ? t('payNow') : t('next')}
               </button>
             </div>
           </div>
 
           {/* Order Summary Sidebar */}
-          <div className="bg-white rounded-2xl p-6 shadow-lg h-fit">
-            <h3 className="text-xl font-bold text-emerald-800 mb-6">ऑर्डर सारांश</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg h-fit">
+            <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-6">{t('orderSummary')}</h3>
 
             <div className="space-y-4 mb-6">
               {items.map((item) => (
@@ -467,27 +463,27 @@ const Checkout = () => {
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   <div className="flex-1">
-                    <h4 className="font-medium text-emerald-800 line-clamp-2">{item.name}</h4>
-                    <p className="text-gray-600">मात्रा: {item.quantity}</p>
+                    <h4 className="font-medium text-emerald-800 dark:text-emerald-200 line-clamp-2">{item.name}</h4>
+                    <p className="text-gray-600 dark:text-gray-300">{t('quantity')}: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold text-emerald-800">
+                  <p className="font-semibold text-emerald-800 dark:text-emerald-200">
                     ₹{(item.price * item.quantity).toLocaleString()}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-gray-200 pt-4 space-y-2">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
               <div className="flex justify-between">
-                <span>उत्पाद राशि:</span>
+                <span>{t('productTotal')}:</span>
                 <span>₹{getCartSummary().subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span>डिलीवरी:</span>
+                <span>{t('delivery')}:</span>
                 <span>
                   {deliveryOption ?
                     (deliveryOptions.find(opt => opt.id === deliveryOption)?.price === 0 ?
-                      'मुफ्त' :
+                      t('free') :
                       `₹${deliveryOptions.find(opt => opt.id === deliveryOption)?.price}`
                     ) :
                     '₹0'
@@ -495,13 +491,13 @@ const Checkout = () => {
                 </span>
               </div>
               {getCartSummary().discount > 0 && (
-                <div className="flex justify-between text-green-600">
-                  <span>छूट:</span>
+                <div className="flex justify-between text-green-600 dark:text-green-400">
+                  <span>{t('discount')}:</span>
                   <span>-₹{getCartSummary().discount.toLocaleString()}</span>
                 </div>
               )}
-              <div className="border-t border-gray-200 pt-2 flex justify-between text-lg font-bold text-emerald-800">
-                <span>कुल राशि:</span>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between text-lg font-bold text-emerald-800 dark:text-emerald-200">
+                <span>{t('totalAmount')}:</span>
                 <span>
                   ₹{(
                     getCartSummary().total +

@@ -97,7 +97,7 @@ const Signup = () => {
     const isPasswordValid = Object.values(requirements).every(req => req);
     setValidations(prev => ({ ...prev, validPassword: isPasswordValid }));
 
-    return isPasswordValid ? '' : t('passwordRequirementsNotMet'); // Consider adding this key or handling differently
+    return isPasswordValid ? '' : t('passwordRequirementsNotMet');
   };
 
   const validatePhoneNumber = (phoneNumber) => {
@@ -231,27 +231,20 @@ const Signup = () => {
 
   return (
     <React.StrictMode>
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 pt-20">
         <div className="max-w-2xl mx-auto px-6 py-8">
 
           {/* Header */}
           <div className="text-center mb-8">
-            <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200'>
+            <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200 dark:border-emerald-700'>
               <span className='text-2xl'>🌟</span>
-              <span className='text-emerald-800 font-bold'>{t('congrats')}</span>
-              {/* Using 'congrats' might not be best for 'New Member' context, maybe add 'newMember' key? 
-                  Original was 'Naya Sadasya' (New Member). 'congrats' is 'Badhai ho'. 
-                  Let's use 'signUpTitle' or similar for now or stick to 'congrats' if it fits generally.
-                  Actually, original was 'Naya Sadasya'. Let's use 'joinUs' or similar if available, or just 'welcome'.
-                  Wait, looking at keys... I did not add 'newMember'. I'll use 'welcome' for now or just generic.
-                  Actually better to swap this to specific text.
-              */}
+              <span className='text-emerald-800 dark:text-emerald-300 font-bold'>{t('newMember')}</span>
             </div>
 
             <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-700 to-green-600 bg-clip-text text-transparent mb-4">
               {t('signUpTitle')}
             </h1>
-            <p className="text-emerald-600 text-lg whitespace-pre-line">
+            <p className="text-emerald-600 dark:text-emerald-400 text-lg whitespace-pre-line">
               {t('signUpSubtitle')}
             </p>
           </div>
@@ -261,18 +254,18 @@ const Signup = () => {
             <div className="flex items-center space-x-4">
               {steps.map((step, index) => (
                 <React.Fragment key={step.id}>
-                  <div className={`flex flex-col items-center ${currentStep >= step.id ? 'text-emerald-600' : 'text-gray-400'
+                  <div className={`flex flex-col items-center ${currentStep >= step.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'
                     }`}>
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300 ${currentStep >= step.id
                       ? 'bg-emerald-500 text-white border-emerald-500'
-                      : 'bg-white border-gray-300'
+                      : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
                       }`}>
                       {currentStep > step.id ? '✓' : step.icon}
                     </div>
                     <span className="text-sm font-medium mt-2">{step.title}</span>
                   </div>
                   {index < steps.length - 1 && (
-                    <div className={`w-16 h-1 rounded transition-all duration-300 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300'
+                    <div className={`w-16 h-1 rounded transition-all duration-300 ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'
                       }`}></div>
                   )}
                 </React.Fragment>
@@ -281,19 +274,19 @@ const Signup = () => {
           </div>
 
           {/* Form */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-emerald-200">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-emerald-200 dark:border-gray-700">
 
             {/* Step 1: Account Type */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-emerald-800 text-center mb-6">
-                  {t('accountType')}
+                <h3 className="text-2xl font-bold text-emerald-800 dark:text-emerald-300 text-center mb-6">
+                  {t('selectAccountType')}
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${formData.accountType === 'customer'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-emerald-200 hover:border-emerald-300'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30'
+                    : 'border-emerald-200 dark:border-gray-600 hover:border-emerald-300'
                     }`}>
                     <input
                       type="radio"
@@ -305,16 +298,16 @@ const Signup = () => {
                     />
                     <div className="text-center">
                       <div className="text-4xl mb-3">🛍️</div>
-                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">{t('customer')}</h4>
-                      <p className="text-emerald-600 text-sm">
+                      <h4 className="text-lg font-semibold text-emerald-800 dark:text-emerald-300 mb-2">{t('customer')}</h4>
+                      <p className="text-emerald-600 dark:text-emerald-400 text-sm">
                         {t('customerDesc')}
                       </p>
                     </div>
                   </label>
 
                   <label className={`cursor-pointer border-2 rounded-xl p-6 transition-all duration-300 ${formData.accountType === 'vendor'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-emerald-200 hover:border-emerald-300'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30'
+                    : 'border-emerald-200 dark:border-gray-600 hover:border-emerald-300'
                     }`}>
                     <input
                       type="radio"
@@ -326,8 +319,8 @@ const Signup = () => {
                     />
                     <div className="text-center">
                       <div className="text-4xl mb-3">🏪</div>
-                      <h4 className="text-lg font-semibold text-emerald-800 mb-2">{t('vendor')}</h4>
-                      <p className="text-emerald-600 text-sm">
+                      <h4 className="text-lg font-semibold text-emerald-800 dark:text-emerald-300 mb-2">{t('vendor')}</h4>
+                      <p className="text-emerald-600 dark:text-emerald-400 text-sm">
                         {t('vendorDesc')}
                       </p>
                     </div>
@@ -337,7 +330,7 @@ const Signup = () => {
                 {/* Vendor Invitation Code */}
                 {formData.accountType === "vendor" && (
                   <div className="mt-6">
-                    <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                    <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                       {t('invitationCode')}
                     </label>
                     <input
@@ -346,8 +339,8 @@ const Signup = () => {
                       onChange={(e) => handleInputChange('invitationCode', e.target.value)}
                       className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.invitationCode
                         ? 'border-red-300 focus:border-red-500'
-                        : 'border-emerald-200 focus:border-emerald-500'
-                        } focus:outline-none bg-white text-lg`}
+                        : 'border-emerald-200 dark:border-gray-600 focus:border-emerald-500'
+                        } focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg`}
                       placeholder={t('invitationCodePlaceholder')}
                     />
                     {errors.invitationCode && (
@@ -369,13 +362,13 @@ const Signup = () => {
             {/* Step 2: Personal Information */}
             {currentStep === 2 && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-emerald-800 text-center mb-6">
+                <h3 className="text-2xl font-bold text-emerald-800 dark:text-emerald-300 text-center mb-6">
                   {t('personalInfo')}
                 </h3>
 
                 {/* Name */}
                 <div>
-                  <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                  <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                     {t('fullName')}
                   </label>
                   <input
@@ -384,8 +377,8 @@ const Signup = () => {
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.name
                       ? 'border-red-300 focus:border-red-500'
-                      : 'border-emerald-200 focus:border-emerald-500'
-                      } focus:outline-none bg-white text-lg`}
+                      : 'border-emerald-200 dark:border-gray-600 focus:border-emerald-500'
+                      } focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg`}
                     placeholder={t('fullNamePlaceholder')}
                   />
                   {errors.name && (
@@ -395,7 +388,7 @@ const Signup = () => {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                  <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                     {t('emailAddress')}
                   </label>
                   <input
@@ -404,8 +397,8 @@ const Signup = () => {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.email
                       ? 'border-red-300 focus:border-red-500'
-                      : 'border-emerald-200 focus:border-emerald-500'
-                      } focus:outline-none bg-white text-lg`}
+                      : 'border-emerald-200 dark:border-gray-600 focus:border-emerald-500'
+                      } focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg`}
                     placeholder={t('emailAddressPlaceholder')}
                   />
                   {errors.email && (
@@ -415,7 +408,7 @@ const Signup = () => {
 
                 {/* Phone Number */}
                 <div>
-                  <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                  <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                     {t('phoneNumber')}
                   </label>
                   <PhoneInput
@@ -449,14 +442,14 @@ const Signup = () => {
                 {/* OTP Verification */}
                 {otpSent && (
                   <div>
-                    <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                    <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                       {t('otpLabel')}
                     </label>
                     <input
                       type="text"
                       value={otp}
                       onChange={(e) => setOTP(e.target.value)}
-                      className="w-full px-4 py-4 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none bg-white text-lg text-center tracking-widest"
+                      className="w-full px-4 py-4 border-2 border-emerald-200 dark:border-gray-600 rounded-xl focus:border-emerald-500 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg text-center tracking-widest"
                       placeholder={t('otpPlaceholder')}
                       maxLength={6}
                     />
@@ -468,7 +461,7 @@ const Signup = () => {
 
                 {/* Password */}
                 <div>
-                  <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                  <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                     {t('password')}
                   </label>
                   <div className="relative">
@@ -476,7 +469,7 @@ const Signup = () => {
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="w-full px-4 py-4 pr-12 border-2 border-emerald-200 rounded-xl focus:border-emerald-500 focus:outline-none bg-white text-lg"
+                      className="w-full px-4 py-4 pr-12 border-2 border-emerald-200 dark:border-gray-600 rounded-xl focus:border-emerald-500 focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg"
                       placeholder={t('passwordPlaceholder')}
                     />
                     <button
@@ -497,7 +490,7 @@ const Signup = () => {
                       uppercase: t('passwordCriteria.uppercase'),
                       lowercase: t('passwordCriteria.lowercase')
                     }).map(([key, text]) => (
-                      <p key={key} className={`text-sm flex items-center ${passwordRequirements[key] ? 'text-green-600' : 'text-gray-500'
+                      <p key={key} className={`text-sm flex items-center ${passwordRequirements[key] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
                         }`}>
                         <span className="mr-2">{passwordRequirements[key] ? '✅' : '⭕'}</span>
                         {text}
@@ -508,7 +501,7 @@ const Signup = () => {
 
                 {/* Repeat Password */}
                 <div>
-                  <label className="block text-emerald-800 font-semibold text-lg mb-2">
+                  <label className="block text-emerald-800 dark:text-emerald-300 font-semibold text-lg mb-2">
                     {t('repeatPassword')}
                   </label>
                   <input
@@ -517,8 +510,8 @@ const Signup = () => {
                     onChange={(e) => handleInputChange('repeatPassword', e.target.value)}
                     className={`w-full px-4 py-4 border-2 rounded-xl transition-all duration-300 ${errors.repeatPassword
                       ? 'border-red-300 focus:border-red-500'
-                      : 'border-emerald-200 focus:border-emerald-500'
-                      } focus:outline-none bg-white text-lg`}
+                      : 'border-emerald-200 dark:border-gray-600 focus:border-emerald-500'
+                      } focus:outline-none bg-white dark:bg-gray-700 dark:text-gray-100 text-lg`}
                     placeholder={t('repeatPasswordPlaceholder')}
                   />
                   {errors.repeatPassword && (
@@ -529,7 +522,7 @@ const Signup = () => {
                 <div className="flex space-x-4">
                   <button
                     onClick={prevStep}
-                    className="flex-1 border-2 border-emerald-500 text-emerald-600 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-50 transition-all duration-300"
+                    className="flex-1 border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-50 dark:hover:bg-gray-700 transition-all duration-300"
                   >
                     {t('back')}
                   </button>
@@ -553,16 +546,16 @@ const Signup = () => {
             {currentStep === 3 && (
               <div className="text-center space-y-6">
                 <div className="text-6xl mb-4">🎉</div>
-                <h3 className="text-3xl font-bold text-emerald-800 mb-4">
+                <h3 className="text-3xl font-bold text-emerald-800 dark:text-emerald-300 mb-4">
                   {t('congrats')}
                 </h3>
-                <p className="text-xl text-emerald-600 mb-8 whitespace-pre-line">
+                <p className="text-xl text-emerald-600 dark:text-emerald-400 mb-8 whitespace-pre-line">
                   {t('accountCreated')}
                 </p>
 
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-8">
-                  <h4 className="font-semibold text-emerald-800 mb-3">{t('yourInfo')}</h4>
-                  <div className="space-y-2 text-emerald-700">
+                <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-xl p-6 mb-8">
+                  <h4 className="font-semibold text-emerald-800 dark:text-emerald-300 mb-3">{t('yourInfo')}</h4>
+                  <div className="space-y-2 text-emerald-700 dark:text-emerald-300">
                     <p><strong>{t('name')}:</strong> {formData.name}</p>
                     <p><strong>{t('emailAddress')}:</strong> {formData.email}</p>
                     <p><strong>{t('accountType')}:</strong> {formData.accountType === 'customer' ? t('customer') : t('vendor')}</p>
@@ -580,27 +573,27 @@ const Signup = () => {
 
             {/* General Error */}
             {errors.general && (
-              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <p className="text-red-600 text-center">{errors.general}</p>
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl">
+                <p className="text-red-600 dark:text-red-400 text-center">{errors.general}</p>
               </div>
             )}
           </div>
 
           {/* Login Link */}
           <div className="text-center mt-8">
-            <p className="text-emerald-600 mb-4">
+            <p className="text-emerald-600 dark:text-emerald-400 mb-4">
               {t('alreadyHaveAccount')}
             </p>
             <a
               href="/login"
-              className="text-emerald-600 hover:text-emerald-700 font-semibold text-lg border-b-2 border-transparent hover:border-emerald-600 transition-all duration-300"
+              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold text-lg border-b-2 border-transparent hover:border-emerald-600 transition-all duration-300"
             >
               {t('loginLink')}!
             </a>
           </div>
         </div>
       </div>
-    </React.StrictMode>
+    </React.StrictMode >
   );
 };
 

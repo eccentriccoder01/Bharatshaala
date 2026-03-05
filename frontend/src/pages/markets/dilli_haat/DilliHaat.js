@@ -1,16 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import ShopCard from '../../../components/ShopCard';
 import '../../../App.css';
-
 import map from '../../../images/markets/dilli_haat_map.jpg';
 
 const DilliHaat = () => {
   const [loading, setLoading] = useState(true);
-  const [selectedShop, setSelectedShop] = useState(null);
   const [hoveredShop, setHoveredShop] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const navigate = useNavigate();
@@ -187,13 +184,21 @@ const DilliHaat = () => {
     established: '1994',
     totalShops: 200,
     totalVendors: 200,
-    specialties: ['हस्तशिल्प', 'टेक्सटाइल', 'फूड', 'आर्ट', 'इको प्रोडक्ट्स'],
-    specialtiesEn: ['Handicrafts', 'Textiles', 'Food', 'Art', 'Eco Products'],
-    openingHours: '10:30 AM - 10:00 PM',
+    specialties: language === 'hi'
+      ? ['हस्तशिल्प', 'टेक्सटाइल', 'फूड', 'आर्ट', 'इको प्रोडक्ट्स']
+      : ['Handicrafts', 'Textiles', 'Food', 'Art', 'Eco Products'],
+    openingHours: language === 'hi' ? 'सुबह 10:30 - रात 10:00' : '10:30 AM - 10:00 PM',
     bestTime: language === 'hi' ? 'पूरे साल' : 'All year round',
-    nearbyAttractions: ['INA Market', 'Lodhi Gardens', 'India Habitat Centre', 'Safdarjung Tomb'],
-    transport: ['मेट्रो: INA', 'DTC बस', 'ऑटो रिक्शा', 'टैक्सी'],
-    parkingAvailable: true
+    nearbyAttractions: language === 'hi'
+      ? ['INA मार्केट', 'लोधी गार्डन', 'इंडिया हैबिटेट सेंटर', 'सफदरजंग मकबरा']
+      : ['INA Market', 'Lodhi Gardens', 'India Habitat Centre', 'Safdarjung Tomb'],
+    transport: language === 'hi'
+      ? ['मेट्रो: INA', 'DTC बस', 'ऑटो रिक्शा', 'टैक्सी']
+      : ['Metro: INA', 'DTC Bus', 'Auto Rickshaw', 'Taxi'],
+    parkingAvailable: true,
+    history: language === 'hi'
+      ? 'भारत सरकार द्वारा स्थापित यह हाट देश के सभी राज्यों की कला और संस्कृति का केंद्र है।'
+      : 'Established by the Government of India, this Haat is a hub for art and culture from all states of the country.'
   };
 
   const categories = [
@@ -215,24 +220,26 @@ const DilliHaat = () => {
 
   return (
     <React.StrictMode>
-      <div className='min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20'>
+      <div className='min-h-screen bg-gradient-to-br from-emerald-50 dark:from-gray-900 via-green-50 dark:via-gray-900 to-emerald-100 dark:to-gray-800 pt-20'>
         {/* Hero Section with unique Dilli Haat theme */}
         <div className='relative overflow-hidden'>
           <div className='max-w-6xl mx-auto px-6 py-16 relative z-10'>
             <div className='text-center mb-16'>
-              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-orange-100 to-red-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-orange-200'>
+              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-orange-100 dark:from-orange-900/30 to-red-100 dark:to-red-900/30 rounded-full px-6 py-3 mb-6 shadow-lg border border-orange-200 dark:border-orange-700'>
                 <span className='text-2xl'>🇮🇳</span>
-                <span className='text-orange-800 font-bold'>{t('miniIndia')}</span>
+                <span className='text-orange-800 dark:text-orange-200 font-bold'>
+                  {language === 'hi' ? 'भारत का मिनी इंडिया' : t('miniIndia')}
+                </span>
               </div>
 
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-red-500 to-orange-700 bg-clip-text text-transparent mb-4 pt-4 leading-tight'>
                 {language === 'hi' ? marketInfo.nameHindi : marketInfo.name}
               </h1>
-              <h2 className='text-2xl md:text-3xl text-emerald-700 font-semibold mb-6'>
-                {language === 'hi' ? `Dilli Haat, ${marketInfo.cityHindi}` : `Dilli Haat, ${marketInfo.city}`}
+              <h2 className='text-2xl md:text-3xl text-emerald-700 dark:text-emerald-300 font-semibold mb-6'>
+                Dilli Haat, {language === 'hi' ? marketInfo.cityHindi : marketInfo.city}
               </h2>
 
-              <p className='text-xl text-emerald-600 max-w-4xl mx-auto leading-relaxed mb-8'>
+              <p className='text-xl text-emerald-600 dark:text-emerald-400 max-w-4xl mx-auto leading-relaxed mb-8'>
                 {language === 'hi'
                   ? 'भारत सरकार का एक अनूठा प्रयास - जहाँ पूरे देश की कला, संस्कृति और स्वाद एक ही छत के नीचे मिलते हैं। यहाँ हर राज्य के कारीगर अपने हुनर का प्रदर्शन करते हैं। गुजरात से असम तक, राजस्थान से केरल तक - सभी की अनूठी विरासत यहाँ संजोई गई है।'
                   : 'A unique initiative by the Government of India - where art, culture and taste of the whole country meet under one roof. Here artisans from every state display their skills. From Gujarat to Assam, from Rajasthan to Kerala - everyone\'s unique heritage is preserved here.'
@@ -240,21 +247,29 @@ const DilliHaat = () => {
               </p>
 
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12'>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200'>
-                  <div className='text-2xl font-bold text-orange-600'>{marketInfo.established}</div>
-                  <div className='text-orange-600 text-sm font-medium'>{t('established')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200 dark:border-orange-700'>
+                  <div className='text-2xl font-bold text-orange-600 dark:text-orange-400'>{marketInfo.established}</div>
+                  <div className='text-orange-600 dark:text-orange-400 text-sm font-medium'>
+                    {language === 'hi' ? 'स्थापना' : t('established')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200'>
-                  <div className='text-2xl font-bold text-orange-600'>{marketInfo.totalShops.toLocaleString()}+</div>
-                  <div className='text-orange-600 text-sm font-medium'>{t('totalShops')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200 dark:border-orange-700'>
+                  <div className='text-2xl font-bold text-orange-600 dark:text-orange-400'>{marketInfo.totalShops.toLocaleString()}+</div>
+                  <div className='text-orange-600 dark:text-orange-400 text-sm font-medium'>
+                    {language === 'hi' ? 'स्टॉल्स' : t('totalShops')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200'>
-                  <div className='text-2xl font-bold text-orange-600'>28</div>
-                  <div className='text-orange-600 text-sm font-medium'>{t('stateRepresentation')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200 dark:border-orange-700'>
+                  <div className='text-2xl font-bold text-orange-600 dark:text-orange-400'>28</div>
+                  <div className='text-orange-600 dark:text-orange-400 text-sm font-medium'>
+                    {language === 'hi' ? 'राज्य प्रतिनिधित्व' : t('stateRepresentation')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200'>
-                  <div className='text-2xl font-bold text-orange-600'>31</div>
-                  <div className='text-orange-600 text-sm font-medium'>{t('yearsOld')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200 dark:border-orange-700'>
+                  <div className='text-2xl font-bold text-orange-600 dark:text-orange-400'>31</div>
+                  <div className='text-orange-600 dark:text-orange-400 text-sm font-medium'>
+                    {language === 'hi' ? 'साल पुराना' : t('yearsOld')}
+                  </div>
                 </div>
               </div>
             </div>
@@ -265,7 +280,9 @@ const DilliHaat = () => {
         <div className='max-w-7xl mx-auto px-6 mb-16'>
           <div className='bg-gradient-to-r from-orange-600 to-red-600 rounded-3xl p-12 text-white'>
             <div className='text-center mb-8'>
-              <h3 className='text-3xl font-bold mb-4'>{t('govtInitiative')}</h3>
+              <h3 className='text-3xl font-bold mb-4'>
+                {language === 'hi' ? 'सरकारी पहल' : t('govtInitiative')}
+              </h3>
               <p className='text-xl text-orange-100 max-w-3xl mx-auto'>
                 {language === 'hi'
                   ? 'हस्तशिल्प निकास संवर्धन परिषद (EPCH) द्वारा संचालित यह हाट कारीगरों को सीधे ग्राहकों से जोड़ता है'
@@ -275,25 +292,41 @@ const DilliHaat = () => {
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🎯</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('mission')}</h4>
-                <p className='text-orange-100 text-sm'>{t('directMarket')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'मिशन' : t('mission')}
+                </h4>
+                <p className='text-orange-100 text-sm'>
+                  {language === 'hi' ? 'कारीगरों को प्रत्यक्ष बाज़ार' : t('directMarket')}
+                </p>
               </div>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🌍</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('globalReach')}</h4>
-                <p className='text-orange-100 text-sm'>{t('touristHub')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'वैश्विक पहुंच' : t('globalReach')}
+                </h4>
+                <p className='text-orange-100 text-sm'>
+                  {language === 'hi' ? 'अंतर्राष्ट्रीय पर्यटकों का केंद्र' : t('touristHub')}
+                </p>
               </div>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>💰</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('economicEmpowerment')}</h4>
-                <p className='text-orange-100 text-sm'>{t('artisanLivelihood')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'आर्थिक सशक्तिकरण' : t('economicEmpowerment')}
+                </h4>
+                <p className='text-orange-100 text-sm'>
+                  {language === 'hi' ? 'कारीगरों की आजीविका' : t('artisanLivelihood')}
+                </p>
               </div>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🏆</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('quality')}</h4>
-                <p className='text-orange-100 text-sm'>{t('certifiedProducts')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'गुणवत्ता' : t('quality')}
+                </h4>
+                <p className='text-orange-100 text-sm'>
+                  {language === 'hi' ? 'प्रमाणित उत्पाद' : t('certifiedProducts')}
+                </p>
               </div>
             </div>
           </div>
@@ -301,23 +334,25 @@ const DilliHaat = () => {
 
         {/* Category Filter */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
-          <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
-            <h3 className='text-xl font-bold text-emerald-800 mb-4 text-center'>{t('stallCategories')}</h3>
+          <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
+            <h3 className='text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4 text-center'>
+              {language === 'hi' ? 'स्टॉल श्रेणियां' : t('stallCategories')}
+            </h3>
             <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3'>
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
                   className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
-                    ? 'bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-lg scale-105'
-                    : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
+                      ? 'bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-lg scale-105'
+                      : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
                     }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
-                    ? 'bg-white/20 text-white'
-                    : 'bg-emerald-100 text-emerald-600'
+                      ? 'bg-white/20 dark:bg-gray-800/20 text-white'
+                      : 'bg-emerald-100 dark:bg-gray-800 text-emerald-600 dark:text-emerald-400'
                     }`}>
                     {category.count}
                   </span>
@@ -330,9 +365,14 @@ const DilliHaat = () => {
         {/* Shops Grid */}
         <div className='max-w-7xl mx-auto px-6 pb-20'>
           <div className='text-center mb-12'>
-            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 mb-4'>{t('keyStalls')}</h3>
-            <p className='text-xl text-emerald-600'>
-              {t('artCulture')}
+            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 dark:text-emerald-200 mb-4'>
+              {language === 'hi' ? 'मुख्य स्टॉल्स' : t('keyStalls')}
+            </h3>
+            <p className='text-xl text-emerald-600 dark:text-emerald-400'>
+              {language === 'hi'
+                ? 'भारत के विभिन्न राज्यों की कला और संस्कृति'
+                : t('artCulture') || 'Different states of India, all in one place'
+              }
             </p>
           </div>
 
@@ -352,10 +392,51 @@ const DilliHaat = () => {
           ) : (
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 mb-2'>{t('noStallsFound')}</h3>
-              <p className='text-emerald-600'>{t('noStallsCategory')}</p>
+              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>
+                {language === 'hi' ? 'कोई स्टॉल नहीं मिला' : t('noStallsFound')}
+              </h3>
+              <p className='text-emerald-600 dark:text-emerald-400'>
+                {language === 'hi' ? 'इस श्रेणी में कोई स्टॉल उपलब्ध नहीं है' : t('noStallsCategory')}
+              </p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Interactive Map Section */}
+      <div className='max-w-7xl mx-auto px-6 mb-16'>
+        <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
+          <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6 text-center flex items-center justify-center space-x-3'>
+            <span>🗺️</span>
+            <span>{language === 'hi' ? 'दिल्ली हाट का नक्शा' : t('marketMap')}</span>
+          </h3>
+          <div className='relative flex justify-center'>
+            <img
+              src={map}
+              alt='Dilli Haat Map'
+              className='rounded-2xl w-full max-w-4xl shadow-lg hover:scale-105 transition-transform duration-500'
+            />
+          </div>
+          <div className='mt-8 grid grid-cols-1 md:grid-cols-3 gap-6'>
+            <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+              <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                ⏰ {language === 'hi' ? 'समय' : t('openingHours')}
+              </h4>
+              <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.openingHours}</p>
+            </div>
+            <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+              <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                🌤️ {language === 'hi' ? 'बेस्ट टाइम' : t('bestTime')}
+              </h4>
+              <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.bestTime}</p>
+            </div>
+            <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+              <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                🚇 {language === 'hi' ? 'मेट्रो' : 'Metro'}
+              </h4>
+              <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.transport[0]}</p>
+            </div>
+          </div>
         </div>
       </div>
     </React.StrictMode>

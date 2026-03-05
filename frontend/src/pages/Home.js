@@ -29,10 +29,8 @@ const Home = () => {
   // Enhanced category data with more interactivity
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
+  // eslint-disable-next-line no-unused-vars
   const [isVisible, setIsVisible] = useState({});
-
-
   // Intersection Observer for animations
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1, triggerOnce: true });
   const { ref: categoriesRef, inView: categoriesInView } = useInView({ threshold: 0.1, triggerOnce: true });
@@ -264,17 +262,17 @@ const Home = () => {
         {/* Dynamic Multi-Layer Background */}
         <div className="fixed inset-0 z-0">
           {/* Primary animated gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 animate-gradient-shift"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 animate-gradient-shift"></div>
 
           {/* Secondary overlay with pattern */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-300/40 via-transparent to-green-400/40 animate-gradient-shift-reverse"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-300/40 via-transparent to-green-400/40 dark:from-gray-800/40 dark:to-gray-700/40 animate-gradient-shift-reverse"></div>
 
           {/* Animated geometric shapes */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-green-500/30 rounded-full blur-3xl animate-blob"></div>
-            <div className="absolute top-20 right-0 w-80 h-80 bg-gradient-to-bl from-green-400/40 to-emerald-600/40 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-            <div className="absolute bottom-0 left-20 w-72 h-72 bg-gradient-to-tr from-emerald-500/35 to-green-400/35 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
-            <div className="absolute bottom-20 right-20 w-64 h-64 bg-gradient-to-tl from-green-300/30 to-emerald-500/30 rounded-full blur-3xl animate-blob animation-delay-6000"></div>
+            <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-400/30 to-green-500/30 dark:from-gray-700/30 dark:to-gray-600/30 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute top-20 right-0 w-80 h-80 bg-gradient-to-bl from-green-400/40 to-emerald-600/40 dark:from-gray-700/40 dark:to-gray-600/40 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+            <div className="absolute bottom-0 left-20 w-72 h-72 bg-gradient-to-tr from-emerald-500/35 to-green-400/35 dark:from-gray-700/35 dark:to-gray-600/35 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+            <div className="absolute bottom-20 right-20 w-64 h-64 bg-gradient-to-tl from-green-300/30 to-emerald-500/30 dark:from-gray-700/30 dark:to-gray-600/30 rounded-full blur-3xl animate-blob animation-delay-6000"></div>
           </div>
 
           {/* Subtle texture overlay */}
@@ -365,9 +363,9 @@ const Home = () => {
               <div className='flex flex-col sm:flex-row gap-6 justify-center items-center mb-20'>
                 <a
                   href='/markets'
-                  className='group relative bg-white/20 backdrop-blur-md text-white border-2 border-white/50 px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-emerald-600 hover:shadow-2xl hover:shadow-white/50 transform hover:scale-110 transition-all duration-500 flex items-center space-x-3 overflow-hidden'
+                  className='group relative bg-white/20 backdrop-blur-md text-white border-2 border-white/50 px-10 py-5 rounded-full font-bold text-lg hover:bg-white dark:hover:bg-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-2xl hover:shadow-white/50 transform hover:scale-110 transition-all duration-500 flex items-center space-x-3 overflow-hidden'
                 >
-                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-white dark:bg-gray-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <span className="relative z-10">🏪 {t('startJourney')}</span>
                   <svg className="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -483,7 +481,7 @@ const Home = () => {
         {/* Enhanced Featured Markets Section */}
         <div ref={marketsRef} className='relative py-20 overflow-hidden z-20'>
           {/* Background with Pattern */}
-          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }}></div>
@@ -521,7 +519,7 @@ const Home = () => {
             <div className='text-center mt-16'>
               <a
                 href='/markets'
-                className='group inline-flex items-center space-x-3 bg-white/20 backdrop-blur-md border-2 border-white/50 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-emerald-600 hover:shadow-2xl hover:shadow-white/50 transform hover:scale-105 transition-all duration-500'
+                className='group inline-flex items-center space-x-3 bg-white/20 backdrop-blur-md border-2 border-white/50 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white dark:hover:bg-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-2xl hover:shadow-white/50 transform hover:scale-105 transition-all duration-500'
               >
                 <span>{t('discoverAllMarkets')}</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -533,7 +531,7 @@ const Home = () => {
         </div>
 
         {/* Customer Testimonials */}
-        <div className='py-20 bg-white/10 backdrop-blur-md relative z-20'>
+        <div className='py-20 bg-white/10 dark:bg-gray-800/20 backdrop-blur-md relative z-20'>
           <div className='max-w-6xl mx-auto px-6'>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
@@ -586,7 +584,7 @@ const Home = () => {
 
         {/* Enhanced Newsletter Section */}
         <div className='relative py-20 overflow-hidden z-20'>
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-800/30 via-green-700/30 to-emerald-800/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-800/30 via-green-700/30 to-emerald-800/30 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50"></div>
           <div className="absolute inset-0 opacity-20" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30l15-15v30l-15-15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }}></div>
@@ -604,10 +602,10 @@ const Home = () => {
             <div className='flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-8'>
               <input
                 type="email"
-                placeholder={t('emailPlaceholder')}
-                className="flex-1 px-6 py-4 rounded-full border-none focus:outline-none focus:ring-4 focus:ring-white/50 text-lg shadow-2xl bg-white/90 backdrop-blur-md"
+                placeholder={t('emailPlaceholder') || 'Enter your email'}
+                className='flex-1 px-6 py-4 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300'
               />
-              <button className='bg-white text-emerald-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center space-x-2'>
+              <button className='bg-white dark:bg-gray-200 text-emerald-600 dark:text-emerald-400 px-8 py-4 rounded-full font-bold text-lg hover:bg-white/90 dark:hover:bg-gray-300 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center space-x-2'>
                 <span>{t('subscribe')}</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -622,7 +620,7 @@ const Home = () => {
         </div>
 
         {/* Enhanced Values Section */}
-        <div className='py-20 bg-white/10 backdrop-blur-md relative z-20'>
+        <div className='py-20 bg-white/10 dark:bg-gray-800/20 backdrop-blur-md relative z-20'>
           <div className='max-w-7xl mx-auto px-6'>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg pb-6 pt-6">
@@ -682,12 +680,12 @@ const Home = () => {
           33% { transform: translateY(-20px) rotate(5deg); }
           66% { transform: translateY(10px) rotate(-3deg); }
         }
-        
+
         @keyframes bounce-slow {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
         }
-        
+
         @keyframes gradient-x {
           0%, 100% { background-size: 200% 200%; background-position: left center; }
           50% { background-size: 200% 200%; background-position: right center; }
@@ -716,15 +714,15 @@ const Home = () => {
           0%, 100% { text-shadow: 0 0 20px rgba(255,255,255,0.5), 0 0 30px rgba(255,255,255,0.3), 0 0 40px rgba(255,255,255,0.1); }
           50% { text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.5), 0 0 50px rgba(255,255,255,0.3); }
         }
-        
+
         .animate-float {
           animation: float 8s ease-in-out infinite;
         }
-        
+
         .animate-bounce-slow {
           animation: bounce-slow 4s ease-in-out infinite;
         }
-        
+
         .animate-gradient-x {
           animation: gradient-x 3s ease infinite;
         }
@@ -762,31 +760,31 @@ const Home = () => {
         .animation-delay-1000 {
           animation-delay: 1s;
         }
-        
+
         .bg-size-200 {
           background-size: 200% 200%;
         }
-        
+
         .typewriter-container {
           height: 80px;
           overflow: hidden;
         }
-        
+
         .typewriter-text {
           display: inline-block;
           animation: typewriter 4s steps(60) infinite;
         }
-        
+
         @keyframes typewriter {
           0% { width: 0; }
           50% { width: 100%; }
           100% { width: 0; }
         }
-        
+
         .shadow-3xl {
           box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
         }
-        
+
         .border-3 {
           border-width: 3px;
         }

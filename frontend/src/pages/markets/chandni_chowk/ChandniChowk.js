@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../../components/LoadingSpinner';
@@ -162,6 +161,10 @@ const ChandniChowk = () => {
   ];
 
   const marketInfo = {
+    name: 'Chandni Chowk',
+    nameHindi: 'चांदनी चौक',
+    city: 'Delhi',
+    cityHindi: 'नई दिल्ली',
     established: '1650',
     totalShops: 9000,
     totalVendors: 350,
@@ -197,7 +200,7 @@ const ChandniChowk = () => {
 
   return (
     <React.StrictMode>
-      <div className='min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20'>
+      <div className='min-h-screen bg-gradient-to-br from-emerald-50 dark:from-gray-900 via-green-50 dark:via-gray-900 to-emerald-100 dark:to-gray-800 pt-20'>
 
         {/* Hero Section */}
         <div className='relative overflow-hidden'>
@@ -212,39 +215,52 @@ const ChandniChowk = () => {
           <div className='max-w-6xl mx-auto px-6 py-16 relative z-10'>
             <div className='text-center mb-16'>
               {/* Historical Badge */}
-              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-amber-200'>
+              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 dark:from-amber-900/30 to-orange-100 dark:to-orange-900/30 rounded-full px-6 py-3 mb-6 shadow-lg border border-amber-200 dark:border-amber-700'>
                 <span className='text-2xl'>🏛️</span>
-                <span className='text-amber-800 font-bold'>{t('market_chandni_chowk_hero_title')}</span>
+                <span className='text-amber-800 dark:text-amber-200 font-bold'>
+                  {language === 'hi' ? 'मुगल काल से' : t('market_chandni_chowk_hero_title')}
+                </span>
               </div>
 
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-red-600 via-orange-500 to-red-700 bg-clip-text text-transparent mb-4 leading-tight'>
-                {t('market_chandni_chowk')}
+                {language === 'hi' ? marketInfo.nameHindi : t('market_chandni_chowk')}
               </h1>
-              <h2 className='text-2xl md:text-3xl text-emerald-700 font-semibold mb-6'>
-                {t('market_chandni_chowk_subtitle')}
+              <h2 className='text-2xl md:text-3xl text-emerald-700 dark:text-emerald-300 font-semibold mb-6'>
+                {language === 'hi' ? `Chandni Chowk, ${marketInfo.cityHindi}` : t('market_chandni_chowk_subtitle')}
               </h2>
 
-              <p className='text-xl text-emerald-600 max-w-4xl mx-auto leading-relaxed mb-8'>
-                {t('market_chandni_chowk_desc')}
+              <p className='text-xl text-emerald-600 dark:text-emerald-400 max-w-4xl mx-auto leading-relaxed mb-8'>
+                {language === 'hi'
+                  ? 'भारत के सबसे पुराने और व्यस्त बाजारों में से एक, इसकी संकरी गलियों और भीड़भाड़ के माहौल की खोज करें। मुगल सम्राट शाहजहाँ द्वारा बसाया गया यह बाजार आज भी अपनी पुरानी रौनक बनाए हुए है। यहाँ आपको मसालों की सुगंध, चांदी के गहनों की चमक और पारंपरिक मिठाइयों का स्वाद मिलेगा।'
+                  : t('market_chandni_chowk_desc')
+                }
               </p>
 
               {/* Market Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12'>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
-                  <div className='text-2xl font-bold text-red-600'>{marketInfo.established}</div>
-                  <div className='text-red-600 text-sm font-medium'>{t('established')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-red-200 dark:border-red-700'>
+                  <div className='text-2xl font-bold text-red-600 dark:text-red-400'>{marketInfo.established}</div>
+                  <div className='text-red-600 dark:text-red-400 text-sm font-medium'>
+                    {language === 'hi' ? 'स्थापना' : t('established')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
-                  <div className='text-2xl font-bold text-red-600'>{marketInfo.totalShops.toLocaleString()}+</div>
-                  <div className='text-red-600 text-sm font-medium'>{t('totalShops')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-red-200 dark:border-red-700'>
+                  <div className='text-2xl font-bold text-red-600 dark:text-red-400'>{marketInfo.totalShops.toLocaleString()}+</div>
+                  <div className='text-red-600 dark:text-red-400 text-sm font-medium'>
+                    {language === 'hi' ? 'कुल दुकानें' : t('totalShops')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
-                  <div className='text-2xl font-bold text-red-600'>{marketInfo.totalVendors}+</div>
-                  <div className='text-red-600 text-sm font-medium'>{t('totalVendors')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-red-200 dark:border-red-700'>
+                  <div className='text-2xl font-bold text-red-600 dark:text-red-400'>{marketInfo.totalVendors}+</div>
+                  <div className='text-red-600 dark:text-red-400 text-sm font-medium'>
+                    {language === 'hi' ? 'विक्रेता' : t('totalVendors')}
+                  </div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-red-200'>
-                  <div className='text-2xl font-bold text-red-600'>375</div>
-                  <div className='text-red-600 text-sm font-medium'>{t('yearsOld')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-red-200 dark:border-red-700'>
+                  <div className='text-2xl font-bold text-red-600 dark:text-red-400'>375</div>
+                  <div className='text-red-600 dark:text-red-400 text-sm font-medium'>
+                    {language === 'hi' ? 'साल पुराना' : t('yearsOld')}
+                  </div>
                 </div>
               </div>
             </div>
@@ -253,10 +269,10 @@ const ChandniChowk = () => {
 
         {/* Interactive Map Section */}
         <div className='max-w-7xl mx-auto px-6 mb-16'>
-          <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
-            <h3 className='text-2xl font-bold text-emerald-800 mb-6 text-center flex items-center justify-center space-x-3'>
+          <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
+            <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6 text-center flex items-center justify-center space-x-3'>
               <span>🗺️</span>
-              <span>{t('market_map_title')}</span>
+              <span>{language === 'hi' ? 'चांदनी चौक का नक्शा' : t('market_map_title')}</span>
             </h3>
             <div className='relative flex justify-center'>
               <img
@@ -265,26 +281,42 @@ const ChandniChowk = () => {
                 className='rounded-2xl w-full max-w-4xl shadow-lg hover:scale-105 transition-transform duration-500'
               />
               <div className='absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-medium'>
-                🚇 Metro: Chandni Chowk
+                {language === 'hi' ? '🚇 मेट्रो: चांदनी चौक' : '🚇 Metro: Chandni Chowk'}
               </div>
             </div>
 
             {/* Market Info */}
             <div className='mt-8 grid grid-cols-1 md:grid-cols-3 gap-6'>
-              <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>⏰ {t('openingHours')}</h4>
-                <p className='text-emerald-700'>{marketInfo.openingHours}</p>
-                <p className='text-emerald-600 text-sm mt-1'>{t('openDaily') || 'Open Daily'}</p>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  ⏰ {language === 'hi' ? 'समय' : t('openingHours')}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.openingHours}</p>
+                <p className='text-emerald-600 dark:text-emerald-400 text-sm mt-1'>
+                  {language === 'hi' ? 'सोमवार से रविवार' : (t('openDaily') || 'Open Daily')}
+                </p>
               </div>
-              <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>🌤️ {t('bestTime')}</h4>
-                <p className='text-emerald-700'>{t('bestTimeValue')}</p>
-                <p className='text-emerald-600 text-sm mt-1'>{t('weatherDesc')}</p>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  🌤️ {language === 'hi' ? 'बेस्ट टाइम' : t('bestTime')}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>
+                  {language === 'hi' ? marketInfo.bestTime : t('bestTimeValue')}
+                </p>
+                <p className='text-emerald-600 dark:text-emerald-400 text-sm mt-1'>
+                  {language === 'hi' ? 'ठंडा मौसम' : t('weatherDesc')}
+                </p>
               </div>
-              <div className='text-center bg-emerald-50 rounded-xl p-4 border border-emerald-200'>
-                <h4 className='font-semibold text-emerald-800 mb-2'>🅿️ {t('parking')}</h4>
-                <p className='text-emerald-700'>{t('parkingAvailable')}</p>
-                <p className='text-emerald-600 text-sm mt-1'>{t('parkingType')}</p>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  🅿️ {language === 'hi' ? 'पार्किंग' : t('parking')}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>
+                  {language === 'hi' ? 'उपलब्ध' : (t('parkingAvailable') || 'Available')}
+                </p>
+                <p className='text-emerald-600 dark:text-emerald-400 text-sm mt-1'>
+                  {language === 'hi' ? 'मेट्रो पार्किंग' : (t('parkingType') || 'Metro Parking')}
+                </p>
               </div>
             </div>
           </div>
@@ -292,23 +324,25 @@ const ChandniChowk = () => {
 
         {/* Category Filter */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
-          <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
-            <h3 className='text-xl font-bold text-emerald-800 mb-4 text-center'>{t('shopCategories')}</h3>
+          <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
+            <h3 className='text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4 text-center'>
+              {language === 'hi' ? 'दुकान श्रेणियां' : t('shopCategories')}
+            </h3>
             <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3'>
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
                   className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
-                    ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
-                    : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-200 hover:border-emerald-300'
+                      ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
+                      : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
                     }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
-                    ? 'bg-white/20 text-white'
-                    : 'bg-emerald-100 text-emerald-600'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
                     }`}>
                     {category.count}
                   </span>
@@ -321,11 +355,13 @@ const ChandniChowk = () => {
         {/* Shops Grid */}
         <div className='max-w-7xl mx-auto px-6 pb-20'>
           <div className='text-center mb-12'>
-            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 mb-4'>{t('featuredShops')}</h3>
-            <p className='text-xl text-emerald-600'>
+            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 dark:text-emerald-200 mb-4'>
+              {language === 'hi' ? 'प्रमुख दुकानें' : t('featuredShops')}
+            </h3>
+            <p className='text-xl text-emerald-600 dark:text-emerald-400'>
               {activeFilter === 'all'
-                ? t('allShopsDesc', 'All famous shops of Chandni Chowk')
-                : `${categories.find(c => c.id === activeFilter)?.name} Shops`
+                ? (language === 'hi' ? 'चांदनी चौक की सभी प्रसिद्ध दुकानें' : t('allShopsDesc', 'All famous shops of Chandni Chowk'))
+                : `${categories.find(c => c.id === activeFilter)?.name} ${language === 'hi' ? 'की दुकानें' : 'Shops'}`
               }
             </p>
           </div>
@@ -346,41 +382,62 @@ const ChandniChowk = () => {
           ) : (
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 mb-2'>{t('noShopsFound')}</h3>
-              <p className='text-emerald-600'>{t('noShopsFoundDesc')}</p>
+              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>
+                {language === 'hi' ? 'कोई दुकान नहीं मिली' : t('noShopsFound')}
+              </h3>
+              <p className='text-emerald-600 dark:text-emerald-400'>
+                {language === 'hi' ? 'इस श्रेणी में कोई दुकान उपलब्ध नहीं है' : t('noShopsFoundDesc')}
+              </p>
             </div>
           )}
 
           {/* Historical Information */}
           <div className='mt-20 bg-gradient-to-r from-red-600 to-orange-600 rounded-3xl p-12 text-white'>
             <div className='text-center mb-8'>
-              <h3 className='text-3xl font-bold mb-4'>{t('market_history_title')}</h3>
+              <h3 className='text-3xl font-bold mb-4'>
+                {language === 'hi' ? 'चांदनी चौक का इतिहास' : t('market_history_title')}
+              </h3>
               <p className='text-xl text-red-100 max-w-3xl mx-auto'>
-                {t('market_history_desc')}
+                {language === 'hi'
+                  ? 'मुगल सम्राट शाहजहाँ की बेटी जहांआरा बेगम द्वारा डिज़ाइन किया गया यह बाजार विश्व प्रसिद्ध है।'
+                  : t('market_history_desc')
+                }
               </p>
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🏛️</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('heritage', 'Mughal Heritage')}</h4>
-                <p className='text-red-100 text-sm'>375 {t('yearsOld')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'मुगल विरासत' : (t('heritage') || 'Mughal Heritage')}
+                </h4>
+                <p className='text-red-100 text-sm'>
+                  {language === 'hi' ? '375 साल का समृद्ध इतिहास' : `375 ${t('yearsOld')}`}
+                </p>
               </div>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🕌</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('redFort')}</h4>
-                <p className='text-red-100 text-sm'>{t('nearDistance')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'लाल किला' : t('redFort')}
+                </h4>
+                <p className='text-red-100 text-sm'>
+                  {language === 'hi' ? '500 मीटर की दूरी पर' : t('nearDistance')}
+                </p>
               </div>
-              <div className='text-center bg-white/20 backdrop-blur-sm rounded-xl p-6'>
+              <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🚇</div>
-                <h4 className='text-lg font-semibold mb-2'>{t('metroConnectivity')}</h4>
-                <p className='text-red-100 text-sm'>{t('metroLines')}</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'मेट्रो कनेक्टिविटी' : t('metroConnectivity')}
+                </h4>
+                <p className='text-red-100 text-sm'>
+                  {language === 'hi' ? 'रेड लाइन और यलो लाइन' : t('metroLines')}
+                </p>
               </div>
             </div>
 
             <div className='text-center mt-8'>
-              <button className='bg-white text-red-600 px-8 py-4 rounded-full font-semibold hover:bg-red-50 transition-colors duration-300 transform hover:scale-105'>
-                {t('knowMore')}
+              <button className='bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 px-8 py-4 rounded-full font-semibold hover:bg-red-50 dark:hover:bg-gray-700 transition-colors duration-300 transform hover:scale-105'>
+                {language === 'hi' ? 'और जानें' : t('knowMore')}
               </button>
             </div>
           </div>

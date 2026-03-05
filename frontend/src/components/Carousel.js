@@ -10,8 +10,8 @@ const Indicators = ({ images, current, onClick }) => {
         <button
           key={index}
           className={`w-3 h-3 rounded-full transition-all duration-300 ${current === index
-              ? 'bg-yellow-400 scale-125 shadow-lg'
-              : 'bg-white/60 hover:bg-white/80'
+            ? 'bg-yellow-400 scale-125 shadow-lg'
+            : 'bg-white/60 hover:bg-white/80'
             }`}
           onClick={() => onClick(index)}
           aria-label={t('goToSlide').replace('{0}', index + 1)}
@@ -57,8 +57,8 @@ const Carousel = ({ images, interval = 5000 }) => {
             <div
               key={index}
               className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === current
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-0 scale-105'
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-105'
                 }`}
             >
               <img
@@ -81,7 +81,7 @@ const Carousel = ({ images, interval = 5000 }) => {
             <p className='text-lg md:text-xl mb-6 opacity-90 animate-fade-in-delay text-white'>
               {t('heroCarouselSubtitle')}
             </p>
-            <button className='bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 animate-fade-in-delay-2'>
+            <button className='bg-gradient-to-r from-yellow-400 to-orange-400 text-emerald-900 dark:text-emerald-200 px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 animate-fade-in-delay-2'>
               {t('buyNow')}
             </button>
           </div>
@@ -131,7 +131,7 @@ const Carousel = ({ images, interval = 5000 }) => {
       </div>
 
       {/* Progress Bar */}
-      <div className='mt-4 w-full bg-gray-200 rounded-full h-1'>
+      <div className='mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1'>
         <div
           className='h-1 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full transition-all duration-300'
           style={{ width: `${((current + 1) / images.length) * 100}%` }}

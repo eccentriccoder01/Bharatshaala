@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MarketCard from '../components/MarketCard';
 import SearchBar from '../components/SearchBar';
-import FilterPanel from '../components/FilterPanel';
 import { useLanguage } from '../context/LanguageContext';
 
 import '../App.css';
@@ -29,8 +28,6 @@ const Markets = () => {
   const [sortBy, setSortBy] = useState('popular');
   const [viewMode, setViewMode] = useState('grid');
   const navigate = useNavigate();
-
-  // ... rest of your state and filter arrays remain the same ...
 
   const states = [
     { id: 'all', name: t('allStates'), nameEn: 'All States' },
@@ -59,7 +56,7 @@ const Markets = () => {
 
   useEffect(() => {
     filterAndSortMarkets();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markets, searchTerm, selectedState, selectedCategory, sortBy]);
 
   const loadMarketsData = () => {
@@ -258,7 +255,6 @@ const Markets = () => {
     setMarkets(marketData);
   };
 
-  // ... rest of your component remains the same ...
   const filterAndSortMarkets = () => {
     let filtered = markets.filter(market => {
       const matchesSearch = market.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -292,44 +288,43 @@ const Markets = () => {
   }
 
   return (
-    // ... rest of your JSX remains exactly the same ...
     <React.StrictMode>
-      <div className='min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20'>
+      <div className='min-h-screen bg-gradient-to-br from-emerald-50 dark:from-gray-900 via-green-50 dark:via-gray-900 to-emerald-100 dark:to-gray-800 pt-20'>
 
         {/* Hero Section */}
         <div className='relative overflow-hidden'>
           <div className='max-w-7xl mx-auto px-6 py-16 relative z-10'>
             <div className='text-center mb-16'>
-              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 to-green-100 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200'>
+              <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 dark:from-gray-800 to-green-100 dark:to-gray-800 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200 dark:border-emerald-700'>
                 <span className='text-2xl'>🏪</span>
-                <span className='text-emerald-800 font-bold'>{t('indianMarkets')}</span>
+                <span className='text-emerald-800 dark:text-emerald-200 font-bold'>{t('indianMarkets')}</span>
               </div>
 
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-700 via-green-600 to-emerald-800 bg-clip-text text-transparent mb-6 pt-6 leading-tight'>
                 {t('famousIndianMarkets')}
               </h1>
 
-              <p className='text-xl md:text-2xl text-emerald-700 max-w-4xl mx-auto leading-relaxed font-medium mb-12 whitespace-pre-line'>
+              <p className='text-xl md:text-2xl text-emerald-700 dark:text-emerald-300 max-w-4xl mx-auto leading-relaxed font-medium mb-12 whitespace-pre-line'>
                 {t('exploreMarketsDesc')}
               </p>
 
               {/* Quick Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto'>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200'>
-                  <div className='text-2xl font-bold text-emerald-600'>{markets.length}</div>
-                  <div className='text-emerald-600 text-sm font-medium'>{t('totalMarkets')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                  <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>{markets.length}</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalMarkets')}</div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200'>
-                  <div className='text-2xl font-bold text-emerald-600'>{markets.reduce((sum, market) => sum + market.vendors, 0)}</div>
-                  <div className='text-emerald-600 text-sm font-medium'>{t('totalVendors')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                  <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>{markets.reduce((sum, market) => sum + market.vendors, 0)}</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalVendors')}</div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200'>
-                  <div className='text-2xl font-bold text-emerald-600'>6</div>
-                  <div className='text-emerald-600 text-sm font-medium'>{t('totalStates')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                  <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>6</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalStates')}</div>
                 </div>
-                <div className='text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200'>
-                  <div className='text-2xl font-bold text-emerald-600'>4.7⭐</div>
-                  <div className='text-emerald-600 text-sm font-medium'>{t('avgRating')}</div>
+                <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                  <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>4.7⭐</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('avgRating')}</div>
                 </div>
               </div>
             </div>
@@ -338,7 +333,7 @@ const Markets = () => {
 
         {/* Search and Filters */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
-          <div className='bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
+          <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
 
             {/* Search Bar */}
             <div className='mb-6'>
@@ -354,11 +349,11 @@ const Markets = () => {
 
               {/* State Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 mb-2'>{t('filterByState')}</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('filterByState')}</label>
                 <select
                   value={selectedState}
                   onChange={(e) => setSelectedState(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none bg-white'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
                   {states.map(state => (
                     <option key={state.id} value={state.id}>{state.name}</option>
@@ -368,11 +363,11 @@ const Markets = () => {
 
               {/* Category Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 mb-2'>{t('filterByCategory')}</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('filterByCategory')}</label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none bg-white'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
                   {categories.map(category => (
                     <option key={category.id} value={category.id}>{category.name}</option>
@@ -382,11 +377,11 @@ const Markets = () => {
 
               {/* Sort Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 mb-2'>{t('sortBy')}</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('sortBy')}</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 rounded-lg focus:border-emerald-500 focus:outline-none bg-white'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
                   <option value="popular">{t('sortPopularity')}</option>
                   <option value="rating">{t('sortRating')}</option>
@@ -399,15 +394,15 @@ const Markets = () => {
 
             {/* View Mode Toggle */}
             <div className='flex justify-between items-center'>
-              <div className='text-emerald-600 font-medium'>
+              <div className='text-emerald-600 dark:text-emerald-400 font-medium'>
                 {filteredMarkets.length} {t('marketsFound')}
               </div>
-              <div className='flex bg-emerald-100 rounded-lg p-1'>
+              <div className='flex bg-emerald-100 dark:bg-gray-800 rounded-lg p-1'>
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'grid'
-                    ? 'bg-emerald-500 text-white'
-                    : 'text-emerald-600 hover:bg-emerald-200'
+                      ? 'bg-emerald-500 text-white'
+                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
                     }`}
                 >
                   ⊞ {t('gridView')}
@@ -415,8 +410,8 @@ const Markets = () => {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'list'
-                    ? 'bg-emerald-500 text-white'
-                    : 'text-emerald-600 hover:bg-emerald-200'
+                      ? 'bg-emerald-500 text-white'
+                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
                     }`}
                 >
                   ☰ {t('listView')}
@@ -446,8 +441,8 @@ const Markets = () => {
             /* No Results */
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 mb-2'>{t('noMarketsFound')}</h3>
-              <p className='text-emerald-600 mb-6'>कृपया अपना खोज शब्द या फ़िल्टर बदलें</p>
+              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>{t('noMarketsFound')}</h3>
+              <p className='text-emerald-600 dark:text-emerald-400 mb-6'>{t('noMarketsDesc')}</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
@@ -470,10 +465,10 @@ const Markets = () => {
               {t('suggestMarketDesc')}
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <button className='bg-white text-emerald-600 px-8 py-4 rounded-full font-semibold hover:bg-emerald-50 transition-colors duration-300'>
+              <button className='bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 px-8 py-4 rounded-full font-semibold hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors duration-300'>
                 {t('suggestMarketBtn')}
               </button>
-              <button className='border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-emerald-600 transition-all duration-300'>
+              <button className='border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white dark:hover:bg-gray-800 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300'>
                 {t('contactUsBtn')}
               </button>
             </div>
