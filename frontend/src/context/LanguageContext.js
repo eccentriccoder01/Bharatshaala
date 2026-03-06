@@ -1,4 +1,4 @@
-
+/* eslint-disable no-dupe-keys */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();

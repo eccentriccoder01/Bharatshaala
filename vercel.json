@@ -13,14 +13,14 @@
             "use": "@vercel/python"
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/(.*)",
-            "dest": "backend/base.py"
+            "source": "/api/(.*)",
+            "destination": "/backend/base.py"
         },
         {
-            "src": "/(.*)",
-            "dest": "/frontend/$1"
+            "source": "/((?!api).*)",
+            "destination": "/index.html"
         }
     ]
 }

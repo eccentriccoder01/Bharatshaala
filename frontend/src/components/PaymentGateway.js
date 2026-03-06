@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
+// import { useAuth } from '../hooks/useAuth';
+// import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import LoadingSpinner from './LoadingSpinner';
 import { useLanguage } from '../context/LanguageContext';
@@ -302,8 +302,8 @@ const PaymentGateway = ({
                     key={method.id}
                     onClick={() => setSelectedMethod(method.id)}
                     className={`relative p-6 border-2 rounded-2xl transition-all duration-300 text-left ${selectedMethod === method.id
-                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg scale-105'
-                        : 'border-emerald-200 dark:border-emerald-700 hover:border-emerald-300 dark:hover:border-emerald-600 hover:bg-emerald-25'
+                      ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg scale-105'
+                      : 'border-emerald-200 dark:border-emerald-700 hover:border-emerald-300 dark:hover:border-emerald-600 hover:bg-emerald-25'
                       }`}
                   >
                     {method.popular && (

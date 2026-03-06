@@ -21,6 +21,17 @@ from .admin import admin_bp
 # Import database
 from . import database
 
+class PrefixMiddleware(object):
+    def __init__(self, app, prefix=''):
+        self.app = app
+        self.prefix = prefix
+
+    def __call__(self, environ, start_response):
+        if environ['PATH_INFO'].startswith(self.prefix):
+            environ['PATH_INFO'] = environ['PATH_INFO'][len(self.prefix):]
+            environ['SCRIPT_NAME'] = self.prefix
+        return self.app(environ, start_response)
+
 def register_error_handlers(flask_app):
     @flask_app.errorhandler(429)
     def ratelimit_handler(e):
@@ -34,6 +45,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # Handle /api prefix from Vercel/proxies
+    app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix='/api')
 
     # Initialize extensions
     jwt = JWTManager(app)

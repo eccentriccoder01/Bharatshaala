@@ -20,7 +20,7 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
   });
 
   // Ensure specialties is an array
-  const specialties = market.specialties || [];
+  // const specialties = market.specialties || [];
 
   // Get language specific name and description
   const displayName = language === 'hi' ? (market.nameHindi || market.name) : market.name;
