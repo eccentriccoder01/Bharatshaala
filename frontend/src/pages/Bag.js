@@ -3,10 +3,11 @@ import axios from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import CartItem from "../components/CartItem";
 import OrderSummary from "../components/OrderSummary";
-import PaymentGateway from "../components/PaymentGateway";
+// import PaymentGateway from "../components/PaymentGateway";
 import { useLanguage } from "../context/LanguageContext"
 import "../App.css";
 
+/*
 function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script");
@@ -17,6 +18,7 @@ function loadScript(src) {
     document.body.removeChild(script);
   });
 }
+*/
 
 const Bag = () => {
   const { t, language } = useLanguage();

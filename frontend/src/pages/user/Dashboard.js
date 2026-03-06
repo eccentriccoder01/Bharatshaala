@@ -9,11 +9,11 @@ import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
-import { useNotification } from '../../context/NotificationContext';
+// import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
   const { trackEvent, trackPageView } = useAnalytics();
-  const { showSuccess, showError } = useNotification();
+  // const { /* showSuccess, showError */ } = useNotification();
   const { user } = useAuth();
   const { language } = useLanguage();
   const [loading, setLoading] = useState(true);

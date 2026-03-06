@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams /* , useNavigate */ } from 'react-router-dom';
 import { useAPI } from '../hooks/useAPI';
 import { useDebounce } from '../hooks/useDebounce';
-import { useNotification } from '../context/NotificationContext';
+// import { useNotification } from '../context/NotificationContext';
 import { useCart } from '../hooks/useCart';
 import ProductCard from '../components/ProductCard';
 import FilterPanel from '../components/FilterPanel';
@@ -10,20 +10,25 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useLanguage } from '../context/LanguageContext';
 
 const SearchResults = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  // const navigate = useNavigate();
   const { get } = useAPI();
-  const { showError } = useNotification();
+  // const { showError } = useNotification();
   const { addToCart } = useCart();
-  const { t, language } = useLanguage();
+  // const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
-  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'relevance');
-  const [viewMode, setViewMode] = useState('grid');
+  // const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
+  const [currentPage] = useState(parseInt(searchParams.get('page')) || 1);
+  // const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'relevance');
+  const [sortBy] = useState(searchParams.get('sort') || 'relevance');
+  // const [viewMode, setViewMode] = useState('grid');
+  const [viewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
@@ -41,6 +46,7 @@ const SearchResults = () => {
     if (debouncedSearchQuery) {
       performSearch();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchQuery, currentPage, sortBy, filters]);
 
   const performSearch = async () => {

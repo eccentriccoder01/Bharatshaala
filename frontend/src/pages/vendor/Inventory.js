@@ -28,6 +28,7 @@ const VendorInventory = () => {
     loadInventoryData();
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const loadInventoryData = async () => {

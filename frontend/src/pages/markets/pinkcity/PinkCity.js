@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import '../../../App.css';
@@ -8,7 +8,7 @@ import map from '../../../images/markets/jaipur_map.jpeg';
 const PinkCity = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredShop, setHoveredShop] = useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { language, t } = useLanguage();
 
   useEffect(() => {
@@ -307,8 +307,8 @@ const PinkCity = () => {
                       <a
                         href={shop.href}
                         className={`block w-full text-center py-4 rounded-xl font-semibold transition-all duration-300 ${hoveredShop === shop.id
-                            ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg transform scale-105'
-                            : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg'
+                          ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg transform scale-105'
+                          : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg'
                           }`}
                       >
                         {t('visitShop')}

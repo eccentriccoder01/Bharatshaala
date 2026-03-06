@@ -4,7 +4,7 @@ import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
 import { useNotification } from '../hooks/useNotification';
-import { useGeolocation } from '../hooks/useGeolocation';
+// import { useGeolocation } from '../hooks/useGeolocation';
 import PaymentGateway from '../components/PaymentGateway';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useLanguage } from '../context/LanguageContext';
@@ -15,8 +15,8 @@ const Checkout = () => {
   const { user, isAuthenticated } = useAuth();
   const { post } = useAPI();
   const { showSuccess, showError } = useNotification();
-  const { deliveryAddress, setDeliveryFromCurrentLocation } = useGeolocation();
-  const { language, t } = useLanguage();
+  // const { /* deliveryAddress, setDeliveryFromCurrentLocation */ } = useGeolocation();
+  const { /* language, */ t } = useLanguage();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -222,8 +222,8 @@ const Checkout = () => {
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
                 <div className={`flex items-center justify-center w-12 h-12 rounded-full ${currentStep >= step.id
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
                   }`}>
                   {currentStep > step.id ? '✓' : step.icon}
                 </div>
@@ -259,8 +259,8 @@ const Checkout = () => {
                       <div
                         key={address.id}
                         className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${selectedAddress?.id === address.id
-                            ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                            : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
+                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                           }`}
                         onClick={() => setSelectedAddress(address)}
                       >
@@ -382,8 +382,8 @@ const Checkout = () => {
                     <div
                       key={option.id}
                       className={`p-6 border-2 rounded-xl cursor-pointer transition-all duration-200 ${deliveryOption === option.id
-                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
+                        ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
                         }`}
                       onClick={() => setDeliveryOption(option.id)}
                     >

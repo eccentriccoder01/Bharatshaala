@@ -6,7 +6,7 @@ import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLanguage } from '../../context/LanguageContext';
-import { useNotification } from '../../context/NotificationContext';
+// import { useNotification } from '../../context/NotificationContext';
 
 const PaymentMethods = () => {
   const { trackEvent, trackPageView } = useAnalytics();
@@ -226,8 +226,8 @@ const PaymentMethods = () => {
                       type="button"
                       onClick={() => setSelectedType(type.id)}
                       className={`p-3 border rounded-lg text-center transition-colors duration-200 ${selectedType === type.id
-                          ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                          : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                        : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                     >
                       <div className="text-2xl mb-1">{type.icon}</div>

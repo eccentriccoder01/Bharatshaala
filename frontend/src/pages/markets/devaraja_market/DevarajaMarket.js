@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import ShopCard from '../../../components/ShopCard';
@@ -10,7 +10,7 @@ const DevarajaMarket = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredShop, setHoveredShop] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { language, t } = useLanguage();
 
   useEffect(() => {
@@ -454,15 +454,15 @@ const DevarajaMarket = () => {
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
                   className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
-                      ? 'bg-gradient-to-br from-amber-500 to-yellow-500 text-white shadow-lg scale-105'
-                      : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
+                    ? 'bg-gradient-to-br from-amber-500 to-yellow-500 text-white shadow-lg scale-105'
+                    : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
                     }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
-                      ? 'bg-white/20 dark:bg-gray-800/20 text-white'
-                      : 'bg-emerald-100 dark:bg-gray-800 text-emerald-600 dark:text-emerald-400'
+                    ? 'bg-white/20 dark:bg-gray-800/20 text-white'
+                    : 'bg-emerald-100 dark:bg-gray-800 text-emerald-600 dark:text-emerald-400'
                     }`}>
                     {category.count}
                   </span>

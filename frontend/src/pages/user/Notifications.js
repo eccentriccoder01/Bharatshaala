@@ -6,16 +6,16 @@ import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLanguage } from '../../context/LanguageContext';
-import { useNotification } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
+// import { useNotification } from '../../context/NotificationContext';
+// import { useAuth } from '../../context/AuthContext';
 import { formatRelativeTime } from '../../utils/helpers';
 
 const Notifications = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { showSuccess, showError } = useNotification();
-  const { user } = useAuth();
+  // const { showSuccess, showError } = useNotification();
+  // const { user } = useAuth();
   const { language } = useLanguage();
   const [filter, setFilter] = useState('all');
   const [selectedIds, setSelectedIds] = useState([]);
@@ -179,8 +179,8 @@ const Notifications = () => {
                     key={type.value}
                     onClick={() => setFilter(type.value)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${filter === type.value
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                       }`}
                   >
                     <span>{type.icon}</span>

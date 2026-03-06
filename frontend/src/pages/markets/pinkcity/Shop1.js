@@ -9,7 +9,7 @@ const Shop1 = () => {
   const [notification, setNotification] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
@@ -198,8 +198,8 @@ const Shop1 = () => {
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
                       className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${selectedCategory === category.id
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg scale-105'
-                          : 'bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-600 border border-emerald-200 dark:border-emerald-700'
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg scale-105'
+                        : 'bg-white dark:bg-gray-700 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-600 border border-emerald-200 dark:border-emerald-700'
                         }`}
                     >
                       <span>{category.icon}</span>
@@ -285,8 +285,8 @@ const Shop1 = () => {
                       onClick={() => SendData(item)}
                       disabled={!item.inStock}
                       className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${item.inStock
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg transform hover:scale-105'
-                          : 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg transform hover:scale-105'
+                        : 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
                         }`}
                     >
                       {item.inStock ? (language === 'hi' ? 'कार्ट में जोड़ें' : 'Add to Cart') : (language === 'hi' ? 'स्टॉक में नहीं' : 'Out of Stock')}

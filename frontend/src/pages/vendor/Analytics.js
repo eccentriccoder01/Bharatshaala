@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLanguage } from '../../context/LanguageContext';
@@ -11,9 +11,9 @@ const VendorAnalytics = () => {
   const [loading, setLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('last_30_days');
-  const [selectedMetric, setSelectedMetric] = useState('revenue');
-  const [chartData, setChartData] = useState([]);
-  const navigate = useNavigate();
+  // const [selectedMetric, setSelectedMetric] = useState('revenue');
+  // const [chartData, setChartData] = useState([]);
+  // const navigate = useNavigate();
 
   const periods = [
     { id: 'today', name: 'आज', icon: '📅' },
@@ -24,6 +24,7 @@ const VendorAnalytics = () => {
     { id: 'this_year', name: 'इस साल', icon: '🗓️' }
   ];
 
+  /*
   const metrics = [
     { id: 'revenue', name: 'राजस्व', icon: '💰', color: 'emerald' },
     { id: 'orders', name: 'ऑर्डर', icon: '📦', color: 'blue' },
@@ -31,11 +32,13 @@ const VendorAnalytics = () => {
     { id: 'views', name: 'व्यू', icon: '👁️', color: 'orange' },
     { id: 'conversion', name: 'कन्वर्शन', icon: '📊', color: 'green' }
   ];
+  */
 
   useEffect(() => {
     loadAnalyticsData();
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriod]);
 
   const loadAnalyticsData = async () => {
@@ -43,7 +46,7 @@ const VendorAnalytics = () => {
       const response = await axios.get(`/vendor/analytics?period=${selectedPeriod}`);
       if (response.data.success) {
         setAnalyticsData(response.data.analytics);
-        setChartData(response.data.chartData);
+        // setChartData(response.data.chartData);
       }
     } catch (error) {
       console.error("Analytics data fetch error:", error);
@@ -159,9 +162,11 @@ const VendorAnalytics = () => {
     return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
   };
 
+  /*
   const getGrowthColor = (growth) => {
     return growth >= 0 ? 'text-green-600' : 'text-red-600';
   };
+  */
 
   const getGrowthIcon = (growth) => {
     return growth >= 0 ? '📈' : '📉';
@@ -195,8 +200,8 @@ const VendorAnalytics = () => {
                     key={period.id}
                     onClick={() => setSelectedPeriod(period.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedPeriod === period.id
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
-                        : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700'
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
+                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700'
                       }`}
                   >
                     <span>{period.icon}</span>
@@ -351,9 +356,9 @@ const VendorAnalytics = () => {
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${index === 0 ? 'from-emerald-400 to-green-500' :
-                              index === 1 ? 'from-blue-400 to-indigo-500' :
-                                index === 2 ? 'from-purple-400 to-pink-500' :
-                                  'from-orange-400 to-red-500'
+                            index === 1 ? 'from-blue-400 to-indigo-500' :
+                              index === 2 ? 'from-purple-400 to-pink-500' :
+                                'from-orange-400 to-red-500'
                             }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100 capitalize">{item.category}</span>
                         </div>
@@ -374,11 +379,11 @@ const VendorAnalytics = () => {
                       <div key={status} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-xl">
                         <div className="flex items-center space-x-3">
                           <div className={`w-3 h-3 rounded-full ${status === 'pending' ? 'bg-yellow-500' :
-                              status === 'processing' ? 'bg-blue-500' :
-                                status === 'shipped' ? 'bg-purple-500' :
-                                  status === 'delivered' ? 'bg-green-500' :
-                                    status === 'cancelled' ? 'bg-red-500' :
-                                      'bg-orange-500'
+                            status === 'processing' ? 'bg-blue-500' :
+                              status === 'shipped' ? 'bg-purple-500' :
+                                status === 'delivered' ? 'bg-green-500' :
+                                  status === 'cancelled' ? 'bg-red-500' :
+                                    'bg-orange-500'
                             }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100 capitalize">
                             {status === 'pending' ? 'लंबित' :
@@ -446,9 +451,9 @@ const VendorAnalytics = () => {
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
-                              index === 1 ? 'bg-blue-500' :
-                                index === 2 ? 'bg-purple-500' :
-                                  index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            index === 1 ? 'bg-blue-500' :
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
                             }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100">{source.source}</span>
                         </div>
@@ -469,9 +474,9 @@ const VendorAnalytics = () => {
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
-                              index === 1 ? 'bg-blue-500' :
-                                index === 2 ? 'bg-purple-500' :
-                                  index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            index === 1 ? 'bg-blue-500' :
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
                             }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100">{location.state}</span>
                         </div>

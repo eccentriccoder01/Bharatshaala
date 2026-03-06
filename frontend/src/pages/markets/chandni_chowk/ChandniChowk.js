@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import ShopCard from '../../../components/ShopCard';
 import '../../../App.css';
@@ -9,10 +9,11 @@ import map from '../../../images/markets/chandni_map.jpeg';
 const ChandniChowk = () => {
   const { language, t } = useLanguage();
   const [loading, setLoading] = useState(true);
-  const [selectedShop, setSelectedShop] = useState(null);
+  // const [selectedShop, setSelectedShop] = useState(null);
+  // const [selectedShop] = useState(null);
   const [hoveredShop, setHoveredShop] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
@@ -334,15 +335,15 @@ const ChandniChowk = () => {
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
                   className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
-                      ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
-                      : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
+                    ? 'bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg scale-105'
+                    : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
                     }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
                   <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
                     }`}>
                     {category.count}
                   </span>

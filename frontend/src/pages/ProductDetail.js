@@ -26,10 +26,10 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [showReviews, setShowReviews] = useState(false);
+  // const [/* showReviews, setShowReviews */] = useState(false);
   const [pincode, setPincode] = useState('');
   const [deliveryInfo, setDeliveryInfo] = useState(null);
-  const [similarProducts, setSimilarProducts] = useState([]);
+  // const [/* similarProducts, setSimilarProducts */] = useState([]);
   const [activeTab, setActiveTab] = useState('description');
 
   useEffect(() => {
@@ -322,10 +322,10 @@ const ProductDetail = () => {
                       onClick={() => setSelectedVariant(variant)}
                       disabled={!variant.inStock}
                       className={`p-3 border-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedVariant?.id === variant.id
-                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
-                          : variant.inStock
-                            ? 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
-                            : 'border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-400 cursor-not-allowed'
+                        ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                        : variant.inStock
+                          ? 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
+                          : 'border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-400 cursor-not-allowed'
                         }`}
                     >
                       {variant.name}
@@ -450,8 +450,8 @@ const ProductDetail = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 px-6 py-4 text-center font-medium transition-colors duration-200 ${activeTab === tab.id
-                    ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600'
+                  ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600'
                   }`}
               >
                 <span className="mr-2">{tab.icon}</span>

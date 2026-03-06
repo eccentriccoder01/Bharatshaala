@@ -3,26 +3,25 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();
 
+const languages = [
+  { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'bn', name: 'বাংলা', flag: '🇧🇩' },
+  { code: 'te', name: 'తెలుగు', flag: '🏳️' },
+  { code: 'ta', name: 'தமிழ்', flag: '🏳️' },
+  { code: 'kn', name: 'ಕನ್ನಡ', flag: '🏳️' },
+  { code: 'gu', name: 'ગુજરાતી', flag: '🏳️' },
+  { code: 'mr', name: 'मराठी', flag: '🏳️' },
+  { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🏳️' },
+  { code: 'or', name: 'ଓଡ଼ିଆ', flag: '🏳️' }
+];
+
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
     const saved = localStorage.getItem('bharatshaala_language');
     return saved || 'hi';
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  // Language options
-  const languages = [
-    { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'bn', name: 'বাংলা', flag: '🇧🇩' },
-    { code: 'te', name: 'తెలుగు', flag: '🏳️' },
-    { code: 'ta', name: 'தமிழ்', flag: '🏳️' },
-    { code: 'kn', name: 'ಕನ್ನಡ', flag: '🏳️' },
-    { code: 'gu', name: 'ગુજરાતી', flag: '🏳️' },
-    { code: 'mr', name: 'मराठी', flag: '🏳️' },
-    { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🏳️' },
-    { code: 'or', name: 'ଓଡ଼ିଆ', flag: '🏳️' }
-  ];
 
   // Translation dictionaries
   const translations = {
@@ -445,7 +444,7 @@ export const LanguageProvider = ({ children }) => {
       savedAddresses: 'सहेजे गए पते',
       addNewAddress: 'नया पता जोड़ें',
       noSavedAddresses: 'कोई सहेजा गया पता नहीं है',
-      home: 'घर', // Note: duplicate key 'home' exists in 'Common UI', might need specific context key if different
+      homeMenu: 'घर', // Note: renamed from 'home' to avoid duplicate key warning
       office: 'ऑफिस',
       defaultAddress: 'डिफ़ॉल्ट',
       defaultAddressLabel: 'डिफ़ॉल्ट पता बनाएं',

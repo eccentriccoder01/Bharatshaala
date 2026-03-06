@@ -7,12 +7,12 @@ import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNotification } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
+// import { useAuth } from '../../context/AuthContext';
 
 const AddressBook = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { showSuccess, showError } = useNotification();
-  const { user } = useAuth();
+  // const { /* user */ } = useAuth();
   const { language } = useLanguage();
 
   const [addresses, setAddresses] = useState([]);
@@ -194,8 +194,8 @@ const AddressBook = () => {
                         type="button"
                         onClick={() => setFormData({ ...formData, type: type.value })}
                         className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors duration-200 ${formData.type === type.value
-                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                          ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                          : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                           }`}
                       >
                         <span>{type.icon}</span>

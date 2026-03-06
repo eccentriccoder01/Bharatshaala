@@ -12,8 +12,8 @@ const Wishlist = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { addToCart } = useCart();
-  const { get, post, delete: deleteItem } = useAPI();
-  const { showSuccess, showError, showInfo } = useNotification();
+  const { get, /* post, */ delete: deleteItem } = useAPI();
+  const { showSuccess, showError, /* showInfo */ } = useNotification();
 
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,10 +44,12 @@ const Wishlist = () => {
       return;
     }
     loadWishlist();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   useEffect(() => {
     filterAndSortItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wishlistItems, sortBy, filterBy]);
 
   const loadWishlist = async () => {
@@ -138,6 +140,7 @@ const Wishlist = () => {
     }
   };
 
+  /*
   const handleBulkAction = async (action) => {
     if (selectedItems.length === 0) {
       showInfo(t('selectItemsFirst'));
@@ -145,6 +148,7 @@ const Wishlist = () => {
     }
     // Implementation for bulk actions
   };
+  */
 
   const shareWishlist = () => {
     const wishlistUrl = `${window.location.origin}/shared-wishlist/${user.id}`;

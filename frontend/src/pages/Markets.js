@@ -18,7 +18,7 @@ import dilliHaatImg from '../images/markets/dilli_haat.png';
 
 
 const Markets = () => {
-  const { t, language } = useLanguage();
+  const { t /* , language */ } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [markets, setMarkets] = useState([]);
   const [filteredMarkets, setFilteredMarkets] = useState([]);
@@ -401,8 +401,8 @@ const Markets = () => {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'grid'
-                      ? 'bg-emerald-500 text-white'
-                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
                     }`}
                 >
                   ⊞ {t('gridView')}
@@ -410,8 +410,8 @@ const Markets = () => {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'list'
-                      ? 'bg-emerald-500 text-white'
-                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
                     }`}
                 >
                   ☰ {t('listView')}
