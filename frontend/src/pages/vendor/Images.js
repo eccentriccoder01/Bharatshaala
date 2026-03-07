@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import ImageUploader from "../../components/ImageUploader";
 import "../../App.css";
@@ -144,17 +146,17 @@ const VendorImages = () => {
   const filterAndSortImages = () => {
     let filtered = images.filter(image => {
       const matchesSearch = image.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           image.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           image.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+        image.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        image.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+
       const matchesCategory = selectedCategory === 'all' || image.category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
 
     // Sort images
     filtered.sort((a, b) => {
-      switch(sortBy) {
+      switch (sortBy) {
         case 'recent':
           return new Date(b.uploadDate) - new Date(a.uploadDate);
         case 'oldest':
@@ -195,78 +197,78 @@ const VendorImages = () => {
     }
   };
 
-	const handleBulkAction = async (action) => {
-	if (selectedImages.length === 0) {
-		console.warn('No images selected for bulk action');
-		return;
-	}
+  const handleBulkAction = async (action) => {
+    if (selectedImages.length === 0) {
+      console.warn('No images selected for bulk action');
+      return;
+    }
 
-	try {
-		switch (action) {
-		case 'delete':
-			if (window.confirm(`क्या आप वाकई ${selectedImages.length} छवियां हटाना चाहते हैं?`)) {
-			await axios.delete('/vendor/images/bulk-delete', {
-				data: { imageIds: selectedImages }
-			});
-			loadImages();
-			setSelectedImages([]);
-			console.log(`Successfully deleted ${selectedImages.length} images`);
-			}
-			break;
-			
-		case 'download':
-			// Create zip and download
-			console.log(`Starting download of ${selectedImages.length} images`);
-			window.open(`/vendor/images/bulk-download?ids=${selectedImages.join(',')}`);
-			break;
-			
-		case 'make-public':
-			await axios.patch('/vendor/images/bulk-visibility', {
-			imageIds: selectedImages,
-			isPublic: true
-			});
-			loadImages();
-			console.log(`Made ${selectedImages.length} images public`);
-			break;
-			
-		case 'make-private':
-			await axios.patch('/vendor/images/bulk-visibility', {
-			imageIds: selectedImages,
-			isPublic: false
-			});
-			loadImages();
-			console.log(`Made ${selectedImages.length} images private`);
-			break;
-			
-		default:
-			console.warn(`Unknown bulk action: ${action}`);
-			alert(`अज्ञात कार्य: ${action}. कृपया पुनः प्रयास करें।`);
-			return;
-		}
-	} catch (error) {
-		console.error('Bulk action failed:', error);
-		
-		// More specific error handling based on action
-		const errorMessages = {
-		delete: 'छवियां हटाने में त्रुटि',
-		download: 'डाउनलोड करने में त्रुटि', 
-		'make-public': 'छवियां पब्लिक करने में त्रुटि',
-		'make-private': 'छवियां प्राइवेट करने में त्रुटि'
-		};
-		
-		const errorMessage = errorMessages[action] || 'बल्क ऑपरेशन में त्रुटि';
-		alert(`${errorMessage}. कृपया पुनः प्रयास करें।`);
-		
-		// Log additional error details for debugging
-		console.error('Error details:', {
-		action,
-		selectedImagesCount: selectedImages.length,
-		selectedImageIds: selectedImages,
-		error: error.response?.data || error.message,
-		timestamp: new Date().toISOString()
-		});
-	}
-	};
+    try {
+      switch (action) {
+        case 'delete':
+          if (window.confirm(`क्या आप वाकई ${selectedImages.length} छवियां हटाना चाहते हैं ? `)) {
+            await axios.delete('/vendor/images/bulk-delete', {
+              data: { imageIds: selectedImages }
+            });
+            loadImages();
+            setSelectedImages([]);
+            console.log(`Successfully deleted ${selectedImages.length} images`);
+          }
+          break;
+
+        case 'download':
+          // Create zip and download
+          console.log(`Starting download of ${selectedImages.length} images`);
+          window.open(`/ vendor / images / bulk - download ? ids = ${selectedImages.join(',')} `);
+          break;
+
+        case 'make-public':
+          await axios.patch('/vendor/images/bulk-visibility', {
+            imageIds: selectedImages,
+            isPublic: true
+          });
+          loadImages();
+          console.log(`Made ${selectedImages.length} images public`);
+          break;
+
+        case 'make-private':
+          await axios.patch('/vendor/images/bulk-visibility', {
+            imageIds: selectedImages,
+            isPublic: false
+          });
+          loadImages();
+          console.log(`Made ${selectedImages.length} images private`);
+          break;
+
+        default:
+          console.warn(`Unknown bulk action: ${action} `);
+          alert(`अज्ञात कार्य: ${action}. कृपया पुनः प्रयास करें।`);
+          return;
+      }
+    } catch (error) {
+      console.error('Bulk action failed:', error);
+
+      // More specific error handling based on action
+      const errorMessages = {
+        delete: 'छवियां हटाने में त्रुटि',
+        download: 'डाउनलोड करने में त्रुटि',
+        'make-public': 'छवियां पब्लिक करने में त्रुटि',
+        'make-private': 'छवियां प्राइवेट करने में त्रुटि'
+      };
+
+      const errorMessage = errorMessages[action] || 'बल्क ऑपरेशन में त्रुटि';
+      alert(`${errorMessage}. कृपया पुनः प्रयास करें।`);
+
+      // Log additional error details for debugging
+      console.error('Error details:', {
+        action,
+        selectedImagesCount: selectedImages.length,
+        selectedImageIds: selectedImages,
+        error: error.response?.data || error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  };
 
   const handleImageUpload = async (newImages) => {
     setUploading(true);
@@ -298,21 +300,21 @@ const VendorImages = () => {
     const used = images.filter(img => img.usedIn.length > 0).length;
     const unused = total - used;
     const publicImages = images.filter(img => img.isPublic).length;
-    
+
     return { total, totalSize, used, unused, publicImages };
   };
 
   const stats = getImageStats();
 
   if (loading) {
-    return <LoadingSpinner message="छवियां लोड हो रही हैं..." />;
+    return <LoadingSpinner message={language === 'hi' ? "छवियां लोड हो रही हैं..." : "Images are loading..."} />;
   }
 
   return (
     <React.StrictMode>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 pt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          
+
           {/* Header */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -324,7 +326,7 @@ const VendorImages = () => {
                   अपनी सभी छवियों को व्यवस्थित करें और प्रबंधित करें
                 </p>
               </div>
-              
+
               <button
                 onClick={() => setShowUploader(true)}
                 className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
@@ -343,7 +345,7 @@ const VendorImages = () => {
 
             {/* Main Content */}
             <div className="flex-1 space-y-8">
-              
+
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-4 text-white">
@@ -384,7 +386,7 @@ const VendorImages = () => {
 
               {/* Filters and Search */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                
+
                 {/* Search Bar */}
                 <div className="mb-6">
                   <div className="relative max-w-md">
@@ -403,7 +405,7 @@ const VendorImages = () => {
 
                 {/* Filter Options */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  
+
                   {/* Category Filter */}
                   <div>
                     <label className="block text-emerald-800 font-semibold mb-2 text-sm">श्रेणी</label>
@@ -442,21 +444,19 @@ const VendorImages = () => {
                     <div className="flex bg-emerald-100 rounded-lg p-1">
                       <button
                         onClick={() => setViewMode('grid')}
-                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          viewMode === 'grid' 
-                            ? 'bg-emerald-500 text-white' 
-                            : 'text-emerald-600 hover:bg-emerald-200'
-                        }`}
+                        className={`flex - 1 py - 2 px - 3 rounded - lg text - sm font - medium transition - all duration - 200 ${viewMode === 'grid'
+                          ? 'bg-emerald-500 text-white'
+                          : 'text-emerald-600 hover:bg-emerald-200'
+                          } `}
                       >
                         ⊞ ग्रिड
                       </button>
                       <button
                         onClick={() => setViewMode('list')}
-                        className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          viewMode === 'list' 
-                            ? 'bg-emerald-500 text-white' 
-                            : 'text-emerald-600 hover:bg-emerald-200'
-                        }`}
+                        className={`flex - 1 py - 2 px - 3 rounded - lg text - sm font - medium transition - all duration - 200 ${viewMode === 'list'
+                          ? 'bg-emerald-500 text-white'
+                          : 'text-emerald-600 hover:bg-emerald-200'
+                          } `}
                       >
                         ☰ लिस्ट
                       </button>
@@ -528,31 +528,30 @@ const VendorImages = () => {
 
               {/* Images Grid/List */}
               {filteredImages.length > 0 ? (
-                <div className={viewMode === 'grid' 
-                  ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' 
+                <div className={viewMode === 'grid'
+                  ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
                   : 'space-y-4'
                 }>
                   {filteredImages.map((image) => (
                     <div
                       key={image.id}
-                      className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${
-                        selectedImages.includes(image.id) ? 'ring-2 ring-emerald-500' : ''
-                      } ${viewMode === 'list' ? 'flex' : ''}`}
+                      className={`group bg - white rounded - 2xl overflow - hidden shadow - lg hover: shadow - xl transition - all duration - 300 ${selectedImages.includes(image.id) ? 'ring-2 ring-emerald-500' : ''
+                        } ${viewMode === 'list' ? 'flex' : ''} `}
                     >
                       {/* Image Preview */}
-                      <div className={`relative ${viewMode === 'list' ? 'w-32 h-24' : 'h-48'} overflow-hidden`}>
+                      <div className={`relative ${viewMode === 'list' ? 'w-32 h-24' : 'h-48'} overflow - hidden`}>
                         {image.url.endsWith('.pdf') ? (
                           <div className="w-full h-full bg-red-100 flex items-center justify-center">
                             <span className="text-red-600 text-4xl">📄</span>
                           </div>
                         ) : (
-                          <img 
-                            src={image.url} 
+                          <img
+                            src={image.url}
                             alt={image.name}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         )}
-                        
+
                         {/* Selection Checkbox */}
                         <div className="absolute top-2 left-2">
                           <input
@@ -565,11 +564,10 @@ const VendorImages = () => {
 
                         {/* Visibility Badge */}
                         <div className="absolute top-2 right-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            image.isPublic 
-                              ? 'bg-green-500 text-white' 
-                              : 'bg-red-500 text-white'
-                          }`}>
+                          <span className={`px - 2 py - 1 rounded - full text - xs font - medium ${image.isPublic
+                            ? 'bg-green-500 text-white'
+                            : 'bg-red-500 text-white'
+                            } `}>
                             {image.isPublic ? '🌐' : '🔒'}
                           </span>
                         </div>
@@ -606,11 +604,11 @@ const VendorImages = () => {
                       </div>
 
                       {/* Image Info */}
-                      <div className={`p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+                      <div className={`p - 4 ${viewMode === 'list' ? 'flex-1' : ''} `}>
                         <h3 className="font-semibold text-emerald-800 mb-2 line-clamp-2">
                           {image.name}
                         </h3>
-                        
+
                         {viewMode === 'list' && (
                           <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                             {image.description}
@@ -663,8 +661,8 @@ const VendorImages = () => {
                   <div className="text-6xl mb-4">🖼️</div>
                   <h3 className="text-2xl font-bold text-emerald-800 mb-2">कोई छवि नहीं मिली</h3>
                   <p className="text-emerald-600 mb-6">
-                    {images.length === 0 
-                      ? 'अभी तक कोई छवि अपलोड नहीं की गई है।' 
+                    {images.length === 0
+                      ? 'अभी तक कोई छवि अपलोड नहीं की गई है।'
                       : 'आपके फ़िल्टर के अनुसार कोई छवि नहीं मिली।'
                     }
                   </p>
@@ -694,14 +692,14 @@ const VendorImages = () => {
                   ×
                 </button>
               </div>
-              
+
               <ImageUploader
                 images={[]}
                 onImagesChange={handleImageUpload}
                 maxImages={10}
                 disabled={uploading}
               />
-              
+
               {uploading && (
                 <div className="mt-4 text-center">
                   <div className="inline-flex items-center space-x-2 text-emerald-600">
@@ -727,7 +725,7 @@ const VendorImages = () => {
                   ×
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Image Preview */}
                 <div>
@@ -736,8 +734,8 @@ const VendorImages = () => {
                       <span className="text-red-600 text-6xl">📄</span>
                     </div>
                   ) : (
-                    <img 
-                      src={selectedImage.url} 
+                    <img
+                      src={selectedImage.url}
                       alt={selectedImage.name}
                       className="w-full h-auto rounded-xl shadow-lg"
                     />
@@ -750,12 +748,12 @@ const VendorImages = () => {
                     <h3 className="font-semibold text-emerald-800 mb-1">फ़ाइल का नाम</h3>
                     <p className="text-gray-700">{selectedImage.name}</p>
                   </div>
-                  
+
                   <div>
                     <h3 className="font-semibold text-emerald-800 mb-1">विवरण</h3>
                     <p className="text-gray-700">{selectedImage.description}</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <h3 className="font-semibold text-emerald-800 mb-1">साइज़</h3>
@@ -766,7 +764,7 @@ const VendorImages = () => {
                       <p className="text-gray-700">{selectedImage.dimensions.width}×{selectedImage.dimensions.height}</p>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="font-semibold text-emerald-800 mb-1">टैग्स</h3>
                     <div className="flex flex-wrap gap-2">
@@ -777,7 +775,7 @@ const VendorImages = () => {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="font-semibold text-emerald-800 mb-1">उपयोग में</h3>
                     <div className="space-y-1">
@@ -792,7 +790,7 @@ const VendorImages = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex space-x-3 pt-4">
                     <button
                       onClick={() => window.open(selectedImage.url, '_blank')}

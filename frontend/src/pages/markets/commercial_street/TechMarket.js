@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const TechMarket = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [techProducts, setTechProducts] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -21,23 +23,23 @@ const TechMarket = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const marketInfo = {
-    name: 'कमर्शियल स्ट्रीट टेक मार्केट',
+    name: t('techMarketTitle'),
     nameEn: 'Commercial Street Tech Market',
-    description: 'बेंगलुरु का IT हब - लेटेस्ट टेक्नोलॉजी और गैजेट्स का घर',
+    description: t('techHubDescription'),
     established: '2000s',
-    speciality: 'लैपटॉप्स, स्मार्टफोन्स, गैजेट्स',
-    location: 'कमर्शियल स्ट्रीट, बेंगलुरु',
+    speciality: t('laptopsSmartphonesGadgets'),
+    location: t('commercialStreetCity'),
     heroImage: '/images/markets/commercial-street-tech.jpg'
   };
 
   const techCategories = [
-    { id: 'all', name: 'सभी टेक प्रोडक्ट्स', icon: '💻' },
-    { id: 'laptops', name: 'लैपटॉप्स', icon: '💻' },
-    { id: 'smartphones', name: 'स्मार्टफोन्स', icon: '📱' },
-    { id: 'tablets', name: 'टैबलेट्स', icon: '📱' },
-    { id: 'accessories', name: 'एक्सेसरीज', icon: '🔌' },
-    { id: 'gaming', name: 'गेमिंग', icon: '🎮' },
-    { id: 'smart-devices', name: 'स्मार्ट डिवाइसेज', icon: '🏠' }
+    { id: 'all', name: t('allTechProducts', 'All Tech Products'), icon: '💻' },
+    { id: 'laptops', name: t('laptops'), icon: '💻' },
+    { id: 'smartphones', name: t('smartphones'), icon: '📱' },
+    { id: 'tablets', name: t('tablets'), icon: '📱' },
+    { id: 'accessories', name: t('accessories'), icon: '🔌' },
+    { id: 'gaming', name: t('gaming'), icon: '🎮' },
+    { id: 'smart-devices', name: t('smartDevices'), icon: '🏠' }
   ];
 
   const featuredProducts = [
@@ -76,42 +78,42 @@ const TechMarket = () => {
   const topVendors = [
     {
       name: 'TechZone',
-      speciality: 'लैपटॉप्स और डेस्कटॉप्स',
+      speciality: t('laptopsDesktops'),
       rating: 4.6,
-      experience: '12+ वर्ष',
+      experience: `12+ ${t('years')}`,
       products: 200,
-      services: ['रिपेयर', 'अपग्रेड', 'वारंटी']
+      services: [t('repair'), t('upgrade'), t('warranty')]
     },
     {
       name: 'Mobile Hub',
-      speciality: 'स्मार्टफोन्स और टैबलेट्स',
+      speciality: t('smartphonesTablets'),
       rating: 4.5,
-      experience: '8+ वर्ष',
+      experience: `8+ ${t('years')}`,
       products: 150,
-      services: ['स्क्रीन रिप्लेसमेंट', 'अनलॉकिंग', 'डेटा रिकवरी']
+      services: [t('screenReplacement'), t('unlocking'), t('dataRecovery')]
     },
     {
       name: 'Gadget World',
-      speciality: 'गेमिंग और एक्सेसरीज',
+      speciality: t('gamingAccessories'),
       rating: 4.4,
-      experience: '10+ वर्ष',
+      experience: `10+ ${t('years')}`,
       products: 300,
-      services: ['कस्टम बिल्ड', 'गेमिंग सेटअप', 'टेक सपोर्ट']
+      services: [t('customBuild'), t('gamingSetup'), t('techSupport')]
     }
   ];
 
   const techTrends = [
-    { trend: 'AI और ML डिवाइसेज', description: 'आर्टिफिशियल इंटेलिजेंस इनेबल्ड गैजेट्स', growth: '85%' },
-    { trend: '5G कनेक्टिविटी', description: 'हाई-स्पीड इंटरनेट सपोर्ट', growth: '78%' },
-    { trend: 'वियरेबल टेक', description: 'स्मार्ट वॉचेस और फिटनेस ट्रैकर्स', growth: '92%' },
-    { trend: 'क्लाउड गेमिंग', description: 'स्ट्रीमिंग बेस्ड गेमिंग सोल्यूशन्स', growth: '67%' }
+    { trend: t('aiMlDevices'), description: t('aiEnabledGadgets'), growth: '85%' },
+    { trend: t('5gConnectivity'), description: t('highSpeedInternet'), growth: '78%' },
+    { trend: t('wearableTech'), description: t('smartWatchesTrackers'), growth: '92%' },
+    { trend: t('cloudGaming'), description: t('streamingGaming'), growth: '67%' }
   ];
 
   const techServices = [
-    { service: 'डेटा रिकवरी', description: 'डिलीटेड या करप्टेड डेटा को रिकवर करना', duration: '2-5 दिन' },
-    { service: 'हार्डवेयर अपग्रेड', description: 'RAM, SSD और अन्य कंपोनेंट्स का अपग्रेड', duration: '1-2 घंटे' },
-    { service: 'वायरस रिमूवल', description: 'मैलवेयर और वायरस की सफाई', duration: '2-4 घंटे' },
-    { service: 'स्क्रीन रिप्लेसमेंट', description: 'फोन और लैपटॉप स्क्रीन रिपेयर', duration: '1-3 घंटे' }
+    { service: t('dataRecovery'), description: t('dataRecoveryDesc'), duration: `2-5 ${t('days', 'days')}` },
+    { service: t('hardwareUpgrade'), description: t('hardwareUpgradeDesc'), duration: `1-2 ${t('hours', 'hours')}` },
+    { service: t('virusRemoval'), description: t('virusRemovalDesc'), duration: `2-4 ${t('hours', 'hours')}` },
+    { service: t('screenReplacement'), description: t('screenRepairDesc'), duration: `1-3 ${t('hours', 'hours')}` }
   ];
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const TechMarket = () => {
   const loadMarketData = async () => {
     try {
       setLoading(true);
-      
+
       const [productsResponse, vendorsResponse] = await Promise.all([
         apiService.get('/markets/commercial-street/tech-market/products'),
         apiService.get('/markets/commercial-street/tech-market/vendors')
@@ -171,16 +173,16 @@ const TechMarket = () => {
     }
   };
 
-  const filteredProducts = activeCategory === 'all' 
-    ? techProducts 
+  const filteredProducts = activeCategory === 'all'
+    ? techProducts
     : techProducts.filter(product => product.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{marketInfo.name} - भारतशाला | बेंगलुरु का टेक हब</title>
-        <meta name="description" content="कमर्शियल स्ट्रीट टेक मार्केट से लेटेस्ट लैपटॉप्स, स्मार्टफोन्स, गैजेट्स और टेक एक्सेसरीज खरीदें। बेस्ट प्राइसेस और एक्सपर्ट सर्विस।" />
-        <meta name="keywords" content="बेंगलुरु टेक मार्केट, लैपटॉप्स, स्मार्टफोन्स, कमर्शियल स्ट्रीट, टेक गैजेट्स, कंप्यूटर रिपेयर" />
+        <title>{marketInfo.name} - {t('bharatshaala')} | {t('bangalore')} {t('techHubDescription')}</title>
+        <meta name="description" content={marketInfo.description} />
+        <meta name="keywords" content="bangalore tech market, laptops, smartphones, commercial street, tech gadgets, computer repair" />
         <link rel="canonical" href="https://bharatshaala.com/markets/commercial-street/tech-market" />
       </Helmet>
 
@@ -188,11 +190,11 @@ const TechMarket = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${marketInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -207,18 +209,18 @@ const TechMarket = () => {
                   <p className="text-xl opacity-90">{marketInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-purple-200">{marketInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('speciality', 'Speciality')}</h3>
                   <p className="text-purple-200">{marketInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('location')}</h3>
                   <p className="text-purple-200">{marketInfo.location}</p>
                 </div>
               </div>
@@ -230,13 +232,13 @@ const TechMarket = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/commercial-street" className="hover:text-emerald-600">कमर्शियल स्ट्रीट</Link>
+              <Link to="/markets/commercial-street" className="hover:text-emerald-600">{t('commercialStreetTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">टेक मार्केट</span>
+              <span className="text-gray-900">{t('techMarketTitle')}</span>
             </nav>
           </div>
         </div>
@@ -244,7 +246,7 @@ const TechMarket = () => {
         {/* Featured Products */}
         <section className="py-12 bg-blue-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">आज के बेस्ट डील्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('todaysBestDeals')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredProducts.map((product, index) => (
                 <motion.div
@@ -280,7 +282,7 @@ const TechMarket = () => {
                     <span className="text-sm text-gray-500">{product.vendor}</span>
                   </div>
                   <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                    कार्ट में जोड़ें
+                    {t('addToCart')}
                   </button>
                 </motion.div>
               ))}
@@ -291,17 +293,16 @@ const TechMarket = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">टेक श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('techCategoriesTitle')}</h2>
             <div className="flex flex-wrap gap-4">
               {techCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -314,7 +315,7 @@ const TechMarket = () => {
         {/* Tech Trends */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">टेक ट्रेंड्स 2024</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('techTrendsTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {techTrends.map((trend, index) => (
                 <motion.div
@@ -327,12 +328,12 @@ const TechMarket = () => {
                   <h3 className="text-lg font-bold text-gray-900 mb-3">{trend.trend}</h3>
                   <p className="text-gray-600 mb-4 text-sm">{trend.description}</p>
                   <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full" 
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
                       style={{ width: trend.growth }}
                     ></div>
                   </div>
-                  <p className="text-blue-700 font-medium text-sm">{trend.growth} ग्रोथ</p>
+                  <p className="text-blue-700 font-medium text-sm">{trend.growth} {t('growth', 'Growth')}</p>
                 </motion.div>
               ))}
             </div>
@@ -342,15 +343,15 @@ const TechMarket = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="टेक प्रोडक्ट्स लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')} ${t('techProducts', 'tech products')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी टेक प्रोडक्ट्स' : techCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allTechProducts', 'All Tech Products') : techCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
@@ -368,8 +369,8 @@ const TechMarket = () => {
               {filteredProducts.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">💻</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई प्रोडक्ट नहीं मिला</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noItemsFound')}</h3>
+                  <p className="text-gray-600">{t('tryDifferentCategory', 'Please selecting a different category')}</p>
                 </div>
               )}
             </div>
@@ -379,7 +380,7 @@ const TechMarket = () => {
         {/* Top Vendors */}
         <section className="py-16 bg-gradient-to-r from-blue-100 to-purple-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">टॉप टेक वेंडर्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('topTechVendorsTitle')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {topVendors.map((vendor, index) => (
                 <motion.div
@@ -392,9 +393,9 @@ const TechMarket = () => {
                   <div className="text-4xl mb-4">🏪</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{vendor.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>विशेषता:</strong> {vendor.speciality}</p>
-                    <p><strong>अनुभव:</strong> {vendor.experience}</p>
-                    <p><strong>प्रोडक्ट्स:</strong> {vendor.products}</p>
+                    <p><strong>{t('speciality', 'Speciality')}:</strong> {vendor.speciality}</p>
+                    <p><strong>{t('experience', 'Experience')}:</strong> {vendor.experience}</p>
+                    <p><strong>{t('products', 'Products')}:</strong> {vendor.products}</p>
                   </div>
                   <div className="flex items-center justify-center space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -412,7 +413,7 @@ const TechMarket = () => {
                     ))}
                   </div>
                   <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                    स्टोर देखें
+                    {t('viewShop')}
                   </button>
                 </motion.div>
               ))}
@@ -423,7 +424,7 @@ const TechMarket = () => {
         {/* Tech Services */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">टेक सर्विसेज</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('techServicesTitle')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {techServices.map((service, index) => (
                 <div key={index} className="text-center">
@@ -440,28 +441,26 @@ const TechMarket = () => {
         {/* Tech Market Experience */}
         <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">टेक मार्केट का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('techMarketExperienceTitle')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                25 साल से कमर्शियल स्ट्रीट टेक मार्केट बेंगलुरु का टेक हब है। 
-                यहाँ मिलता है लेटेस्ट टेक्नोलॉजी का बेस्ट कॉम्बिनेशन कम्पेटिटिव प्राइसेस के साथ। 
-                एक्सपर्ट टेक्निशियन्स और ऑथराइज़्ड डीलर्स से खरीदारी करें।
+                {t('techMarketExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>कमर्शियल स्ट्रीट, बेंगलुरु</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('location')}</h3>
+                  <p>{marketInfo.location}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 10:00 - रात 9:00 (रोज़ाना)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timing')}</h3>
+                  <p>{t('timingDesc', '10 AM - 9 PM')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">💻</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>लेटेस्ट टेक्नोलॉजी और बेस्ट प्राइसेस</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('speciality', 'Speciality')}</h3>
+                  <p>{t('latestTechBestPrices')}</p>
                 </div>
               </div>
             </div>

@@ -2,17 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../../context/NotificationContext';
 import { useAnalytics } from '../analytics';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
 import apiService from '../apiService';
 import { helpers } from '../helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ReportGeneration = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,7 +98,7 @@ const ReportGeneration = () => {
     try {
       setLoading(true);
       const response = await apiService.get('/admin/reports');
-      
+
       if (response.success) {
         setReports(response.data);
       }
@@ -125,7 +127,7 @@ const ReportGeneration = () => {
         showSuccess('रिपोर्ट जेनरेट हो रही है');
         setShowModal(false);
         loadReports();
-        
+
         trackEvent('report_generated', {
           reportType: reportConfig.type,
           dateRange: reportConfig.dateRange,
@@ -172,7 +174,7 @@ const ReportGeneration = () => {
       await apiService.delete(`/admin/reports/${reportId}`);
       showSuccess('रिपोर्ट डिलीट हो गई');
       loadReports();
-      
+
       trackEvent('report_deleted', { reportId });
     } catch (error) {
       showError('रिपोर्ट डिलीट करने में त्रुटि');
@@ -198,7 +200,7 @@ const ReportGeneration = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="रिपोर्ट लोड हो रही हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "रिपोर्ट लोड हो रही हैं..." : "Loading reports..."} />;
   }
 
   return (
@@ -254,7 +256,7 @@ const ReportGeneration = () => {
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">हाल की रिपोर्ट्स</h2>
         </div>
-        
+
         <div className="divide-y divide-gray-200">
           {reports.length === 0 ? (
             <div className="p-12 text-center text-gray-500">
@@ -279,7 +281,7 @@ const ReportGeneration = () => {
                         {getReportStatusLabel(report.status)}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
                       <span>टाइप: {reportTypes.find(t => t.key === report.type)?.name}</span>
                       <span>•</span>
@@ -294,7 +296,7 @@ const ReportGeneration = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     {report.status === 'completed' && (
                       <button
@@ -304,7 +306,7 @@ const ReportGeneration = () => {
                         डाउनलोड करें
                       </button>
                     )}
-                    
+
                     <button
                       onClick={() => handleDeleteReport(report.id)}
                       className="text-red-600 hover:text-red-700 px-3 py-1 text-sm"
@@ -336,11 +338,10 @@ const ReportGeneration = () => {
               {reportTypes.map((type) => (
                 <div
                   key={type.key}
-                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                    reportConfig.type === type.key
-                      ? 'border-emerald-500 bg-emerald-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 border rounded-lg cursor-pointer transition-colors ${reportConfig.type === type.key
+                    ? 'border-emerald-500 bg-emerald-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                   onClick={() => setReportConfig(prev => ({ ...prev, type: type.key }))}
                 >
                   <div className="flex items-center">

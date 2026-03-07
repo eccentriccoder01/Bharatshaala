@@ -9,11 +9,13 @@ import Modal from '../components/Modal';
 import ImageUpload from '../components/ImageUpload';
 import apiService from '../apiService';
 import { helpers } from '../helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 const MarketManagement = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ const MarketManagement = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue
@@ -141,18 +143,18 @@ const MarketManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSubmitting(true);
 
     try {
-      const endpoint = editingMarket 
+      const endpoint = editingMarket
         ? `/admin/markets/${editingMarket.id}`
         : '/admin/markets';
-      
+
       const method = editingMarket ? 'put' : 'post';
-      
+
       const response = await apiService[method](endpoint, formData);
 
       if (response.success) {
@@ -160,7 +162,7 @@ const MarketManagement = () => {
         setShowModal(false);
         resetForm();
         loadMarkets();
-        
+
         trackEvent(editingMarket ? 'market_updated' : 'market_created', {
           marketId: response.data.id,
           marketName: formData.name
@@ -207,11 +209,11 @@ const MarketManagement = () => {
 
     try {
       const response = await apiService.delete(`/admin/markets/${marketId}`);
-      
+
       if (response.success) {
         showSuccess('बाज़ार डिलीट हो गया');
         loadMarkets();
-        
+
         trackEvent('market_deleted', { marketId });
       }
     } catch (error) {
@@ -228,7 +230,7 @@ const MarketManagement = () => {
       if (response.success) {
         showSuccess('बाज़ार स्टेटस अपडेट हो गया');
         loadMarkets();
-        
+
         trackEvent('market_status_toggled', {
           marketId,
           newStatus: !currentStatus
@@ -248,7 +250,7 @@ const MarketManagement = () => {
       if (response.success) {
         showSuccess('फीचर्ड स्टेटस अपडेट हो गया');
         loadMarkets();
-        
+
         trackEvent('market_featured_toggled', {
           marketId,
           newFeatured: !currentFeatured
@@ -303,7 +305,7 @@ const MarketManagement = () => {
   const stats = getMarketStats();
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="बाज़ार लोड हो रहे हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "बाज़ार लोड हो रहे हैं..." : "Loading markets..."} />;
   }
 
   return (
@@ -393,7 +395,7 @@ const MarketManagement = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          
+
           <div>
             <select
               value={filterStatus}
@@ -406,7 +408,7 @@ const MarketManagement = () => {
               <option value="featured">फीचर्ड</option>
             </select>
           </div>
-          
+
           <div>
             <button
               onClick={() => {
@@ -446,17 +448,16 @@ const MarketManagement = () => {
                     <span className="text-6xl">🏪</span>
                   </div>
                 )}
-                
+
                 {/* Status Badges */}
                 <div className="absolute top-3 left-3 flex space-x-2">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    market.isActive
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${market.isActive
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                    }`}>
                     {market.isActive ? 'सक्रिय' : 'निष्क्रिय'}
                   </span>
-                  
+
                   {market.isFeatured && (
                     <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                       फीचर्ड
@@ -500,22 +501,20 @@ const MarketManagement = () => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleToggleStatus(market.id, market.isActive)}
-                      className={`text-xs px-3 py-1 rounded ${
-                        market.isActive
-                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                          : 'bg-green-100 text-green-700 hover:bg-green-200'
-                      }`}
+                      className={`text-xs px-3 py-1 rounded ${market.isActive
+                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        }`}
                     >
                       {market.isActive ? 'निष्क्रिय करें' : 'सक्रिय करें'}
                     </button>
-                    
+
                     <button
                       onClick={() => handleToggleFeatured(market.id, market.isFeatured)}
-                      className={`text-xs px-3 py-1 rounded ${
-                        market.isFeatured
-                          ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
+                      className={`text-xs px-3 py-1 rounded ${market.isFeatured
+                        ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
                     >
                       {market.isFeatured ? 'अनफीचर करें' : 'फीचर करें'}
                     </button>
@@ -552,11 +551,11 @@ const MarketManagement = () => {
           >
             पिछला
           </button>
-          
+
           <span className="px-3 py-2 text-sm">
             पेज {currentPage} of {totalPages}
           </span>
-          
+
           <button
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
@@ -586,9 +585,8 @@ const MarketManagement = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.name ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.name ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="जैसे: चांदनी चौक"
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -604,9 +602,8 @@ const MarketManagement = () => {
                 name="nameEn"
                 value={formData.nameEn}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.nameEn ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.nameEn ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="Chandni Chowk"
               />
               {errors.nameEn && <p className="text-red-500 text-sm mt-1">{errors.nameEn}</p>}
@@ -622,9 +619,8 @@ const MarketManagement = () => {
                 name="city"
                 value={formData.city}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.city ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.city ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="नई दिल्ली"
               />
               {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
@@ -640,9 +636,8 @@ const MarketManagement = () => {
                 name="state"
                 value={formData.state}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.state ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.state ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="दिल्ली"
               />
               {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
@@ -658,9 +653,8 @@ const MarketManagement = () => {
                 name="pincode"
                 value={formData.pincode}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.pincode ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.pincode ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="110001"
               />
               {errors.pincode && <p className="text-red-500 text-sm mt-1">{errors.pincode}</p>}
@@ -676,9 +670,8 @@ const MarketManagement = () => {
                 name="speciality"
                 value={formData.speciality}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.speciality ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.speciality ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="जैसे: हस्तशिल्प, वस्त्र, आभूषण"
               />
               {errors.speciality && <p className="text-red-500 text-sm mt-1">{errors.speciality}</p>}
@@ -755,9 +748,8 @@ const MarketManagement = () => {
               value={formData.location}
               onChange={handleInputChange}
               rows={2}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                errors.location ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.location ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="बाज़ार का पूरा पता..."
             />
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
@@ -773,9 +765,8 @@ const MarketManagement = () => {
               value={formData.description}
               onChange={handleInputChange}
               rows={4}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="बाज़ार का विस्तृत विवरण..."
             />
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -826,7 +817,7 @@ const MarketManagement = () => {
           {/* SEO Fields */}
           <div className="border-t pt-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">SEO सेटिंग्स</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

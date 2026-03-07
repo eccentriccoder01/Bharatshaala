@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const AntiqueBazaar = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [antiques, setAntiques] = useState([]);
   const [dealers, setDealers] = useState([]);
@@ -21,84 +23,84 @@ const AntiqueBazaar = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const bazaarInfo = {
-    name: 'कोलाबा एंटीक बाज़ार',
+    name: t('antiqueBazaarTitle'),
     nameEn: 'Colaba Antique Bazaar',
-    description: 'मुंबई का प्रसिद्ध एंटीक बाज़ार - दुर्लभ और कलेक्टिबल वस्तुओं का खजाना',
+    description: t('antiqueBazaarDescription'),
     established: '1920s',
-    speciality: 'विंटेज आइटम्स, कॉइन्स, आर्ट पीसेस',
-    location: 'कोलाबा कॉज़वे, मुंबई',
+    speciality: t('antiqueBazaarSpecialty'),
+    location: t('antiqueBazaarLocation'),
     heroImage: '/images/markets/colaba-antique.jpg'
   };
 
   const antiqueCategories = [
-    { id: 'all', name: 'सभी एंटीक', icon: '🏺' },
-    { id: 'coins', name: 'सिक्के', icon: '🪙' },
-    { id: 'paintings', name: 'पेंटिंग्स', icon: '🎨' },
-    { id: 'sculptures', name: 'मूर्तियां', icon: '🗿' },
-    { id: 'jewelry', name: 'विंटेज ज्वेलरी', icon: '💍' },
-    { id: 'books', name: 'पुराने ग्रंथ', icon: '📚' },
-    { id: 'artifacts', name: 'कलाकृतियां', icon: '🏛️' }
+    { id: 'all', name: t('allAntiques'), icon: '🏺' },
+    { id: 'coins', name: t('coins'), icon: '🪙' },
+    { id: 'paintings', name: t('paintings'), icon: '🎨' },
+    { id: 'sculptures', name: t('sculptures'), icon: '🗿' },
+    { id: 'jewelry', name: t('vintageJewelry'), icon: '💍' },
+    { id: 'books', name: t('oldBooks'), icon: '📚' },
+    { id: 'artifacts', name: t('artifacts'), icon: '🏛️' }
   ];
 
   const featuredAntiques = [
     {
-      name: 'मुगल काल का सिक्का',
-      description: 'अकबर काल का दुर्लभ सोने का सिक्का',
+      name: t('mughalCoin'),
+      description: t('mughalCoinDesc'),
       price: '₹45,000',
-      age: '400+ वर्ष',
-      authenticity: 'सत्यापित',
-      dealer: 'हेरिटेज कॉइन्स'
+      age: `400+ ${t('yearsOld', 'years')}`,
+      authenticity: t('verified'),
+      dealer: t('heritageCoins')
     },
     {
-      name: 'राजा रवि वर्मा पेंटिंग',
-      description: 'प्रामाणिक राजा रवि वर्मा की पेंटिंग',
+      name: t('rajaRaviVarma'),
+      description: t('rajaRaviVarmaDesc'),
       price: '₹2,50,000',
-      age: '120+ वर्ष',
-      authenticity: 'प्रमाणित',
-      dealer: 'आर्ट हेरिटेज गैलरी'
+      age: `120+ ${t('yearsOld', 'years')}`,
+      authenticity: t('certified'),
+      dealer: t('artHeritageGallery')
     },
     {
-      name: 'चोल काल की कांस्य मूर्ति',
-      description: 'दक्षिण भारतीय चोल काल की नटराज मूर्ति',
+      name: t('cholaBronze'),
+      description: t('cholaBronzeDesc'),
       price: '₹1,80,000',
-      age: '800+ वर्ष',
-      authenticity: 'ASI प्रमाणित',
-      dealer: 'ब्रॉन्ज़ एंटीक्स'
+      age: `800+ ${t('yearsOld', 'years')}`,
+      authenticity: t('asiCertified'),
+      dealer: t('bronzeAntiques')
     }
   ];
 
   const expertDealers = [
     {
-      name: 'हेरिटेज कॉइन्स',
+      name: t('heritageCoins'),
       established: '1965',
-      specialty: 'प्राचीन सिक्के और मुद्राएं',
+      specialty: t('ancientCoinsCurrency'),
       rating: 4.9,
-      experience: '58+ वर्ष',
-      expertise: 'न्यूमिस्मैटिक्स'
+      experience: `58+ ${t('yearsOld', 'years')}`,
+      expertise: t('numismatics')
     },
     {
-      name: 'आर्ट हेरिटेज गैलरी',
+      name: t('artHeritageGallery'),
       established: '1958',
-      specialty: 'पेंटिंग्स और आर्ट पीसेस',
+      specialty: t('paintingsArtPieces'),
       rating: 4.8,
-      experience: '65+ वर्ष',
-      expertise: 'भारतीय कला'
+      experience: `65+ ${t('yearsOld', 'years')}`,
+      expertise: t('indianArt')
     },
     {
-      name: 'ब्रॉन्ज़ एंटीक्स',
+      name: t('bronzeAntiques'),
       established: '1972',
-      specialty: 'कांस्य मूर्तियां और शिल्प',
+      specialty: t('bronzeStatuesCrafts'),
       rating: 4.7,
-      experience: '51+ वर्ष',
-      expertise: 'धातु कलाकृतियां'
+      experience: `51+ ${t('yearsOld', 'years')}`,
+      expertise: t('metalArtifacts')
     }
   ];
 
   const antiqueEras = [
-    { era: 'हड़प्पा सभ्यता', period: '3300-1300 BCE', items: ['मिट्टी के बर्तन', 'सील', 'गहने'] },
-    { era: 'मौर्य काल', period: '322-185 BCE', items: ['सिक्के', 'शिलालेख', 'मूर्तियां'] },
-    { era: 'गुप्त काल', period: '320-550 CE', items: ['स्वर्ण सिक्के', 'कलाकृतियां', 'शास्त्र'] },
-    { era: 'मुगल काल', period: '1526-1857 CE', items: ['शाही सिक्के', 'हथियार', 'आभूषण'] }
+    { era: t('harappanCivilization'), period: '3300-1300 BCE', items: t('potterySealsJewelry').split(', ') },
+    { era: t('mauryaEra'), period: '322-185 BCE', items: t('coinsInscriptionsStatues').split(', ') },
+    { era: t('guptaEra'), period: '320-550 CE', items: t('goldCoinsArtifactsScriptures').split(', ') },
+    { era: t('mughalEra'), period: '1526-1857 CE', items: t('royalCoinsWeaponsJewelry').split(', ') }
   ];
 
   useEffect(() => {
@@ -109,7 +111,7 @@ const AntiqueBazaar = () => {
   const loadBazaarData = async () => {
     try {
       setLoading(true);
-      
+
       const [antiquesResponse, dealersResponse] = await Promise.all([
         apiService.get('/markets/colaba-causeway/antique-bazaar/products'),
         apiService.get('/markets/colaba-causeway/antique-bazaar/dealers')
@@ -158,16 +160,16 @@ const AntiqueBazaar = () => {
     }
   };
 
-  const filteredAntiques = activeCategory === 'all' 
-    ? antiques 
+  const filteredAntiques = activeCategory === 'all'
+    ? antiques
     : antiques.filter(antique => antique.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{bazaarInfo.name} - भारतशाला | कोलाबा के दुर्लभ एंटीक्स</title>
-        <meta name="description" content="कोलाबा कॉज़वे के प्रसिद्ध एंटीक बाज़ार से दुर्लभ सिक्के, पेंटिंग्स, मूर्तियां और कलेक्टिबल आइटम्स।" />
-        <meta name="keywords" content="कोलाबा एंटीक्स, विंटेज कॉइन्स, पुरानी पेंटिंग्स, एंटीक ज्वेलरी, मुंबई एंटीक्स" />
+        <title>{bazaarInfo.name} - {t('welcome')} | {t('antiqueBazaarDescription')}</title>
+        <meta name="description" content={t('antiqueBazaarDescription')} />
+        <meta name="keywords" content="colaba antiques, vintage coins, old paintings, antique jewelry, mumbai antiques" />
         <link rel="canonical" href="https://bharatshaala.com/markets/colaba-causeway/antique-bazaar" />
       </Helmet>
 
@@ -175,11 +177,11 @@ const AntiqueBazaar = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-amber-700 to-orange-700 text-white py-16">
           <div className="absolute inset-0 bg-black/50"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-40"
             style={{ backgroundImage: `url(${bazaarInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -194,18 +196,18 @@ const AntiqueBazaar = () => {
                   <p className="text-xl opacity-90">{bazaarInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-amber-200">{bazaarInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('specialityLabel')}</h3>
                   <p className="text-amber-200">{bazaarInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('locationLabel')}</h3>
                   <p className="text-amber-200">{bazaarInfo.location}</p>
                 </div>
               </div>
@@ -217,13 +219,13 @@ const AntiqueBazaar = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">कोलाबा कॉज़वे</Link>
+              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">{t('colabaCausewayTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">एंटीक बाज़ार</span>
+              <span className="text-gray-900">{t('antiqueBazaarTitle')}</span>
             </nav>
           </div>
         </div>
@@ -231,17 +233,16 @@ const AntiqueBazaar = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">एंटीक श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('antiqueCategories')}</h2>
             <div className="flex flex-wrap gap-4">
               {antiqueCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-amber-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -254,7 +255,7 @@ const AntiqueBazaar = () => {
         {/* Featured Antiques */}
         <section className="py-12 bg-amber-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">आज के विशेष एंटीक्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredAntiques')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredAntiques.map((antique, index) => (
                 <motion.div
@@ -271,18 +272,18 @@ const AntiqueBazaar = () => {
                   </div>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">आयु:</span>
+                      <span className="text-gray-500">{t('age')}:</span>
                       <span className="font-medium">{antique.age}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">प्रमाणिकता:</span>
+                      <span className="text-gray-500">{t('authenticity')}:</span>
                       <span className="text-green-600 font-medium">{antique.authenticity}</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">{antique.dealer}</span>
                     <button className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors duration-200">
-                      देखें
+                      {t('view')}
                     </button>
                   </div>
                 </motion.div>
@@ -294,7 +295,7 @@ const AntiqueBazaar = () => {
         {/* Historical Eras */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">ऐतिहासिक काल</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('historicalEras')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {antiqueEras.map((era, index) => (
                 <motion.div
@@ -322,15 +323,15 @@ const AntiqueBazaar = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="एंटीक्स लोड हो रहे हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी एंटीक्स' : antiqueCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allAntiques') : antiqueCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredAntiques.map((antique) => (
                   <ProductCard
@@ -348,8 +349,8 @@ const AntiqueBazaar = () => {
               {filteredAntiques.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🏺</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई एंटीक नहीं मिला</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noAntiquesFound')}</h3>
+                  <p className="text-gray-600">{t('chooseOtherCategory')}</p>
                 </div>
               )}
             </div>
@@ -359,7 +360,7 @@ const AntiqueBazaar = () => {
         {/* Expert Dealers */}
         <section className="py-16 bg-gradient-to-r from-amber-100 to-orange-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">विशेषज्ञ एंटीक डीलर्स</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('expertDealers')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {expertDealers.map((dealer, index) => (
                 <motion.div
@@ -372,10 +373,10 @@ const AntiqueBazaar = () => {
                   <div className="text-4xl mb-4">🏪</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{dealer.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>स्थापना:</strong> {dealer.established}</p>
-                    <p><strong>विशेषता:</strong> {dealer.specialty}</p>
-                    <p><strong>विशेषज्ञता:</strong> {dealer.expertise}</p>
-                    <p><strong>अनुभव:</strong> {dealer.experience}</p>
+                    <p><strong>{t('established')}:</strong> {dealer.established}</p>
+                    <p><strong>{t('specialityLabel')}:</strong> {dealer.specialty}</p>
+                    <p><strong>{t('expertLabel', 'Expertise')}:</strong> {dealer.expertise}</p>
+                    <p><strong>{t('experience')}:</strong> {dealer.experience}</p>
                   </div>
                   <div className="flex items-center justify-center space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -386,7 +387,7 @@ const AntiqueBazaar = () => {
                     <span className="text-sm text-gray-600 ml-2">{dealer.rating}</span>
                   </div>
                   <button className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors duration-200">
-                    दुकान देखें
+                    {t('viewShop', 'View Shop')}
                   </button>
                 </motion.div>
               ))}
@@ -397,27 +398,27 @@ const AntiqueBazaar = () => {
         {/* Authentication Process */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">प्रमाणिकता की प्रक्रिया</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('authenticationProcess')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2">विशेषज्ञ जांच</h3>
-                <p className="text-gray-600">प्रत्येक एंटीक की विशेषज्ञों द्वारा गहन जांच</p>
+                <h3 className="text-xl font-semibold mb-2">{t('expertCheck')}</h3>
+                <p className="text-gray-600">{t('expertCheckDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">📜</div>
-                <h3 className="text-xl font-semibold mb-2">प्रमाणपत्र</h3>
-                <p className="text-gray-600">प्रामाणिकता और आयु का प्रमाणित दस्तावेज</p>
+                <h3 className="text-xl font-semibold mb-2">{t('certificate')}</h3>
+                <p className="text-gray-600">{t('certificateDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🔬</div>
-                <h3 className="text-xl font-semibold mb-2">वैज्ञानिक परीक्षण</h3>
-                <p className="text-gray-600">कार्बन डेटिंग और अन्य तकनीकी परीक्षण</p>
+                <h3 className="text-xl font-semibold mb-2">{t('scientificTesting')}</h3>
+                <p className="text-gray-600">{t('scientificTestingDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🛡️</div>
-                <h3 className="text-xl font-semibold mb-2">गारंटी</h3>
-                <p className="text-gray-600">प्रामाणिकता की आजीवन गारंटी</p>
+                <h3 className="text-xl font-semibold mb-2">{t('guarantee')}</h3>
+                <p className="text-gray-600">{t('guaranteeDesc')}</p>
               </div>
             </div>
           </div>
@@ -426,28 +427,26 @@ const AntiqueBazaar = () => {
         {/* Market Experience */}
         <section className="py-16 bg-gradient-to-r from-amber-700 to-orange-700 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">कोलाबा एंटीक का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('antiqueExperience')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                100 साल पुराने इस एंटीक बाज़ार में छुपी है भारत की अमूल्य धरोहर। 
-                यहाँ हर वस्तु की अपनी कहानी है, हर एंटीक में बसा है इतिहास का एक टुकड़ा। 
-                विशेषज्ञ डीलर्स आपको बताएंगे हर चीज़ का सच्चा मूल्य और उसकी ऐतिहासिक महत्ता।
+                {t('antiqueExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>कॉज़वे स्ट्रीट, कोलाबा, मुंबई</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('locationLabel')}</h3>
+                  <p>{t('causewayStreet')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 10:00 - शाम 8:00 (सोमवार बंद)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timingLabel')}</h3>
+                  <p>{t('timingDesc', '10 AM - 8 PM (Closed on Monday)')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">💎</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>दुर्लभ और प्रमाणित एंटीक्स</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('specialityLabel')}</h3>
+                  <p>{t('rareAndCertified')}</p>
                 </div>
               </div>
             </div>

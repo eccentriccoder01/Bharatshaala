@@ -64,9 +64,8 @@ const ProductCard = ({
   if (viewMode === 'list') {
     return (
       <div
-        className={`bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 ${
-          isSelected ? 'border-emerald-500' : 'border-transparent'
-        }`}
+        className={`bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 ${isSelected ? 'border-emerald-500' : 'border-transparent'
+          }`}
         onClick={handleCardClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -80,9 +79,8 @@ const ProductCard = ({
             <img
               src={item.images?.[0]?.url || item.images?.[0] || '/images/placeholder.png'}
               alt={item.name}
-              className={`w-full h-full object-cover transition-transform duration-500 ${
-                isHovered ? 'scale-110' : 'scale-100'
-              }`}
+              className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'
+                }`}
               onLoad={() => setImageLoading(false)}
               onError={() => setImageLoading(false)}
             />
@@ -180,11 +178,10 @@ const ProductCard = ({
 
                 {/* Active Status for Vendor */}
                 {isVendorView && (
-                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    item.isActive
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${item.isActive
                       ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400'
                       : 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400'
-                  }`}>
+                    }`}>
                     {item.isActive ? 'सक्रिय' : 'निष्क्रिय'}
                   </div>
                 )}
@@ -233,9 +230,8 @@ const ProductCard = ({
   // Grid View (Default)
   return (
     <div
-      className={`group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer border-2 ${
-        isSelected ? 'border-emerald-500' : 'border-transparent'
-      }`}
+      className={`group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer border-2 ${isSelected ? 'border-emerald-500' : 'border-transparent'
+        }`}
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -248,17 +244,15 @@ const ProductCard = ({
         <img
           src={item.images?.[0]?.url || item.images?.[0] || '/images/placeholder.png'}
           alt={item.name}
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            isHovered ? 'scale-110' : 'scale-100'
-          }`}
+          className={`w-full h-full object-cover transition-transform duration-700 ${isHovered ? 'scale-110' : 'scale-100'
+            }`}
           onLoad={() => setImageLoading(false)}
           onError={() => setImageLoading(false)}
         />
 
         {/* Overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-500 ${
-          isHovered ? 'opacity-70' : 'opacity-50'
-        }`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-70' : 'opacity-50'
+          }`}></div>
 
         {/* Discount Badge */}
         {getDiscountPercent() > 0 && (
@@ -297,11 +291,10 @@ const ProductCard = ({
         {/* Active Status for Vendor */}
         {isVendorView && (
           <div className="absolute bottom-4 right-4">
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-              item.isActive
+            <div className={`px-3 py-1 rounded-full text-xs font-medium ${item.isActive
                 ? 'bg-green-500/90 text-white'
                 : 'bg-red-500/90 text-white'
-            }`}>
+              }`}>
               {item.isActive ? 'सक्रिय' : 'निष्क्रिय'}
             </div>
           </div>
@@ -309,9 +302,8 @@ const ProductCard = ({
 
         {/* Quick Action Overlay */}
         {!isVendorView && (
-          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}>
+          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
+            }`}>
             <div className="flex space-x-3">
               <button
                 onClick={(e) => handleActionClick(e, 'cart')}
@@ -417,9 +409,8 @@ const ProductCard = ({
         </div>
 
         {/* Action Button */}
-        <div className={`transition-all duration-300 ${
-          isHovered ? 'transform translate-x-2' : ''
-        }`}>
+        <div className={`transition-all duration-300 ${isHovered ? 'transform translate-x-2' : ''
+          }`}>
           {isVendorView ? (
             <button
               onClick={(e) => handleActionClick(e, 'edit')}
@@ -431,11 +422,10 @@ const ProductCard = ({
             <button
               onClick={(e) => handleActionClick(e, 'cart')}
               disabled={item.quantity === 0}
-              className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
-                item.quantity === 0
+              className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${item.quantity === 0
                   ? 'bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:shadow-lg transform hover:scale-105'
-              }`}
+                }`}
             >
               {item.quantity === 0 ? 'स्टॉक में नहीं' : 'कार्ट में जोड़ें'}
             </button>

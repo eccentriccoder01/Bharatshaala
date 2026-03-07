@@ -7,11 +7,15 @@ import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
+// import { useNotification } from '../../context/NotificationContext';
 
 const Dashboard = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  // const { /* showSuccess, showError */ } = useNotification();
   const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     orders: [],
@@ -137,7 +141,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="डैशबोर्ड लोड हो रहा है..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "डैशबोर्ड लोड हो रहा है..." : "Loading dashboard..."} />
       </div>
     );
   }
@@ -375,7 +379,7 @@ const Dashboard = () => {
                 transition={{ delay: 0.8 }}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
               >
-                <h2 className="text-xl font-bold text-gray-900 mb-4">आपके लिए सुझाव</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">आपके लिए सुझाव</h2>
 
                 {dashboardData.recommendations.length === 0 ? (
                   <div className="text-center py-8">

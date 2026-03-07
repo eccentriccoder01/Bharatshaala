@@ -5,9 +5,16 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+// import { useAuth } from '../../context/AuthContext';
 
 const AddressBook = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  // const { /* user */ } = useAuth();
+  const { language } = useLanguage();
+
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -77,11 +84,13 @@ const AddressBook = () => {
       if (response.success) {
         await loadAddresses();
         resetForm();
-        alert(editingAddress ? 'पता अपडेट हो गया!' : 'नया पता जोड़ा गया!');
+        if (showSuccess) showSuccess(editingAddress ? 'पता अपडेट हो गया!' : 'नया पता जोड़ा गया!');
+        else alert(editingAddress ? 'पता अपडेट हो गया!' : 'नया पता जोड़ा गया!');
       }
     } catch (error) {
       console.error('Failed to save address:', error);
-      alert('पता सेव करने में समस्या हुई');
+      if (showError) showError('पता सेव करने में समस्या हुई');
+      else alert('पता सेव करने में समस्या हुई');
     }
   };
 
@@ -98,11 +107,13 @@ const AddressBook = () => {
         if (response.success) {
           await loadAddresses();
           trackEvent('address_deleted');
-          alert('पता हटा दिया गया!');
+          if (showSuccess) showSuccess('पता हटा दिया गया!');
+          else alert('पता हटा दिया गया!');
         }
       } catch (error) {
         console.error('Failed to delete address:', error);
-        alert('पता हटाने में समस्या हुई');
+        if (showError) showError('पता हटाने में समस्या हुई');
+        else alert('पता हटाने में समस्या हुई');
       }
     }
   };
@@ -128,7 +139,7 @@ const AddressBook = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="पते लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "पते लोड हो रहे हैं..." : "Loading addresses..."} />
       </div>
     );
   }
@@ -181,12 +192,11 @@ const AddressBook = () => {
                       <button
                         key={type.value}
                         type="button"
-                        onClick={() => setFormData({...formData, type: type.value})}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors duration-200 ${
-                          formData.type === type.value
-                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
-                            : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                        }`}
+                        onClick={() => setFormData({ ...formData, type: type.value })}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors duration-200 ${formData.type === type.value
+                          ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                          : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                          }`}
                       >
                         <span>{type.icon}</span>
                         <span>{type.label}</span>
@@ -205,7 +215,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.firstName}
-                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                     />
                   </div>
@@ -217,7 +227,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.lastName}
-                      onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                     />
                   </div>
@@ -232,7 +242,7 @@ const AddressBook = () => {
                     type="tel"
                     required
                     value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                   />
                 </div>
@@ -246,7 +256,7 @@ const AddressBook = () => {
                     type="text"
                     required
                     value={formData.addressLine1}
-                    onChange={(e) => setFormData({...formData, addressLine1: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
                     placeholder="मकान नंबर, सड़क का नाम"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                   />
@@ -259,7 +269,7 @@ const AddressBook = () => {
                   <input
                     type="text"
                     value={formData.addressLine2}
-                    onChange={(e) => setFormData({...formData, addressLine2: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
                     placeholder="इलाका, कॉलोनी"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                   />
@@ -275,7 +285,7 @@ const AddressBook = () => {
                       type="text"
                       required
                       value={formData.city}
-                      onChange={(e) => setFormData({...formData, city: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                     />
                   </div>
@@ -286,7 +296,7 @@ const AddressBook = () => {
                     <select
                       required
                       value={formData.state}
-                      onChange={(e) => setFormData({...formData, state: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                     >
                       <option value="">राज्य चुनें</option>
@@ -304,7 +314,7 @@ const AddressBook = () => {
                       required
                       pattern="[0-9]{6}"
                       value={formData.pincode}
-                      onChange={(e) => setFormData({...formData, pincode: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                     />
                   </div>
@@ -318,7 +328,7 @@ const AddressBook = () => {
                   <input
                     type="text"
                     value={formData.landmark}
-                    onChange={(e) => setFormData({...formData, landmark: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
                     placeholder="पास का प्रसिद्ध स्थान"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-700 dark:text-gray-100"
                   />
@@ -330,7 +340,7 @@ const AddressBook = () => {
                     type="checkbox"
                     id="isDefault"
                     checked={formData.isDefault}
-                    onChange={(e) => setFormData({...formData, isDefault: e.target.checked})}
+                    onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
                     className="mr-2"
                   />
                   <label htmlFor="isDefault" className="text-sm text-gray-700 dark:text-gray-300">

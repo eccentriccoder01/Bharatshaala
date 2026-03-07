@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../hooks/useNotification';
 import { useAnalytics } from '../analytics';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import Modal from '../components/Modal';
 import ImageUpload from '../components/ImageUpload';
 import apiService from '../apiService';
@@ -14,6 +15,7 @@ const CategoryManagement = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +75,7 @@ const CategoryManagement = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue
@@ -118,18 +120,18 @@ const CategoryManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSubmitting(true);
 
     try {
-      const endpoint = editingCategory 
+      const endpoint = editingCategory
         ? `/admin/categories/${editingCategory.id}`
         : '/admin/categories';
-      
+
       const method = editingCategory ? 'put' : 'post';
-      
+
       const response = await apiService[method](endpoint, formData);
 
       if (response.success) {
@@ -137,7 +139,7 @@ const CategoryManagement = () => {
         setShowModal(false);
         resetForm();
         loadCategories();
-        
+
         trackEvent(editingCategory ? 'category_updated' : 'category_created', {
           categoryId: response.data.id,
           categoryName: formData.name
@@ -175,11 +177,11 @@ const CategoryManagement = () => {
 
     try {
       const response = await apiService.delete(`/admin/categories/${categoryId}`);
-      
+
       if (response.success) {
         showSuccess('श्रेणी डिलीट हो गई');
         loadCategories();
-        
+
         trackEvent('category_deleted', { categoryId });
       }
     } catch (error) {
@@ -196,7 +198,7 @@ const CategoryManagement = () => {
       if (response.success) {
         showSuccess('श्रेणी स्टेटस अपडेट हो गया');
         loadCategories();
-        
+
         trackEvent('category_status_toggled', {
           categoryId,
           newStatus: !currentStatus
@@ -232,17 +234,17 @@ const CategoryManagement = () => {
 
   const filteredCategories = categories.filter(category => {
     const matchesSearch = category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         category.nameEn.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === 'all' || 
-                         (filterStatus === 'active' && category.isActive) ||
-                         (filterStatus === 'inactive' && !category.isActive);
+      category.nameEn.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = filterStatus === 'all' ||
+      (filterStatus === 'active' && category.isActive) ||
+      (filterStatus === 'inactive' && !category.isActive);
 
     return matchesSearch && matchesStatus;
   });
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="श्रेणियां लोड हो रही हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "श्रेणियां लोड हो रही हैं..." : "Loading categories..."} />;
   }
 
   return (
@@ -273,7 +275,7 @@ const CategoryManagement = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          
+
           <div>
             <select
               value={filterStatus}
@@ -285,7 +287,7 @@ const CategoryManagement = () => {
               <option value="inactive">निष्क्रिय</option>
             </select>
           </div>
-          
+
           <div>
             <select
               value={sortBy}
@@ -297,7 +299,7 @@ const CategoryManagement = () => {
               <option value="sort_order">क्रम से</option>
             </select>
           </div>
-          
+
           <div>
             <button
               onClick={loadCategories}
@@ -366,11 +368,10 @@ const CategoryManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={() => handleToggleStatus(category.id, category.isActive)}
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          category.isActive
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${category.isActive
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                          }`}
                       >
                         {category.isActive ? 'सक्रिय' : 'निष्क्रिय'}
                       </button>
@@ -451,9 +452,8 @@ const CategoryManagement = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.name ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.name ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="हस्तशिल्प"
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -469,9 +469,8 @@ const CategoryManagement = () => {
                 name="nameEn"
                 value={formData.nameEn}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.nameEn ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.nameEn ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="Handicrafts"
               />
               {errors.nameEn && <p className="text-red-500 text-sm mt-1">{errors.nameEn}</p>}
@@ -487,9 +486,8 @@ const CategoryManagement = () => {
                 name="icon"
                 value={formData.icon}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                  errors.icon ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.icon ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 placeholder="🎨"
               />
               {errors.icon && <p className="text-red-500 text-sm mt-1">{errors.icon}</p>}
@@ -558,9 +556,8 @@ const CategoryManagement = () => {
               value={formData.description}
               onChange={handleInputChange}
               rows={3}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="श्रेणी का विवरण..."
             />
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -582,7 +579,7 @@ const CategoryManagement = () => {
           {/* SEO Fields */}
           <div className="border-t pt-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">SEO सेटिंग्स</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

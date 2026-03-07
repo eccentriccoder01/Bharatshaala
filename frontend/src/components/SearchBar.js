@@ -11,9 +11,8 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
 
   return (
     <div className='relative'>
-      <div className={`relative transition-all duration-300 ${
-        isFocused ? 'transform scale-105' : ''
-      }`}>
+      <div className={`relative transition-all duration-300 ${isFocused ? 'transform scale-105' : ''
+        }`}>
         <input
           type="text"
           placeholder={placeholder}
@@ -27,18 +26,16 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
             setIsFocused(false);
             setTimeout(() => setShowSuggestions(false), 200);
           }}
-          className={`w-full px-6 py-4 pl-14 pr-16 rounded-full border-2 transition-all duration-300 ${
-            isFocused
+          className={`w-full px-6 py-4 pl-14 pr-16 rounded-full border-2 transition-all duration-300 ${isFocused
               ? 'border-emerald-500 bg-white dark:bg-gray-800 shadow-lg'
               : 'border-emerald-200 dark:border-emerald-700 bg-white/80 dark:bg-gray-800/80'
-          } focus:outline-none text-lg`}
+            } focus:outline-none text-lg dark:text-white`}
         />
 
         {/* Search Icon */}
         <svg
-          className={`absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 transition-colors duration-300 ${
-            isFocused ? 'text-emerald-500 dark:text-emerald-400' : 'text-emerald-400'
-          }`}
+          className={`absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 transition-colors duration-300 ${isFocused ? 'text-emerald-500 dark:text-emerald-400' : 'text-emerald-400'
+            }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -59,9 +56,8 @@ const SearchBar = ({ value, onChange, placeholder = "खोजें...", sugges
         )}
 
         {/* Animated Border */}
-        <div className={`absolute inset-0 rounded-full transition-all duration-300 ${
-          isFocused ? 'ring-4 ring-emerald-100 dark:ring-emerald-800' : ''
-        }`}></div>
+        <div className={`absolute inset-0 rounded-full transition-all duration-300 ${isFocused ? 'ring-4 ring-emerald-100 dark:ring-emerald-800' : ''
+          }`}></div>
       </div>
 
       {/* Suggestions Dropdown */}

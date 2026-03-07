@@ -1,0 +1,17 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-dupe-keys": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "default-case": "warn",
+    "no-mixed-operators": "warn",
+    "jsx-a11y/img-redundant-alt": "warn",
+    "jsx-a11y/heading-has-content": "warn",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "eqeqeq": "warn",
+    "no-useless-escape": "warn",
+    "import/no-anonymous-default-export": "warn",
+    "no-dupe-class-members": "warn"
+  }
+}

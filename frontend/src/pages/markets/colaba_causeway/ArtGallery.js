@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ArtGallery = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [artworks, setArtworks] = useState([]);
   const [artists, setArtists] = useState([]);
@@ -22,76 +24,76 @@ const ArtGallery = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const galleryInfo = {
-    name: 'कोलाबा आर्ट गैलरी',
+    name: t('artGalleryTitle'),
     nameEn: 'Colaba Art Gallery',
-    description: 'समकालीन और पारंपरिक भारतीय कला का संगम - मुंबई की प्रसिद्ध कला दीर्घा',
+    description: t('artGalleryDescription'),
     established: '1980s',
-    speciality: 'समकालीन कला, पारंपरिक पेंटिंग्स',
-    location: 'आर्ट डिस्ट्रिक्ट, कोलाबा',
+    speciality: t('artGallerySpecialty'),
+    location: t('artGalleryLocation'),
     heroImage: '/images/markets/colaba-art-gallery.jpg'
   };
 
   const artCategories = [
-    { id: 'all', name: 'सभी कलाकृतियां', icon: '🎨' },
-    { id: 'paintings', name: 'पेंटिंग्स', icon: '🖼️' },
-    { id: 'sculptures', name: 'मूर्तिकला', icon: '🗿' },
-    { id: 'digital', name: 'डिजिटल आर्ट', icon: '💻' },
-    { id: 'photography', name: 'फोटोग्राफी', icon: '📸' },
-    { id: 'mixed-media', name: 'मिक्स्ड मीडिया', icon: '🎭' },
-    { id: 'installations', name: 'इंस्टॉलेशन', icon: '🏗️' }
+    { id: 'all', name: t('allArtworks'), icon: '🎨' },
+    { id: 'paintings', name: t('paintings'), icon: '🖼️' },
+    { id: 'sculptures', name: t('sculptures'), icon: '🗿' },
+    { id: 'digital', name: t('digitalArt'), icon: '💻' },
+    { id: 'photography', name: t('photography'), icon: '📸' },
+    { id: 'mixed-media', name: t('mixedMedia'), icon: '🎭' },
+    { id: 'installations', name: t('installations'), icon: '🏗️' }
   ];
 
   const featuredArtists = [
     {
-      name: 'राज कुमार सिंह',
-      specialty: 'समकालीन भारतीय चित्रकला',
-      experience: '25+ वर्ष',
-      style: 'नव-अभिव्यंजनावाद',
-      achievements: 'राष्ट्रीय कला पुरस्कार विजेता',
+      name: 'राज कुमार सिंह', // Proper names usually kept as is, but could be translated if needed
+      specialty: t('contemporaryIndianPainting'),
+      experience: `25+ ${t('yearsOld', 'years')}`,
+      style: t('neoExpressionism'),
+      achievements: t('nationalArtAward'),
       artworks: 45
     },
     {
       name: 'प्रिया शर्मा',
-      specialty: 'डिजिटल आर्ट और इंस्टॉलेशन',
-      experience: '15+ वर्ष',
-      style: 'आधुनिक अमूर्त',
-      achievements: 'अंतर्राष्ट्रीय प्रदर्शनी में चयनित',
+      specialty: t('digitalArtInstallations'),
+      experience: `15+ ${t('yearsOld', 'years')}`,
+      style: t('modernAbstract'),
+      achievements: t('internationalExhibition'),
       artworks: 32
     },
     {
       name: 'अमित चौधरी',
-      specialty: 'पारंपरिक मुगल शैली',
-      experience: '30+ वर्ष',
-      style: 'लघु चित्रकला',
-      achievements: 'शिल्प गुरु सम्मान',
+      specialty: t('traditionalMughalStyle'),
+      experience: `30+ ${t('yearsOld', 'years')}`,
+      style: t('miniaturePainting'),
+      achievements: t('shilpGuruAward'),
       artworks: 67
     }
   ];
 
   const currentExhibitions = [
     {
-      title: 'रंगों का त्योहार',
-      artist: 'विभिन्न कलाकार',
-      theme: 'भारतीय त्योहारों पर आधारित कलाकृतियां',
-      duration: '15 फरवरी - 15 मार्च',
+      title: t('festivalOfColors'),
+      artist: t('variousArtists'),
+      theme: t('indianFestivalsTheme'),
+      duration: '15 Feb - 15 Mar', // Simplify date for now or use date formatter
       artworks: 25,
-      type: 'ग्रुप शो'
+      type: t('groupShow')
     },
     {
-      title: 'आधुनिक भारत',
+      title: t('modernIndia'),
       artist: 'राज कुमार सिंह',
-      theme: 'समकालीन भारतीय समाज का चित्रण',
-      duration: '1 मार्च - 30 मार्च',
+      theme: t('contemporarySocietyTheme'),
+      duration: '1 Mar - 30 Mar',
       artworks: 18,
-      type: 'सोलो शो'
+      type: t('soloShow')
     }
   ];
 
   const artStyles = [
-    { style: 'मुगल शैली', origin: 'मुगल काल', description: 'लघु चित्रकला और बारीक काम' },
-    { style: 'राजस्थानी शैली', origin: 'राजस्थान', description: 'रंगीन और विस्तृत चित्रण' },
-    { style: 'बंगाल स्कूल', origin: 'बंगाल', description: 'पुनर्जागरण काल की कला' },
-    { style: 'समकालीन', origin: 'आधुनिक काल', description: 'नए माध्यमों और विषयों की खोज' }
+    { style: t('mughalStyle'), origin: t('mughalEra'), description: t('miniatureWorkDesc') },
+    { style: t('rajasthaniStyle'), origin: t('rajasthan'), description: t('colorfulDetailedDesc') },
+    { style: t('bengalSchool'), origin: t('bengal'), description: t('renaissanceArtDesc') },
+    { style: t('contemporary'), origin: t('modernEra'), description: t('newMediumsDesc') }
   ];
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const ArtGallery = () => {
   const loadGalleryData = async () => {
     try {
       setLoading(true);
-      
+
       const [artworksResponse, artistsResponse, exhibitionsResponse] = await Promise.all([
         apiService.get('/markets/colaba-causeway/art-gallery/artworks'),
         apiService.get('/markets/colaba-causeway/art-gallery/artists'),
@@ -156,16 +158,16 @@ const ArtGallery = () => {
     }
   };
 
-  const filteredArtworks = activeCategory === 'all' 
-    ? artworks 
+  const filteredArtworks = activeCategory === 'all'
+    ? artworks
     : artworks.filter(artwork => artwork.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{galleryInfo.name} - भारतशाला | कोलाबा की समकालीन कला</title>
-        <meta name="description" content="कोलाबा आर्ट गैलरी से समकालीन और पारंपरिक भारतीय कलाकृतियां। पेंटिंग्स, मूर्तिकला, डिजिटल आर्ट और फोटोग्राफी।" />
-        <meta name="keywords" content="कोलाबा आर्ट गैलरी, समकालीन कला, भारतीय पेंटिंग्स, मुंबई आर्ट, कलाकृति खरीदें" />
+        <title>{galleryInfo.name} - {t('welcome')} | {t('artGalleryDescription')}</title>
+        <meta name="description" content={t('artGalleryDescription')} />
+        <meta name="keywords" content="colaba art gallery, contemporary art, indian paintings, mumbai art, buy art" />
         <link rel="canonical" href="https://bharatshaala.com/markets/colaba-causeway/art-gallery" />
       </Helmet>
 
@@ -173,11 +175,11 @@ const ArtGallery = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${galleryInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -192,18 +194,18 @@ const ArtGallery = () => {
                   <p className="text-xl opacity-90">{galleryInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-purple-200">{galleryInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">विशेषता</h3>
+                  <h3 className="font-semibold mb-2">{t('specialityLabel')}</h3>
                   <p className="text-purple-200">{galleryInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('locationLabel')}</h3>
                   <p className="text-purple-200">{galleryInfo.location}</p>
                 </div>
               </div>
@@ -215,13 +217,13 @@ const ArtGallery = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">कोलाबा कॉज़वे</Link>
+              <Link to="/markets/colaba-causeway" className="hover:text-emerald-600">{t('colabaCausewayTitle')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">आर्ट गैलरी</span>
+              <span className="text-gray-900">{t('artGalleryTitle')}</span>
             </nav>
           </div>
         </div>
@@ -229,7 +231,7 @@ const ArtGallery = () => {
         {/* Current Exhibitions */}
         <section className="py-12 bg-indigo-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">वर्तमान प्रदर्शनी</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('currentExhibitions')}</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {currentExhibitions.map((exhibition, index) => (
                 <motion.div
@@ -245,12 +247,12 @@ const ArtGallery = () => {
                       {exhibition.type}
                     </span>
                   </div>
-                  <p className="text-gray-600 mb-2"><strong>कलाकार:</strong> {exhibition.artist}</p>
-                  <p className="text-gray-600 mb-2"><strong>थीम:</strong> {exhibition.theme}</p>
-                  <p className="text-gray-600 mb-2"><strong>अवधि:</strong> {exhibition.duration}</p>
-                  <p className="text-gray-600 mb-4"><strong>कलाकृतियां:</strong> {exhibition.artworks}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('artist')}:</strong> {exhibition.artist}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('theme', 'Theme')}:</strong> {exhibition.theme}</p>
+                  <p className="text-gray-600 mb-2"><strong>{t('duration', 'Duration')}:</strong> {exhibition.duration}</p>
+                  <p className="text-gray-600 mb-4"><strong>{t('artworks', 'Artworks')}:</strong> {exhibition.artworks}</p>
                   <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                    प्रदर्शनी देखें
+                    {t('viewExhibition', 'View Exhibition')}
                   </button>
                 </motion.div>
               ))}
@@ -261,17 +263,16 @@ const ArtGallery = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">कला श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('artCategories')}</h2>
             <div className="flex flex-wrap gap-4">
               {artCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -284,7 +285,7 @@ const ArtGallery = () => {
         {/* Featured Artists */}
         <section className="py-16 bg-gradient-to-r from-purple-100 to-indigo-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">प्रसिद्ध कलाकार</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredArtists')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {featuredArtists.map((artist, index) => (
                 <motion.div
@@ -297,14 +298,14 @@ const ArtGallery = () => {
                   <div className="text-4xl mb-4">👨‍🎨</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{artist.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>विशेषता:</strong> {artist.specialty}</p>
-                    <p><strong>शैली:</strong> {artist.style}</p>
-                    <p><strong>अनुभव:</strong> {artist.experience}</p>
-                    <p><strong>उपलब्धि:</strong> {artist.achievements}</p>
-                    <p><strong>कलाकृतियां:</strong> {artist.artworks}</p>
+                    <p><strong>{t('specialityLabel')}:</strong> {artist.specialty}</p>
+                    <p><strong>{t('style', 'Style')}:</strong> {artist.style}</p>
+                    <p><strong>{t('experience')}:</strong> {artist.experience}</p>
+                    <p><strong>{t('achievements', 'Achievements')}:</strong> {artist.achievements}</p>
+                    <p><strong>{t('artworks', 'Artworks')}:</strong> {artist.artworks}</p>
                   </div>
                   <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                    कलाकृतियां देखें
+                    {t('viewArtworks', 'View Artworks')}
                   </button>
                 </motion.div>
               ))}
@@ -315,7 +316,7 @@ const ArtGallery = () => {
         {/* Art Styles */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">भारतीय कला शैलियां</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('indianArtStyles')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {artStyles.map((style, index) => (
                 <motion.div
@@ -337,15 +338,15 @@ const ArtGallery = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="कलाकृतियां लोड हो रही हैं..." />
+            <LoadingSpinner size="large" text={`${t('loading')}...`} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी कलाकृतियां' : artCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allArtworks') : artCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredArtworks.map((artwork) => (
                   <ProductCard
@@ -363,8 +364,8 @@ const ArtGallery = () => {
               {filteredArtworks.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🎨</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई कलाकृति नहीं मिली</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noArtworksFound')}</h3>
+                  <p className="text-gray-600">{t('chooseOtherCategory')}</p>
                 </div>
               )}
             </div>
@@ -374,27 +375,27 @@ const ArtGallery = () => {
         {/* Art Collection Tips */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">कला संग्रह की जानकारी</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('artCollectionTips')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl mb-4">👁️</div>
-                <h3 className="text-xl font-semibold mb-2">कला देखना</h3>
-                <p className="text-gray-600">कलाकृति का सही मूल्यांकन और संदेश समझना</p>
+                <h3 className="text-xl font-semibold mb-2">{t('viewingArt')}</h3>
+                <p className="text-gray-600">{t('viewingArtDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">💰</div>
-                <h3 className="text-xl font-semibold mb-2">मूल्य निर्धारण</h3>
-                <p className="text-gray-600">कलाकार की प्रसिद्धि और काम की दुर्लभता के आधार पर</p>
+                <h3 className="text-xl font-semibold mb-2">{t('pricing')}</h3>
+                <p className="text-gray-600">{t('pricingDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🏠</div>
-                <h3 className="text-xl font-semibold mb-2">संग्रह रखना</h3>
-                <p className="text-gray-600">सही माहौल और सुरक्षा के साथ कलाकृति का संरक्षण</p>
+                <h3 className="text-xl font-semibold mb-2">{t('storingCollection')}</h3>
+                <p className="text-gray-600">{t('storingCollectionDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">📈</div>
-                <h3 className="text-xl font-semibold mb-2">निवेश मूल्य</h3>
-                <p className="text-gray-600">समय के साथ कलाकृति का बढ़ता हुआ मूल्य</p>
+                <h3 className="text-xl font-semibold mb-2">{t('investmentValue')}</h3>
+                <p className="text-gray-600">{t('investmentValueDesc')}</p>
               </div>
             </div>
           </div>
@@ -403,28 +404,26 @@ const ArtGallery = () => {
         {/* Gallery Experience */}
         <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">कोलाबा आर्ट गैलरी का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('galleryExperience')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                40 साल से कोलाबा आर्ट गैलरी भारतीय कला को नई ऊंचाइयों तक पहुंचा रही है। 
-                यहाँ हर कलाकृति में छुपी है कलाकार की भावनाएं और समाज की आवाज़। 
-                पारंपरिक से लेकर अत्याधुनिक तक, यहाँ मिलता है हर तरह की कला का अनुभव।
+                {t('galleryExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>आर्ट डिस्ट्रिक्ट, कोलाबा, मुंबई</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('locationLabel')}</h3>
+                  <p>{t('artDistrict')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 10:00 - रात 8:00 (सोमवार बंद)</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timingLabel')}</h3>
+                  <p>{t('timingDesc', '10 AM - 8 PM (Closed on Monday)')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🎨</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>समकालीन और पारंपरिक कला</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('specialityLabel')}</h3>
+                  <p>{t('contemporaryAndTraditional')}</p>
                 </div>
               </div>
             </div>

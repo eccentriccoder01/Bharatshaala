@@ -6,11 +6,15 @@ import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
+import { useNotification } from '../../context/NotificationContext';
 
 const RewardPoints = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
   const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [rewardData, setRewardData] = useState({
     totalPoints: 0,
@@ -229,7 +233,7 @@ const RewardPoints = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="रिवार्ड पॉइंट्स लोड हो रहे हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "रिवार्ड पॉइंट्स लोड हो रहे हैं..." : "Loading reward points..."} />
       </div>
     );
   }
@@ -264,7 +268,7 @@ const RewardPoints = () => {
                 <div className="text-lg">उपलब्ध पॉइंट्स</div>
               </div>
             </div>
-            
+
             {expiringInfo && (
               <div className={`mt-4 p-3 bg-${expiringInfo.color}-100 text-${expiringInfo.color}-800 rounded-lg`}>
                 <p className="text-sm">⚠️ {expiringInfo.message}</p>
@@ -351,11 +355,10 @@ const RewardPoints = () => {
                   <button
                     key={tab.id}
                     onClick={() => setSelectedTab(tab.id)}
-                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                      selectedTab === tab.id
-                        ? 'border-yellow-500 text-yellow-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
+                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 ${selectedTab === tab.id
+                      ? 'border-yellow-500 text-yellow-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
                   >
                     <span>{tab.icon}</span>
                     <span>{tab.name}</span>
@@ -382,7 +385,7 @@ const RewardPoints = () => {
                         <p className="text-sm text-gray-600">• मिनिमम रिडीम: 300 पॉइंट्स</p>
                       </div>
                     </div>
-                    
+
                     <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">कैसे कमाएं?</h3>
                       <div className="space-y-2">
@@ -416,15 +419,14 @@ const RewardPoints = () => {
                   {earnMethods.map((method, index) => (
                     <div
                       key={index}
-                      className={`p-4 rounded-lg border-2 transition-colors duration-200 ${
-                        method.status === 'completed' 
-                          ? 'border-green-200 bg-green-50' :
+                      className={`p-4 rounded-lg border-2 transition-colors duration-200 ${method.status === 'completed'
+                        ? 'border-green-200 bg-green-50' :
                         method.status === 'active'
                           ? 'border-blue-200 bg-blue-50' :
-                        method.status === 'pending'
-                          ? 'border-yellow-200 bg-yellow-50' :
-                          'border-gray-200 bg-gray-50'
-                      }`}
+                          method.status === 'pending'
+                            ? 'border-yellow-200 bg-yellow-50' :
+                            'border-gray-200 bg-gray-50'
+                        }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-3">
@@ -435,15 +437,14 @@ const RewardPoints = () => {
                             <p className="text-lg font-bold text-green-600">{method.points} पॉइंट्स</p>
                           </div>
                         </div>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          method.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${method.status === 'completed' ? 'bg-green-100 text-green-800' :
                           method.status === 'active' ? 'bg-blue-100 text-blue-800' :
-                          method.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
+                            method.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-gray-100 text-gray-800'
+                          }`}>
                           {method.status === 'completed' ? 'पूर्ण' :
-                           method.status === 'active' ? 'सक्रिय' :
-                           method.status === 'pending' ? 'प्रतीक्षा में' : 'आगामी'}
+                            method.status === 'active' ? 'सक्रिय' :
+                              method.status === 'pending' ? 'प्रतीक्षा में' : 'आगामी'}
                         </span>
                       </div>
                     </div>
@@ -461,11 +462,10 @@ const RewardPoints = () => {
                   {redeemOptions.map((option, index) => (
                     <div
                       key={index}
-                      className={`p-6 rounded-lg border transition-all duration-200 hover:shadow-lg ${
-                        option.available && rewardData.availablePoints >= option.points
-                          ? 'border-green-200 bg-white'
-                          : 'border-gray-200 bg-gray-50 opacity-60'
-                      }`}
+                      className={`p-6 rounded-lg border transition-all duration-200 hover:shadow-lg ${option.available && rewardData.availablePoints >= option.points
+                        ? 'border-green-200 bg-white'
+                        : 'border-gray-200 bg-gray-50 opacity-60'
+                        }`}
                     >
                       <div className="text-center">
                         <span className="text-4xl mb-3 block">{option.icon}</span>
@@ -474,19 +474,18 @@ const RewardPoints = () => {
                         <div className="text-2xl font-bold text-yellow-600 mb-4">
                           {option.points} पॉइंट्स
                         </div>
-                        
+
                         <button
                           onClick={() => handleRedeemReward(option)}
                           disabled={!option.available || rewardData.availablePoints < option.points}
-                          className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors duration-200 ${
-                            option.available && rewardData.availablePoints >= option.points
-                              ? 'bg-yellow-600 text-white hover:bg-yellow-700'
-                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          }`}
+                          className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors duration-200 ${option.available && rewardData.availablePoints >= option.points
+                            ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
                         >
                           {!option.available ? 'अनुपलब्ध' :
-                           rewardData.availablePoints < option.points ? 'पर्याप्त पॉइंट्स नहीं' :
-                           'रिडीम करें'}
+                            rewardData.availablePoints < option.points ? 'पर्याप्त पॉइंट्स नहीं' :
+                              'रिडीम करें'}
                         </button>
                       </div>
                     </div>
@@ -521,15 +520,14 @@ const RewardPoints = () => {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className={`font-bold ${
-                              transaction.type === 'earned' ? 'text-green-600' : 'text-red-600'
-                            }`}>
+                            <p className={`font-bold ${transaction.type === 'earned' ? 'text-green-600' : 'text-red-600'
+                              }`}>
                               {transaction.type === 'earned' ? '+' : '-'}{transaction.points} पॉइंट्स
                             </p>
                             <p className="text-xs text-gray-500">
-                              {transaction.type === 'earned' ? 'कमाए' : 
-                               transaction.type === 'redeemed' ? 'रिडीम किए' :
-                               transaction.type === 'expired' ? 'एक्सपायर हुए' : 'प्रतीक्षा में'}
+                              {transaction.type === 'earned' ? 'कमाए' :
+                                transaction.type === 'redeemed' ? 'रिडीम किए' :
+                                  transaction.type === 'expired' ? 'एक्सपायर हुए' : 'प्रतीक्षा में'}
                             </p>
                           </div>
                         </div>

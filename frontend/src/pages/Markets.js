@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MarketCard from '../components/MarketCard';
 import SearchBar from '../components/SearchBar';
+import { useLanguage } from '../context/LanguageContext';
+
 import '../App.css';
 
 // Import actual market images based on your directory structure
@@ -16,6 +18,7 @@ import dilliHaatImg from '../images/markets/dilli_haat.png';
 
 
 const Markets = () => {
+  const { t /* , language */ } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [markets, setMarkets] = useState([]);
   const [filteredMarkets, setFilteredMarkets] = useState([]);
@@ -26,25 +29,23 @@ const Markets = () => {
   const [viewMode, setViewMode] = useState('grid');
   const navigate = useNavigate();
 
-  // ... rest of your state and filter arrays remain the same ...
-
   const states = [
-    { id: 'all', name: 'सभी राज्य', nameEn: 'All States' },
-    { id: 'delhi', name: 'दिल्ली', nameEn: 'Delhi' },
-    { id: 'rajasthan', name: 'राजस्थान', nameEn: 'Rajasthan' },
-    { id: 'telangana', name: 'तेलंगाना', nameEn: 'Telangana' },
-    { id: 'karnataka', name: 'कर्नाटक', nameEn: 'Karnataka' },
-    { id: 'maharashtra', name: 'महाराष्ट्र', nameEn: 'Maharashtra' }
+    { id: 'all', name: t('allStates'), nameEn: 'All States' },
+    { id: 'delhi', name: t('delhi'), nameEn: 'Delhi' },
+    { id: 'rajasthan', name: t('rajasthan'), nameEn: 'Rajasthan' },
+    { id: 'telangana', name: t('telangana'), nameEn: 'Telangana' },
+    { id: 'karnataka', name: t('karnataka'), nameEn: 'Karnataka' },
+    { id: 'maharashtra', name: t('maharashtra'), nameEn: 'Maharashtra' }
   ];
 
   const categories = [
-    { id: 'all', name: 'सभी श्रेणियां', icon: '🏪' },
-    { id: 'traditional', name: 'पारंपरिक', icon: '🏛️' },
-    { id: 'heritage', name: 'विरासत', icon: '👑' },
-    { id: 'modern', name: 'आधुनिक', icon: '🏢' },
-    { id: 'handicrafts', name: 'हस्तशिल्प', icon: '🎨' },
-    { id: 'textiles', name: 'वस्त्र', icon: '🧵' },
-    { id: 'jewelry', name: 'आभूषण', icon: '💎' }
+    { id: 'all', name: t('allCategories'), icon: '🏪' },
+    { id: 'traditional', name: t('traditional'), icon: '🏛️' },
+    { id: 'heritage', name: t('heritage'), icon: '👑' },
+    { id: 'modern', name: t('modern'), icon: '🏢' },
+    { id: 'handicrafts', name: t('handicraft'), icon: '🎨' },
+    { id: 'textiles', name: t('textiles'), icon: '🧵' },
+    { id: 'jewelry', name: t('jewelry'), icon: '💎' }
   ];
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const Markets = () => {
 
   useEffect(() => {
     filterAndSortMarkets();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markets, searchTerm, selectedState, selectedCategory, sortBy]);
 
   const loadMarketsData = () => {
@@ -76,9 +77,11 @@ const Markets = () => {
         vendors: 350,
         established: '1650',
         specialties: ['मसाले', 'चांदी के आभूषण', 'कपड़े', 'मिठाइयां'],
+        specialtiesEn: ['Spices', 'Silver Jewelry', 'Clothing', 'Sweets'],
         categories: ['traditional', 'heritage', 'handicrafts', 'textiles'],
         openingHours: '10:00 - 21:00',
         popularItems: ['चांदी के गहने', 'पारंपरिक कपड़े', 'मसाले', 'स्ट्रीट फूड'],
+        popularItemsEn: ['Silver Jewelry', 'Traditional Clothing', 'Spices', 'Street Food'],
         avgPrice: '₹500-₹5000',
         bestTime: 'नवंबर-फरवरी',
         nearbyAttractions: ['लाल किला', 'जामा मस्जिद', 'राज घाट'],
@@ -94,16 +97,18 @@ const Markets = () => {
         state: 'rajasthan',
         description: 'ये जीवंत बाजार गहने, कपड़े और हस्तशिल्प की विविधता का घर हैं।',
         descriptionEn: 'These vibrant bazaars are host to a variety of jewelry, textiles and handicrafts.',
-        image: jaipurImg, // ✅ Fixed: Using imported image
+        image: jaipurImg,
         href: '/markets/pinkcity_bazaar',
         rating: 4.9,
         reviews: 3245,
         vendors: 220,
         established: '1727',
         specialties: ['जयपुरी आभूषण', 'ब्लॉक प्रिंट', 'नीली मिट्टी के बर्तन', 'राजस्थानी कठपुतली'],
+        specialtiesEn: ['Jaipuri Jewelry', 'Block Print', 'Blue Pottery', 'Rajasthani Puppetry'],
         categories: ['traditional', 'heritage', 'handicrafts', 'jewelry'],
         openingHours: '10:00 - 20:00',
         popularItems: ['कुंदन ज्वेलरी', 'बंधेज साड़ी', 'जोधपुरी जूते', 'मीनाकारी'],
+        popularItemsEn: ['Kundan Jewelry', 'Bandhej Saree', 'Jodhpuri Shoes', 'Meenakari'],
         avgPrice: '₹300-₹25000',
         bestTime: 'अक्टूबर-मार्च',
         nearbyAttractions: ['हवा महल', 'सिटी पैलेस', 'अंबर किला'],
@@ -119,16 +124,18 @@ const Markets = () => {
         state: 'telangana',
         description: 'प्रतिष्ठित चार मीनार के सामने स्थित, यह बाजार चूड़ियों, मोतियों और पारंपरिक हैदराबादी आभूषण डिजाइन का शानदार संग्रह प्रस्तुत करता है।',
         descriptionEn: 'Facing the iconic Char Minar, this market offers a stunning array of bangles, pearls and traditional Hyderabadi jewelry designs.',
-        image: laadBazaarImg, // ✅ Fixed: Using imported image
+        image: laadBazaarImg,
         href: '/markets/laad_bazaar',
         rating: 4.7,
         reviews: 1876,
         vendors: 150,
         established: '1591',
         specialties: ['मोती', 'लाख की चूड़ियां', 'निज़ामी आभूषण', 'अत्तर'],
+        specialtiesEn: ['Pearls', 'Lac Bangles', 'Nizami Jewelry', 'Attar'],
         categories: ['traditional', 'heritage', 'jewelry'],
         openingHours: '11:00 - 21:30',
         popularItems: ['हैदराबादी पर्ल्स', 'लाख बैंगल्स', 'दक्खिनी कपड़े'],
+        popularItemsEn: ['Hyderabadi Pearls', 'Lac Bangles', 'Deccani Clothing'],
         avgPrice: '₹200-₹50000',
         bestTime: 'नवंबर-फरवरी',
         nearbyAttractions: ['चार मीनार', 'मक्का मस्जिद', 'चौमहल्ला पैलेस'],
@@ -144,16 +151,18 @@ const Markets = () => {
         state: 'karnataka',
         description: 'यह रंग-बिरंगा बाजार एक पर्यटक आकर्षण भी है, जहाँ फूलों के गुच्छे, फल और विभिन्न रंगों का कुमकुम पाउडर मिलता है।',
         descriptionEn: 'This colorful market also doubles as a tourist attraction, with bundles of flowers, fruits and various colored Kumkum powder.',
-        image: mysoreImg, // ✅ Fixed: Using imported image
+        image: mysoreImg,
         href: '/markets/devaraja_market',
         rating: 4.6,
         reviews: 1456,
         vendors: 95,
         established: '1905',
         specialties: ['चंदन', 'रेशम', 'मैसूर पाक', 'कुमकुम'],
+        specialtiesEn: ['Sandalwood', 'Silk', 'Mysore Pak', 'Kumkum'],
         categories: ['traditional', 'handicrafts'],
         openingHours: '06:00 - 20:00',
         popularItems: ['चंदन की लकड़ी', 'मैसूर सिल्क', 'फूल माला'],
+        popularItemsEn: ['Sandalwood', 'Mysore Silk', 'Flower Garlands'],
         avgPrice: '₹100-₹15000',
         bestTime: 'अक्टूबर-मार्च',
         nearbyAttractions: ['मैसूर पैलेस', 'चामुंडी हिल्स', 'सेंट फिलोमिना चर्च'],
@@ -169,16 +178,18 @@ const Markets = () => {
         state: 'maharashtra',
         description: 'यह लोकप्रिय शॉपिंग गंतव्य अपने ट्रेंडी फैशन बुटीक और प्राचीन वस्तुओं के लिए जाना जाता है।',
         descriptionEn: 'This popular shopping destination is known for its trendy fashion boutiques and antiques.',
-        image: colabaImg, // ✅ Fixed: Using imported image
+        image: colabaImg,
         href: '/markets/colaba_causeway',
         rating: 4.5,
         reviews: 2134,
         vendors: 300,
         established: '1838',
         specialties: ['एंटीक्स', 'फैशन', 'हैंडीक्राफ्ट्स', 'कैफे'],
+        specialtiesEn: ['Antiques', 'Fashion', 'Handicrafts', 'Cafes'],
         categories: ['modern', 'handicrafts'],
         openingHours: '10:00 - 23:00',
         popularItems: ['विंटेज कलेक्टिबल्स', 'डिज़ाइनर वियर', 'हैंडमेड ज्वेलरी'],
+        popularItemsEn: ['Vintage Collectibles', 'Designer Wear', 'Handmade Jewelry'],
         avgPrice: '₹500-₹25000',
         bestTime: 'नवंबर-फरवरी',
         nearbyAttractions: ['गेटवे ऑफ इंडिया', 'ताज होटल', 'प्रिंस ऑफ वेल्स म्यूजियम'],
@@ -194,16 +205,18 @@ const Markets = () => {
         state: 'karnataka',
         description: 'बैंगलोर के दिल में स्थित इस बाजार में दुकानों की विविध श्रृंखला देखने लायक है।',
         descriptionEn: 'The diverse range of shops in this market in the heart of Bangalore is a sight to behold.',
-        image: commercialStreetImg, // ✅ Fixed: Using imported image
+        image: commercialStreetImg,
         href: '/markets/commercial_street',
         rating: 4.4,
         reviews: 1987,
         vendors: 250,
         established: '1884',
         specialties: ['इलेक्ट्रॉनिक्स', 'बुक्स', 'कपड़े', 'टेक गैजेट्स'],
+        specialtiesEn: ['Electronics', 'Books', 'Clothing', 'Tech Gadgets'],
         categories: ['modern', 'textiles'],
         openingHours: '10:00 - 21:00',
         popularItems: ['टेक एक्सेसरीज', 'कर्नाटक हैंडलूम', 'कॉफी'],
+        popularItemsEn: ['Tech Accessories', 'Karnataka Handloom', 'Coffee'],
         avgPrice: '₹200-₹15000',
         bestTime: 'पूरे साल',
         nearbyAttractions: ['विधान सौध', 'कब्बन पार्क', 'यूबी सिटी मॉल'],
@@ -219,16 +232,18 @@ const Markets = () => {
         state: 'delhi',
         description: 'एक खुला बाजार जो पूरे भारत की हस्तशिल्प और भोजन परंपराओं को एक स्थान पर प्रस्तुत करता है।',
         descriptionEn: 'An open-air market showcasing handicrafts and food traditions from across India in one place.',
-        image: dilliHaatImg, // ✅ Fixed: Using imported image
+        image: dilliHaatImg,
         href: '/markets/dilli_haat',
         rating: 4.7,
         reviews: 3421,
         vendors: 200,
         established: '1994',
         specialties: ['राज्यवार हैंडीक्राफ्ट्स', 'क्षेत्रीय भोजन', 'लाइव परफॉर्मेंस', 'कल्चरल इवेंट्स'],
+        specialtiesEn: ['State-wise Handicrafts', 'Regional Food', 'Live Performances', 'Cultural Events'],
         categories: ['traditional', 'handicrafts', 'heritage'],
         openingHours: '10:30 - 22:00',
         popularItems: ['हैंडलूम', 'पॉटरी', 'ऑर्गेनिक फूड', 'जनजातीय आर्ट'],
+        popularItemsEn: ['Handloom', 'Pottery', 'Organic Food', 'Tribal Art'],
         avgPrice: '₹100-₹5000',
         bestTime: 'अक्टूबर-मार्च',
         nearbyAttractions: ['INA मार्केट', 'लोधी गार्डन', 'इंडिया गेट'],
@@ -240,23 +255,22 @@ const Markets = () => {
     setMarkets(marketData);
   };
 
-  // ... rest of your component remains the same ...
   const filterAndSortMarkets = () => {
     let filtered = markets.filter(market => {
       const matchesSearch = market.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           market.nameHindi.includes(searchTerm) ||
-                           market.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           market.specialties.some(specialty => specialty.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+        market.nameHindi.includes(searchTerm) ||
+        market.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        market.specialties.some(specialty => specialty.toLowerCase().includes(searchTerm.toLowerCase()));
+
       const matchesState = selectedState === 'all' || market.state === selectedState;
       const matchesCategory = selectedCategory === 'all' || market.categories.includes(selectedCategory);
-      
+
       return matchesSearch && matchesState && matchesCategory;
     });
 
     // Sort markets
     filtered.sort((a, b) => {
-      switch(sortBy) {
+      switch (sortBy) {
         case 'rating': return b.rating - a.rating;
         case 'reviews': return b.reviews - a.reviews;
         case 'alphabetical': return a.name.localeCompare(b.name);
@@ -270,11 +284,10 @@ const Markets = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="भारत के प्रसिद्ध बाजार लोड हो रहे हैं..." />;
+    return <LoadingSpinner message={t('famousIndianMarkets') + "..."} />;
   }
 
   return (
-    // ... rest of your JSX remains exactly the same ...
     <React.StrictMode>
       <div className='min-h-screen bg-gradient-to-br from-emerald-50 dark:from-gray-900 via-green-50 dark:via-gray-900 to-emerald-100 dark:to-gray-800 pt-20'>
 
@@ -284,35 +297,34 @@ const Markets = () => {
             <div className='text-center mb-16'>
               <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-100 dark:from-gray-800 to-green-100 dark:to-gray-800 rounded-full px-6 py-3 mb-6 shadow-lg border border-emerald-200 dark:border-emerald-700'>
                 <span className='text-2xl'>🏪</span>
-                <span className='text-emerald-800 dark:text-emerald-200 font-bold'>भारतीय बाजार</span>
+                <span className='text-emerald-800 dark:text-emerald-200 font-bold'>{t('indianMarkets')}</span>
               </div>
-              
+
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-700 via-green-600 to-emerald-800 bg-clip-text text-transparent mb-6 pt-6 leading-tight'>
-                भारत के प्रसिद्ध बाजार
+                {t('famousIndianMarkets')}
               </h1>
-              
-              <p className='text-xl md:text-2xl text-emerald-700 dark:text-emerald-300 max-w-4xl mx-auto leading-relaxed font-medium mb-12'>
-                भारत के सबसे प्रसिद्ध स्थानीय बाजारों में घूमें,<br/>
-                प्रत्येक अपने अनूठे आइटम और अनुभव प्रदान करता है
+
+              <p className='text-xl md:text-2xl text-emerald-700 dark:text-emerald-300 max-w-4xl mx-auto leading-relaxed font-medium mb-12 whitespace-pre-line'>
+                {t('exploreMarketsDesc')}
               </p>
 
               {/* Quick Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto'>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
                   <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>{markets.length}</div>
-                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>प्रसिद्ध बाजार</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalMarkets')}</div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
                   <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>{markets.reduce((sum, market) => sum + market.vendors, 0)}</div>
-                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>कुल विक्रेता</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalVendors')}</div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
                   <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>6</div>
-                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>राज्य</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('totalStates')}</div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
                   <div className='text-2xl font-bold text-emerald-600 dark:text-emerald-400'>4.7⭐</div>
-                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>औसत रेटिंग</div>
+                  <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium'>{t('avgRating')}</div>
                 </div>
               </div>
             </div>
@@ -322,26 +334,26 @@ const Markets = () => {
         {/* Search and Filters */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
           <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
-            
+
             {/* Search Bar */}
             <div className='mb-6'>
-              <SearchBar 
+              <SearchBar
                 value={searchTerm}
                 onChange={setSearchTerm}
-                placeholder="बाजार, शहर या उत्पाद खोजें..."
+                placeholder={t('searchMarketsPlaceholder')}
               />
             </div>
 
             {/* Filters */}
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
-              
+
               {/* State Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>राज्य के अनुसार</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('filterByState')}</label>
                 <select
                   value={selectedState}
                   onChange={(e) => setSelectedState(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
                   {states.map(state => (
                     <option key={state.id} value={state.id}>{state.name}</option>
@@ -351,11 +363,11 @@ const Markets = () => {
 
               {/* Category Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>श्रेणी के अनुसार</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('filterByCategory')}</label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
                   {categories.map(category => (
                     <option key={category.id} value={category.id}>{category.name}</option>
@@ -365,17 +377,17 @@ const Markets = () => {
 
               {/* Sort Filter */}
               <div>
-                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>क्रमबद्ध करें</label>
+                <label className='block text-sm font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>{t('sortBy')}</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800'
+                  className='w-full px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:focus:border-emerald-400 focus:outline-none bg-white dark:bg-gray-800 dark:text-white'
                 >
-                  <option value="popular">लोकप्रियता</option>
-                  <option value="rating">रेटिंग</option>
-                  <option value="reviews">समीक्षाएं</option>
-                  <option value="alphabetical">नाम (अ-ज्ञ)</option>
-                  <option value="established">स्थापना वर्ष</option>
+                  <option value="popular">{t('sortPopularity')}</option>
+                  <option value="rating">{t('sortRating')}</option>
+                  <option value="reviews">{t('sortReviews')}</option>
+                  <option value="alphabetical">{t('sortAlphabetical')}</option>
+                  <option value="established">{t('sortEstablished')}</option>
                 </select>
               </div>
             </div>
@@ -383,28 +395,26 @@ const Markets = () => {
             {/* View Mode Toggle */}
             <div className='flex justify-between items-center'>
               <div className='text-emerald-600 dark:text-emerald-400 font-medium'>
-                {filteredMarkets.length} बाजार मिले
+                {filteredMarkets.length} {t('marketsFound')}
               </div>
               <div className='flex bg-emerald-100 dark:bg-gray-800 rounded-lg p-1'>
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-4 py-2 rounded-lg transition-all duration-200 ${
-                    viewMode === 'grid' 
-                      ? 'bg-emerald-500 text-white' 
-                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'grid'
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
+                    }`}
                 >
-                  ⊞ ग्रिड
+                  ⊞ {t('gridView')}
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-4 py-2 rounded-lg transition-all duration-200 ${
-                    viewMode === 'list' 
-                      ? 'bg-emerald-500 text-white' 
-                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 ${viewMode === 'list'
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-gray-700'
+                    }`}
                 >
-                  ☰ लिस्ट
+                  ☰ {t('listView')}
                 </button>
               </div>
             </div>
@@ -414,14 +424,14 @@ const Markets = () => {
         {/* Markets Grid/List */}
         <div className='max-w-7xl mx-auto px-6 pb-20'>
           {filteredMarkets.length > 0 ? (
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 lg:grid-cols-2 gap-8' 
+            <div className={viewMode === 'grid'
+              ? 'grid grid-cols-1 lg:grid-cols-2 gap-8'
               : 'space-y-6'
             }>
               {filteredMarkets.map((market) => (
-                <MarketCard 
-                  key={market.id} 
-                  market={market} 
+                <MarketCard
+                  key={market.id}
+                  market={market}
                   viewMode={viewMode}
                   onClick={() => navigate(market.href)}
                 />
@@ -431,8 +441,8 @@ const Markets = () => {
             /* No Results */
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>कोई बाजार नहीं मिला</h3>
-              <p className='text-emerald-600 dark:text-emerald-400 mb-6'>कृपया अपना खोज शब्द या फ़िल्टर बदलें</p>
+              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>{t('noMarketsFound')}</h3>
+              <p className='text-emerald-600 dark:text-emerald-400 mb-6'>{t('noMarketsDesc')}</p>
               <button
                 onClick={() => {
                   setSearchTerm('');
@@ -441,7 +451,7 @@ const Markets = () => {
                 }}
                 className='bg-gradient-to-r from-emerald-500 to-green-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-300'
               >
-                सभी फ़िल्टर साफ़ करें
+                {t('clearFilters')}
               </button>
             </div>
           )}
@@ -450,16 +460,16 @@ const Markets = () => {
         {/* Featured Section */}
         <div className='bg-gradient-to-r from-emerald-600 to-green-600 py-16'>
           <div className='max-w-7xl mx-auto px-6 text-center text-white'>
-            <h3 className='text-3xl font-bold mb-4'>अपना पसंदीदा बाजार नहीं मिला?</h3>
+            <h3 className='text-3xl font-bold mb-4'>{t('suggestMarketTitle')}</h3>
             <p className='text-xl text-emerald-100 mb-8'>
-              हमें बताएं और हम इसे जल्द ही जोड़ देंगे
+              {t('suggestMarketDesc')}
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <button className='bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 px-8 py-4 rounded-full font-semibold hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 transition-colors duration-300'>
-                बाजार सुझाएं
+              <button className='bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 px-8 py-4 rounded-full font-semibold hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors duration-300'>
+                {t('suggestMarketBtn')}
               </button>
-              <button className='border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white dark:bg-gray-800 hover:text-emerald-600 dark:text-emerald-400 transition-all duration-300'>
-                संपर्क करें
+              <button className='border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white dark:hover:bg-gray-800 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300'>
+                {t('contactUsBtn')}
               </button>
             </div>
           </div>

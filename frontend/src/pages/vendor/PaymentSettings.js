@@ -5,9 +5,15 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 
 const PaymentSettings = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [paymentData, setPaymentData] = useState({
@@ -95,7 +101,7 @@ const PaymentSettings = () => {
     try {
       setSaving(true);
       const response = await apiService.put('/vendor/payment-settings', paymentData);
-      
+
       if (response.success) {
         trackEvent('payment_settings_updated');
         alert('पेमेंट सेटिंग्स सफलतापूर्वक अपडेट हुईं!');
@@ -162,7 +168,7 @@ const PaymentSettings = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="पेमेंट सेटिंग्स लोड हो रही हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "पेमेंट सेटिंग्स लोड हो रही हैं..." : "Loading payment settings..."} />
       </div>
     );
   }
@@ -499,7 +505,7 @@ const PaymentSettings = () => {
                 className="bg-white rounded-lg shadow-lg p-6"
               >
                 <h3 className="text-lg font-bold text-gray-900 mb-4">पेमेंट हिस्ट्री</h3>
-                
+
                 {paymentHistory.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="text-3xl mb-2">💳</div>
@@ -514,13 +520,12 @@ const PaymentSettings = () => {
                           <p className="text-sm text-gray-600">{formatDate(payment.date)}</p>
                           <p className="text-xs text-gray-500">{payment.transactionId}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          payment.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${payment.status === 'completed' ? 'bg-green-100 text-green-800' :
                           payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
+                            'bg-red-100 text-red-800'
+                          }`}>
                           {payment.status === 'completed' ? 'पूर्ण' :
-                           payment.status === 'pending' ? 'प्रतीक्षा में' : 'फेल'}
+                            payment.status === 'pending' ? 'प्रतीक्षा में' : 'फेल'}
                         </span>
                       </div>
                     ))}
@@ -557,13 +562,13 @@ const PaymentSettings = () => {
                   पेमेंट से जुड़ी कोई समस्या है? हमारी फाइनेंस टीम से संपर्क करें।
                 </p>
                 <div className="space-y-2">
-                  <a 
+                  <a
                     href="mailto:payments@bharatshaala.com"
                     className="block text-yellow-600 hover:text-yellow-800 text-sm font-medium"
                   >
                     📧 payments@bharatshaala.com
                   </a>
-                  <a 
+                  <a
                     href="tel:+91-XXXX-XXXXXX"
                     className="block text-yellow-600 hover:text-yellow-800 text-sm font-medium"
                   >

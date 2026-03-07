@@ -24,6 +24,7 @@ import customer5 from "../images/avatars/customer5.jpg";
 const images = [car1, car2, car3, car4, car5];
 
 const Home = () => {
+  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [featuredCategories, setFeaturedCategories] = useState([]);
   const [popularMarkets, setPopularMarkets] = useState([]);
@@ -32,7 +33,6 @@ const Home = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [isVisible, setIsVisible] = useState({});
-
   // Intersection Observer for animations
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1, triggerOnce: true });
   const { ref: categoriesRef, inView: categoriesInView } = useInView({ threshold: 0.1, triggerOnce: true });
@@ -72,7 +72,6 @@ const Home = () => {
     // Simulate loading time for premium experience
     const timer = setTimeout(() => {
       setLoading(false);
-      loadFeaturedData();
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -80,7 +79,7 @@ const Home = () => {
   // Auto-rotate testimonials
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      setCurrentTestimonial((prev) => (prev + 1) % 3); // Using fixed length 3 to avoid dependency issues
     }, 4000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,91 +152,90 @@ const Home = () => {
       }
     ]);
 
-    // Enhanced market data
-    setPopularMarkets([
-      {
-        id: 'pinkcity_bazaar',
-        name: 'Pink City Bazaars',
-        nameHindi: 'गुलाबी शहर बाजार',
-        city: 'Jaipur',
-        cityHindi: 'जयपुर',
-        state: 'rajasthan',
-        description: 'ये जीवंत बाजार गहने, कपड़े और हस्तशिल्प की विविधता का घर हैं।',
-        image: jaipurImg,
-        href: '/markets/pinkcity_bazaar',
-        rating: 4.9,
-        reviews: 3245,
-        vendors: 220,
-        established: '1727',
-        specialties: ['जयपुरी आभूषण', 'ब्लॉक प्रिंट', 'नीली मिट्टी के बर्तन'],
-        categories: ['traditional', 'heritage', 'handicrafts', 'jewelry'],
-        openingHours: '10:00 - 20:00',
-        avgPrice: '₹300-₹25000',
-        bestTime: 'अक्टूबर-मार्च'
-      },
-      {
-        id: 'chandni_chowk',
-        name: 'Chandni Chowk',
-        nameHindi: 'चांदनी चौक',
-        city: 'Delhi',
-        cityHindi: 'दिल्ली',
-        state: 'delhi',
-        description: 'भारत के सबसे पुराने और व्यस्त बाजारों में से एक, इसकी संकरी गलियों और भीड़भाड़ के माहौल की खोज करें।',
-        image: chandniChowkImg,
-        href: '/markets/chandni_chowk',
-        rating: 4.8,
-        reviews: 2847,
-        vendors: 350,
-        established: '1650',
-        specialties: ['मसाले', 'चांदी के आभूषण', 'कपड़े'],
-        categories: ['traditional', 'heritage', 'handicrafts', 'textiles'],
-        openingHours: '10:00 - 21:00',
-        avgPrice: '₹500-₹5000',
-        bestTime: 'नवंबर-फरवरी'
-      },
-      {
-        id: 'laad_bazaar',
-        name: 'Laad Bazaar',
-        nameHindi: 'लाड़ बाजार',
-        city: 'Hyderabad',
-        cityHindi: 'हैदराबाद',
-        state: 'telangana',
-        description: 'प्रतिष्ठित चार मीनार के सामने स्थित, यह बाजार चूड़ियों, मोतियों और पारंपरिक हैदराबादी आभूषण डिजाइन का शानदार संग्रह प्रस्तुत करता है।',
-        image: laadBazaarImg,
-        href: '/markets/laad_bazaar',
-        rating: 4.7,
-        reviews: 1876,
-        vendors: 150,
-        established: '1591',
-        specialties: ['मोती', 'लाख की चूड़ियां', 'निज़ामी आभूषण'],
-        categories: ['traditional', 'heritage', 'jewelry'],
-        openingHours: '11:00 - 21:30',
-        avgPrice: '₹200-₹50000',
-        bestTime: 'नवंबर-फरवरी'
-      }
-    ]);
-  };
+  // Enhanced market data
+  const popularMarkets = [
+    {
+      id: 'pinkcity_bazaar',
+      name: 'Pink City Bazaars',
+      nameHindi: 'गुलाबी शहर बाजार',
+      city: 'Jaipur',
+      cityHindi: 'जयपुर',
+      state: 'rajasthan',
+      description: t('pinkCityDesc'),
+      image: jaipurImg,
+      href: '/markets/pinkcity_bazaar',
+      rating: 4.9,
+      reviews: 3245,
+      vendors: 220,
+      established: '1727',
+      specialties: [t('jewellery'), t('clothing'), t('houseware')],
+      categories: ['traditional', 'heritage', 'handicrafts', 'jewelry'],
+      openingHours: '10:00 - 20:00',
+      avgPrice: '₹300-₹25000',
+      bestTime: 'Oct-Mar'
+    },
+    {
+      id: 'chandni_chowk',
+      name: 'Chandni Chowk',
+      nameHindi: 'चांदनी चौक',
+      city: 'Delhi',
+      cityHindi: 'दिल्ली',
+      state: 'delhi',
+      description: t('chandniChowkDesc'),
+      image: chandniChowkImg,
+      href: '/markets/chandni_chowk',
+      rating: 4.8,
+      reviews: 2847,
+      vendors: 350,
+      established: '1650',
+      specialties: [t('spices'), t('silverJewelry'), t('clothing')],
+      categories: ['traditional', 'heritage', 'handicrafts', 'textiles'],
+      openingHours: '10:00 - 21:00',
+      avgPrice: '₹500-₹5000',
+      bestTime: 'Nov-Feb'
+    },
+    {
+      id: 'laad_bazaar',
+      name: 'Laad Bazaar',
+      nameHindi: 'लाड़ बाजार',
+      city: 'Hyderabad',
+      cityHindi: 'हैदराबाद',
+      state: 'telangana',
+      description: t('laadBazaarDesc'),
+      image: laadBazaarImg,
+      href: '/markets/laad_bazaar',
+      rating: 4.7,
+      reviews: 1876,
+      vendors: 150,
+      established: '1591',
+      specialties: [t('pearls'), t('lacBangles'), t('nizamiJewelry')],
+      categories: ['traditional', 'heritage', 'jewelry'],
+      openingHours: '11:00 - 21:30',
+      avgPrice: '₹200-₹50000',
+      bestTime: 'Nov-Feb'
+    }
+  ];
 
   // Testimonials data - Note: avatar is now the image source
   const testimonials = [
     {
-      name: "प्रिया शर्मा",
-      location: "मुंबई",
-      text: "भारतशाला से मुझे वास्तविक जयपुरी आभूषण मिले। गुणवत्ता अद्भुत है!",
+      name: "Priya Sharma",
+      location: "Mumbai",
+      text: t('testimonial1'),
       rating: 5,
       avatar: customer1
     },
     {
-      name: "राहुल गुप्ता",
-      location: "दिल्ली",
-      text: "चांदनी चौक के मसाले घर बैठे मिल गए। बहुत खुश हूं!",
+      name: "Rahul Gupta",
+      location: "Delhi",
+      text: t('testimonial2'),
       rating: 5,
       avatar: customer5
     },
     {
-      name: "सुमित्रा देवी",
-      location: "कोलकाता",
-      text: "हस्तशिल्प का संग्रह देखकर मन खुश हो गया। शानदार सेवा!",
+      name: "Sumitra Devi",
+      location: "Kolkata",
+      text: t('testimonial3'),
       rating: 5,
       avatar: customer2
     }
@@ -245,10 +243,10 @@ const Home = () => {
 
   // Interactive stats with counter animation
   const stats = [
-    { number: 500, suffix: '+', label: 'विश्वसनीय विक्रेता', icon: '🏪' },
-    { number: 15000, suffix: '+', label: 'प्रामाणिक उत्पाद', icon: '✨' },
-    { number: 50, suffix: '+', label: 'पारंपरिक बाजार', icon: '🏛️' },
-    { number: 4.8, suffix: '⭐', label: 'ग्राहक रेटिंग', icon: '💝' }
+    { number: 500, suffix: '+', label: t('trustedVendors'), icon: '🏪' },
+    { number: 15000, suffix: '+', label: t('authenticProducts'), icon: '✨' },
+    { number: 50, suffix: '+', label: t('traditionalMarkets'), icon: '🏛️' },
+    { number: 4.8, suffix: '⭐', label: t('customerRating'), icon: '💝' }
   ];
 
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
@@ -276,7 +274,7 @@ const Home = () => {
   }, [statsInView]);
 
   if (loading) {
-    return <LoadingSpinner message="भारतशाला लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "भारतशाला लोड हो रहा है..." : "Bharatshaala is loading..."} />;
   }
 
   return (
@@ -364,7 +362,7 @@ const Home = () => {
               {/* Interactive Main Heading */}
               <h1 className='mb-8 text-6xl font-bold leading-tight md:text-8xl'>
                 <span className='text-white drop-shadow-2xl bg-size-200 animate-text-glow'>
-                  भारत की समृद्ध
+                  {t('heroTitle1')}
                 </span>
                 <br />
                 <span className='text-yellow-200 delay-500 drop-shadow-2xl bg-size-200 animate-text-glow'>
@@ -376,7 +374,7 @@ const Home = () => {
               <div className='h-20 max-w-5xl mx-auto mb-12 text-2xl font-medium leading-relaxed md:text-3xl text-white/90 drop-shadow-lg'>
                 <div className="pt-6 pb-20 typewriter-container">
                   <span className="typewriter-text">
-                    भारत के जीवंत और विविधतापूर्ण स्थानीय बाजारों की खोज करें
+                    {t('heroSubtitle')}
                   </span>
                 </div>
               </div>
@@ -461,12 +459,12 @@ const Home = () => {
 
           <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
             {featuredCategories.map((category, index) => (
-                <div
-                  key={category.id}
-                  onClick={() => window.location.href = `/categories/${category.id}`}
-                  className={`group relative bg-gradient-to-br ${category.gradient} rounded-3xl p-8 shadow-2xl ${category.hoverColor} transform hover:scale-105 transition-all duration-500 cursor-pointer overflow-hidden ${categoriesInView ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
+              <div
+                key={category.id}
+                onClick={() => window.location.href = `/categories/${category.id}`}
+                className={`group relative bg-gradient-to-br ${category.gradient} rounded-3xl p-8 shadow-2xl ${category.hoverColor} transform hover:scale-105 transition-all duration-500 cursor-pointer overflow-hidden ${categoriesInView ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute top-0 right-0 w-32 h-32 transition-transform duration-700 transform translate-x-16 -translate-y-16 bg-white rounded-full group-hover:scale-150"></div>
@@ -572,9 +570,8 @@ const Home = () => {
                   {testimonials.map((_, index) => (
                     <button
                       key={index}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentTestimonial ? 'bg-white w-8' : 'bg-white/50'
-                      }`}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentTestimonial ? 'bg-white w-8' : 'bg-white/50'
+                        }`}
                       onClick={() => setCurrentTestimonial(index)}
                     />
                   ))}
@@ -661,20 +658,20 @@ const Home = () => {
               {[
                 {
                   icon: '🌿',
-                  title: 'प्रामाणिकता की गारंटी',
-                  description: 'हमारे सभी उत्पाद 100% प्रामाणिक हैं और कुशल कारीगरों द्वारा तैयार किए गए हैं',
+                  title: t('authGuarantee'),
+                  description: t('authDesc'),
                   gradient: 'from-green-500 to-emerald-500'
                 },
                 {
                   icon: '🚚',
-                  title: 'तेज़ और सुरक्षित डिलीवरी',
-                  description: 'पूरे भारत में 48 घंटे के अंदर सुरक्षित पैकेजिंग के साथ डिलीवरी',
+                  title: t('fastDelivery'),
+                  description: t('deliveryDesc'),
                   gradient: 'from-blue-500 to-cyan-500'
                 },
                 {
                   icon: '💯',
-                  title: 'पूर्ण संतुष्टि गारंटी',
-                  description: '30 दिन की मनी-बैक गारंटी और 24/7 कस्टमर सपोर्ट सेवा',
+                  title: t('satisfactionGuarantee'),
+                  description: t('satisfactionDesc'),
                   gradient: 'from-purple-500 to-pink-500'
                 }
               ].map((value, index) => (

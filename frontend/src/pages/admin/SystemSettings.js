@@ -2,16 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../../context/NotificationContext';
 import { useAnalytics } from '../analytics';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ImageUpload from '../components/ImageUpload';
 import apiService from '../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const SystemSettings = () => {
   const { user } = useAuth();
   const { showSuccess, showError } = useNotification();
   const { trackEvent } = useAnalytics();
+  const { language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -28,14 +30,14 @@ const SystemSettings = () => {
     supportEmail: '',
     phone: '',
     address: '',
-    
+
     // Business Settings
     businessName: '',
     businessType: '',
     gstNumber: '',
     panNumber: '',
     businessAddress: '',
-    
+
     // Payment Settings
     razorpayKeyId: '',
     razorpayKeySecret: '',
@@ -44,14 +46,14 @@ const SystemSettings = () => {
     codEnabled: true,
     minOrderAmount: 0,
     maxOrderAmount: 100000,
-    
+
     // Shipping Settings
     defaultShippingCharges: 50,
     freeShippingThreshold: 500,
     maxShippingWeight: 30,
     domesticShipping: true,
     internationalShipping: false,
-    
+
     // Email Settings
     smtpHost: '',
     smtpPort: 587,
@@ -60,7 +62,7 @@ const SystemSettings = () => {
     smtpEncryption: 'tls',
     emailFromName: '',
     emailFromAddress: '',
-    
+
     // SMS Settings
     smsProvider: 'twilio',
     twilioSid: '',
@@ -68,7 +70,7 @@ const SystemSettings = () => {
     twilioFrom: '',
     otpLength: 6,
     otpExpiry: 300,
-    
+
     // Security Settings
     sessionTimeout: 3600,
     maxLoginAttempts: 5,
@@ -76,26 +78,26 @@ const SystemSettings = () => {
     passwordMinLength: 8,
     passwordRequireSpecial: true,
     twoFactorEnabled: false,
-    
+
     // Performance Settings
     cacheEnabled: true,
     cacheDuration: 3600,
     compressionEnabled: true,
     cdnEnabled: false,
     cdnUrl: '',
-    
+
     // Analytics Settings
     googleAnalyticsId: '',
     facebookPixelId: '',
     gtmId: '',
     hotjarId: '',
     analyticsEnabled: true,
-    
+
     // Maintenance Settings
     maintenanceMode: false,
     maintenanceMessage: '',
     allowedIPs: [],
-    
+
     // Feature Flags
     featuresEnabled: {
       wishlist: true,
@@ -131,7 +133,7 @@ const SystemSettings = () => {
     try {
       setLoading(true);
       const response = await apiService.get('/admin/settings');
-      
+
       if (response.success) {
         setSettings(prev => ({ ...prev, ...response.data }));
       }
@@ -144,7 +146,7 @@ const SystemSettings = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     if (name.startsWith('featuresEnabled.')) {
       const featureKey = name.split('.')[1];
       setSettings(prev => ({
@@ -167,10 +169,10 @@ const SystemSettings = () => {
 
     try {
       const response = await apiService.post('/admin/settings', settings);
-      
+
       if (response.success) {
         showSuccess('सेटिंग्स सेव हो गईं');
-        
+
         trackEvent('system_settings_updated', {
           tab: activeTab,
           adminId: user.id
@@ -184,7 +186,7 @@ const SystemSettings = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner fullScreen text="सेटिंग्स लोड हो रही हैं..." />;
+    return <LoadingSpinner fullScreen text={language === 'hi' ? "सेटिंग्स लोड हो रही हैं..." : "Loading settings..."} />;
   }
 
   return (
@@ -212,11 +214,10 @@ const SystemSettings = () => {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                  activeTab === tab.key
-                    ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${activeTab === tab.key
+                  ? 'border-emerald-500 text-emerald-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
               >
                 <span className="mr-2">{tab.icon}</span>
                 {tab.name}
@@ -351,7 +352,7 @@ const SystemSettings = () => {
           {activeTab === 'features' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-900">फीचर्स को सक्षम/निष्क्रिय करें</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(settings.featuresEnabled).map(([feature, enabled]) => (
                   <div key={feature} className="flex items-center">

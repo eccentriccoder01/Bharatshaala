@@ -5,14 +5,19 @@ import { motion } from 'framer-motion';
 import { useAnalytics } from '../../utils/analytics';
 import apiService from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
+import { useNotification } from '../../context/NotificationContext';
 import ImageUploader from '../../components/ImageUploader';
 
 const StoreSettings = () => {
   const { trackEvent, trackPageView } = useAnalytics();
+  const { showSuccess, showError } = useNotification();
+  const { user } = useAuth();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
-  
+
   const [storeData, setStoreData] = useState({
     basic: {
       storeName: '',
@@ -151,7 +156,7 @@ const StoreSettings = () => {
     try {
       setSaving(true);
       const response = await apiService.put('/vendor/store-settings', storeData);
-      
+
       if (response.success) {
         trackEvent('store_settings_updated', { tab: activeTab });
         alert('स्टोर सेटिंग्स सफलतापूर्वक अपडेट हुईं!');
@@ -233,7 +238,7 @@ const StoreSettings = () => {
       ...storeData,
       preferences: {
         ...storeData.preferences,
-        [section]: typeof storeData.preferences[section] === 'object' 
+        [section]: typeof storeData.preferences[section] === 'object'
           ? { ...storeData.preferences[section], [field]: value }
           : value
       }
@@ -263,7 +268,7 @@ const StoreSettings = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="large" text="स्टोर सेटिंग्स लोड हो रही हैं..." />
+        <LoadingSpinner size="large" text={language === 'hi' ? "स्टोर सेटिंग्स लोड हो रही हैं..." : "Loading store settings..."} />
       </div>
     );
   }
@@ -307,11 +312,10 @@ const StoreSettings = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap ${
-                      activeTab === tab.id
-                        ? 'border-green-500 text-green-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
+                    className={`flex items-center space-x-2 py-4 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap ${activeTab === tab.id
+                      ? 'border-green-500 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      }`}
                   >
                     <span>{tab.icon}</span>
                     <span>{tab.name}</span>

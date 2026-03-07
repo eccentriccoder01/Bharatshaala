@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAPI } from '../hooks/useAPI';
+// import { useNotification } from '../context/NotificationContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const TrackOrder = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { get } = useAPI();
+  // const { /* showError */ } = useNotification();
+  const { language } = useLanguage();
 
   const [orderTracking, setOrderTracking] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -180,7 +184,7 @@ const TrackOrder = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner message="ट्रैकिंग जानकारी लोड हो रही है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "ट्रैकिंग जानकारी लोड हो रही है..." : "Tracking information is loading..."} />;
   }
 
   if (!orderTracking) {
@@ -289,9 +293,8 @@ const TrackOrder = () => {
                 <div key={index} className="relative flex items-start space-x-6">
 
                   {/* Timeline Dot */}
-                  <div className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center text-white text-xl ${
-                    event.completed ? getStatusColor(event.status) : 'bg-gray-300 dark:bg-gray-600'
-                  } ${event.current ? 'ring-4 ring-yellow-300 dark:ring-yellow-600 animate-pulse' : ''}`}>
+                  <div className={`relative z-10 w-16 h-16 rounded-full flex items-center justify-center text-white text-xl ${event.completed ? getStatusColor(event.status) : 'bg-gray-300 dark:bg-gray-600'
+                    } ${event.current ? 'ring-4 ring-yellow-300 dark:ring-yellow-600 animate-pulse' : ''}`}>
                     {event.icon}
                   </div>
 

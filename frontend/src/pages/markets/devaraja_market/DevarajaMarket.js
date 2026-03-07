@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../../context/LanguageContext';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import ShopCard from '../../../components/ShopCard';
 import '../../../App.css';
+import map from '../../../images/markets/mysore_map.jpeg';
 
 const DevarajaMarket = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredShop, setHoveredShop] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
+  // const navigate = useNavigate();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
@@ -25,15 +30,22 @@ const DevarajaMarket = () => {
       established: '1912',
       products: 150,
       owner: 'श्री रामस्वामी अय्यर',
+      ownerEn: 'Mr. Ramaswamy Iyer',
       experience: '40 साल',
+      experienceEn: '40 Years',
       category: 'sandalwood',
       specialty_items: ['चंदन की लकड़ी', 'चंदन का तेल', 'चंदन साबुन', 'अगरबत्ती', 'चंदन पाउडर'],
+      specialtyItemsEn: ['Sandalwood Logs', 'Sandalwood Oil', 'Sandalwood Soap', 'Incense Sticks', 'Sandalwood Powder'],
       href: '/markets/devaraja_market/sandalwood-palace',
       image: '/images/shops/sandalwood-palace.jpg',
       badge: '🌿 प्रमाणित चंदन',
+      badgeEn: '🌿 Certified Sandalwood',
       timings: 'सुबह 7:00 - रात 8:00',
+      timingsEn: '7:00 AM - 8:00 PM',
       languages: ['कन्नड़', 'हिंदी', 'अंग्रेजी', 'तमिल'],
+      languagesEn: ['Kannada', 'Hindi', 'English', 'Tamil'],
       payment_methods: ['नकद', 'UPI', 'कार्ड'],
+      paymentMethodsEn: ['Cash', 'UPI', 'Card'],
       delivery_available: true,
       wholesale_available: true,
       certifications: ['GI Tag Certified', 'Forest Department Approved']
@@ -49,15 +61,22 @@ const DevarajaMarket = () => {
       established: '1924',
       products: 380,
       owner: 'श्रीमती पद्मा देवी',
+      ownerEn: 'Mrs. Padma Devi',
       experience: '35 साल',
+      experienceEn: '35 Years',
       category: 'silk',
       specialty_items: ['मैसूर सिल्क साड़ी', 'कांचीपुरम साड़ी', 'सिल्क ब्लाउज', 'धोती', 'पवाड़ा'],
+      specialtyItemsEn: ['Mysore Silk Saree', 'Kanchipuram Saree', 'Silk Blouse', 'Dhoti', 'Pavada'],
       href: '/markets/devaraja_market/mysore-silk-emporium',
       image: '/images/shops/silk-emporium.jpg',
       badge: '🧵 हैंडलूम सर्टिफाइड',
+      badgeEn: '🧵 Handloom Certified',
       timings: 'सुबह 9:00 - रात 8:30',
+      timingsEn: '9:00 AM - 8:30 PM',
       languages: ['कन्नड़', 'हिंदी', 'अंग्रेजी'],
+      languagesEn: ['Kannada', 'Hindi', 'English'],
       payment_methods: ['नकद', 'UPI', 'कार्ड', 'चेक'],
+      paymentMethodsEn: ['Cash', 'UPI', 'Card', 'Check'],
       delivery_available: true,
       wholesale_available: true,
       certifications: ['Handloom Mark', 'Silk Mark Authority']
@@ -73,15 +92,22 @@ const DevarajaMarket = () => {
       established: '1945',
       products: 85,
       owner: 'श्री वेंकटेश',
+      ownerEn: 'Mr. Venkatesh',
       experience: '30 साल',
+      experienceEn: '30 Years',
       category: 'flowers',
       specialty_items: ['जैस्मिन माला', 'गुलाब की पंखुड़ी', 'मारिगोल्ड', 'तुलसी माला', 'कमल के फूल'],
+      specialtyItemsEn: ['Jasmine Garland', 'Rose Petals', 'Marigold', 'Tulsi Garland', 'Lotus Flowers'],
       href: '/markets/devaraja_market/flower-garland-shop',
       image: '/images/shops/flower-shop.jpg',
       badge: '🌸 ताजे फूल',
+      badgeEn: '🌸 Fresh Flowers',
       timings: 'सुबह 5:00 - रात 10:00',
+      timingsEn: '5:00 AM - 10:00 PM',
       languages: ['कन्नड़', 'हिंदी', 'तमिल'],
+      languagesEn: ['Kannada', 'Hindi', 'Tamil'],
       payment_methods: ['नकद', 'UPI'],
+      paymentMethodsEn: ['Cash', 'UPI'],
       delivery_available: false,
       wholesale_available: true,
       certifications: ['Organic Flowers']
@@ -97,15 +123,22 @@ const DevarajaMarket = () => {
       established: '1958',
       products: 320,
       owner: 'श्री कृष्णा मूर्ति',
+      ownerEn: 'Mr. Krishna Murthy',
       experience: '28 साल',
+      experienceEn: '28 Years',
       category: 'spices',
       specialty_items: ['कुर्ग कॉफी', 'काली मिर्च', 'इलायची', 'हल्दी', 'गरम मसाला'],
+      specialtyItemsEn: ['Coorg Coffee', 'Black Pepper', 'Cardamom', 'Turmeric', 'Garam Masala'],
       href: '/markets/devaraja_market/spice-corner',
       image: '/images/shops/spice-corner.jpg',
       badge: '☕ कुर्ग कॉफी',
+      badgeEn: '☕ Coorg Coffee',
       timings: 'सुबह 8:00 - रात 8:00',
+      timingsEn: '8:00 AM - 8:00 PM',
       languages: ['कन्नड़', 'हिंदी', 'अंग्रेजी'],
+      languagesEn: ['Kannada', 'Hindi', 'English'],
       payment_methods: ['नकद', 'UPI', 'कार्ड'],
+      paymentMethodsEn: ['Cash', 'UPI', 'Card'],
       delivery_available: true,
       wholesale_available: true,
       certifications: ['Spice Board Certified', 'Coffee Board Approved']
@@ -121,15 +154,22 @@ const DevarajaMarket = () => {
       established: '1935',
       products: 95,
       owner: 'श्री गुरुमूर्ति',
+      ownerEn: 'Mr. Gurumurthy',
       experience: '42 साल',
+      experienceEn: '42 Years',
       category: 'sweets',
       specialty_items: ['मैसूर पाक', 'होलिगे', 'चिरोटी', 'हेसरू बेले', 'कारजिकै'],
+      specialtyItemsEn: ['Mysore Pak', 'Holige', 'Chiroti', 'Hesaru Bele', 'Karjikayi'],
       href: '/markets/devaraja_market/mysore-pak-house',
       image: '/images/shops/sweet-mart.jpg',
       badge: '🍯 मूल मैसूर पाक',
+      badgeEn: '🍯 Original Mysore Pak',
       timings: 'सुबह 7:00 - रात 9:00',
+      timingsEn: '7:00 AM - 9:00 PM',
       languages: ['कन्नड़', 'हिंदी'],
+      languagesEn: ['Kannada', 'Hindi'],
       payment_methods: ['नकद', 'UPI'],
+      paymentMethodsEn: ['Cash', 'UPI'],
       delivery_available: true,
       wholesale_available: true,
       certifications: ['FSSAI Certified', 'Heritage Recipe']
@@ -145,15 +185,22 @@ const DevarajaMarket = () => {
       established: '1968',
       products: 240,
       owner: 'श्री राजेश वर्मा',
+      ownerEn: 'Mr. Rajesh Verma',
       experience: '25 साल',
+      experienceEn: '25 Years',
       category: 'handicrafts',
       specialty_items: ['चंदन मूर्तियां', 'मैसूर पेंटिंग', 'रोसवुड आइटम्स', 'इनले वर्क', 'बांस के सामान'],
+      specialtyItemsEn: ['Sandalwood Statues', 'Mysore Paintings', 'Rosewood Items', 'Inlay Work', 'Bamboo Items'],
       href: '/markets/devaraja_market/traditional-crafts',
       image: '/images/shops/handicrafts.jpg',
       badge: '🎨 हस्तनिर्मित',
+      badgeEn: '🎨 Handmade',
       timings: 'सुबह 10:00 - रात 8:00',
+      timingsEn: '10:00 AM - 8:00 PM',
       languages: ['कन्नड़', 'हिंदी', 'अंग्रेजी'],
+      languagesEn: ['Kannada', 'Hindi', 'English'],
       payment_methods: ['नकद', 'UPI', 'कार्ड'],
+      paymentMethodsEn: ['Cash', 'UPI', 'Card'],
       delivery_available: true,
       wholesale_available: false,
       certifications: ['Handicraft Development Board', 'Artisan Certified']
@@ -168,23 +215,31 @@ const DevarajaMarket = () => {
     established: '1886',
     totalShops: 1200,
     totalVendors: 95,
-    specialties: ['चंदन', 'रेशम', 'फूल', 'मसाले', 'मैसूर पाक', 'हस्तशिल्प'],
-    openingHours: 'सुबह 6:00 - रात 8:00',
-    bestTime: 'अक्टूबर से मार्च',
-    nearbyAttractions: ['मैसूर पैलेस', 'चामुंडी हिल्स', 'सेंट फिलोमिना चर्च', 'ललिता महल'],
-    transport: ['सिटी बस', 'ऑटो रिक्शा', 'टैक्सी', 'प्राइवेट वाहन'],
+    specialties: language === 'hi'
+      ? ['चंदन', 'रेशम', 'फूल', 'मसाले', 'मैसूर पाक', 'हस्तशिल्प']
+      : ['Sandalwood', 'Silk', 'Flowers', 'Spices', 'Mysore Pak', 'Handicrafts'],
+    openingHours: language === 'hi' ? 'सुबह 6:00 - रात 8:00' : '6:00 AM - 8:00 PM',
+    bestTime: language === 'hi' ? 'अक्टूबर से मार्च' : 'October to March',
+    nearbyAttractions: language === 'hi'
+      ? ['मैसूर पैलेस', 'चामुंडी हिल्स', 'सेंट फिलोमिना चर्च', 'ललिता महल']
+      : ['Mysore Palace', 'Chamundi Hills', 'St. Philomena\'s Church', 'Lalitha Mahal'],
+    transport: language === 'hi'
+      ? ['सिटी बस', 'ऑटो रिक्शा', 'टैक्सी', 'प्राइवेट वाहन']
+      : ['City Bus', 'Auto Rickshaw', 'Taxi', 'Private Marriage'],
     parkingAvailable: true,
-    history: 'टीपू सुल्तान के समय से चला आ रहा यह बाजार मैसूर की सांस्कृतिक पहचान है।'
+    history: language === 'hi'
+      ? 'टीपू सुल्तान के समय से चला आ रहा यह बाजार मैसूर की सांस्कृतिक पहचान है।'
+      : 'Dating back to the time of Tipu Sultan, this market is the cultural identity of Mysore.'
   };
 
   const categories = [
-    { id: 'all', name: 'सभी दुकानें', icon: '🏪', count: shops.length },
-    { id: 'sandalwood', name: 'चंदन', icon: '🌿', count: shops.filter(s => s.category === 'sandalwood').length },
-    { id: 'silk', name: 'सिल्क', icon: '🧵', count: shops.filter(s => s.category === 'silk').length },
-    { id: 'flowers', name: 'फूल', icon: '🌸', count: shops.filter(s => s.category === 'flowers').length },
-    { id: 'spices', name: 'मसाले', icon: '🌶️', count: shops.filter(s => s.category === 'spices').length },
-    { id: 'sweets', name: 'मिठाइयां', icon: '🍯', count: shops.filter(s => s.category === 'sweets').length },
-    { id: 'handicrafts', name: 'हस्तशिल्प', icon: '🎨', count: shops.filter(s => s.category === 'handicrafts').length }
+    { id: 'all', name: language === 'hi' ? 'सभी दुकानें' : 'All Shops', icon: '🏪', count: shops.length },
+    { id: 'sandalwood', name: language === 'hi' ? 'चंदन' : 'Sandalwood', icon: '🌿', count: shops.filter(s => s.category === 'sandalwood').length },
+    { id: 'silk', name: language === 'hi' ? 'सिल्क' : 'Silk', icon: '🧵', count: shops.filter(s => s.category === 'silk').length },
+    { id: 'flowers', name: language === 'hi' ? 'फूल' : 'Flowers', icon: '🌸', count: shops.filter(s => s.category === 'flowers').length },
+    { id: 'spices', name: language === 'hi' ? 'मसाले' : 'Spices', icon: '🌶️', count: shops.filter(s => s.category === 'spices').length },
+    { id: 'sweets', name: language === 'hi' ? 'मिठाइयां' : 'Sweets', icon: '🍯', count: shops.filter(s => s.category === 'sweets').length },
+    { id: 'handicrafts', name: language === 'hi' ? 'हस्तशिल्प' : 'Handicrafts', icon: '🎨', count: shops.filter(s => s.category === 'handicrafts').length }
   ];
 
   const filteredShops = activeFilter === 'all'
@@ -192,7 +247,7 @@ const DevarajaMarket = () => {
     : shops.filter(shop => shop.category === activeFilter);
 
   if (loading) {
-    return <LoadingSpinner message="Devaraja Market लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "Devaraja Market लोड हो रहा है..." : "Devaraja Market is loading..."} />;
   }
 
   return (
@@ -214,39 +269,50 @@ const DevarajaMarket = () => {
               {/* Royal Heritage Badge */}
               <div className='inline-flex items-center space-x-3 bg-gradient-to-r from-amber-100 dark:from-amber-900/30 to-yellow-100 dark:to-yellow-900/30 rounded-full px-6 py-3 mb-6 shadow-lg border border-amber-200 dark:border-amber-700'>
                 <span className='text-2xl'>👑</span>
-                <span className='text-amber-800 dark:text-amber-200 font-bold'>शाही विरासत</span>
+                <span className='text-amber-800 dark:text-amber-200 font-bold'>
+                  {language === 'hi' ? 'शाही विरासत' : t('royalHeritage')}
+                </span>
               </div>
 
               <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent mb-4 leading-tight'>
-                {marketInfo.nameHindi}
+                {language === 'hi' ? marketInfo.nameHindi : marketInfo.name}
               </h1>
               <h2 className='text-2xl md:text-3xl text-emerald-700 dark:text-emerald-300 font-semibold mb-6'>
-                Devaraja Market, {marketInfo.cityHindi}
+                Devaraja Market, {language === 'hi' ? marketInfo.cityHindi : marketInfo.city}
               </h2>
 
               <p className='text-xl text-emerald-600 dark:text-emerald-400 max-w-4xl mx-auto leading-relaxed mb-8'>
-                यह रंग-बिरंगा बाजार एक पर्यटक आकर्षण भी है, जहाँ फूलों के गुच्छे, फल और विभिन्न रंगों का कुमकुम पाउडर मिलता है।
-                मैसूर के महाराजाओं के समय से चला आ रहा यह बाजार आज भी अपने मूल स्वरूप में जीवित है।
-                यहाँ आपको विश्व प्रसिद्ध मैसूर चंदन, सिल्क साड़ियां और पारंपरिक मैसूर पाक मिलेगा।
+                {language === 'hi'
+                  ? 'यह रंग-बिरंगा बाजार एक पर्यटक आकर्षण भी है, जहाँ फूलों के गुच्छे, फल और विभिन्न रंगों का कुमकुम पाउडर मिलता है। मैसूर के महाराजाओं के समय से चला आ रहा यह बाजार आज भी अपने मूल स्वरूप में जीवित है। यहाँ आपको विश्व प्रसिद्ध मैसूर चंदन, सिल्क साड़ियां और पारंपरिक मैसूर पाक मिलेगा।'
+                  : 'This colorful market is also a tourist attraction, offering bunches of flowers, fruits and kumkum powder of various colors. Dating back to the time of the Maharajas of Mysore, this market is still alive in its original form. Here you will find world famous Mysore Sandalwood, Silk Sarees and traditional Mysore Pak.'
+                }
               </p>
 
               {/* Market Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12'>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 dark:border-amber-700'>
                   <div className='text-2xl font-bold text-amber-600 dark:text-amber-400'>{marketInfo.established}</div>
-                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>स्थापना</div>
+                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>
+                    {language === 'hi' ? 'स्थापना' : t('established')}
+                  </div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 dark:border-amber-700'>
                   <div className='text-2xl font-bold text-amber-600 dark:text-amber-400'>{marketInfo.totalShops.toLocaleString()}+</div>
-                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>कुल दुकानें</div>
+                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>
+                    {language === 'hi' ? 'कुल दुकानें' : t('totalShops')}
+                  </div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 dark:border-amber-700'>
                   <div className='text-2xl font-bold text-amber-600 dark:text-amber-400'>{marketInfo.totalVendors}+</div>
-                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>विक्रेता</div>
+                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>
+                    {language === 'hi' ? 'विक्रेता' : t('totalVendors')}
+                  </div>
                 </div>
                 <div className='text-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 dark:border-amber-700'>
                   <div className='text-2xl font-bold text-amber-600 dark:text-amber-400'>139</div>
-                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>साल पुराना</div>
+                  <div className='text-amber-600 dark:text-amber-400 text-sm font-medium'>
+                    {language === 'hi' ? 'साल पुराना' : t('yearsOld')}
+                  </div>
                 </div>
               </div>
 
@@ -254,18 +320,30 @@ const DevarajaMarket = () => {
               <div className='grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto'>
                 <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-amber-200 dark:border-amber-700'>
                   <div className='text-3xl mb-3'>🌿</div>
-                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>मैसूर चंदन</h3>
-                  <p className='text-amber-600 dark:text-amber-400 text-sm'>विश्व की सबसे अच्छी चंदन की लकड़ी</p>
+                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>
+                    {language === 'hi' ? 'मैसूर चंदन' : 'Mysore Sandalwood'}
+                  </h3>
+                  <p className='text-amber-600 dark:text-amber-400 text-sm'>
+                    {language === 'hi' ? 'विश्व की सबसे अच्छी चंदन की लकड़ी' : 'World\'s best sandalwood'}
+                  </p>
                 </div>
                 <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-amber-200 dark:border-amber-700'>
                   <div className='text-3xl mb-3'>🧵</div>
-                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>मैसूर सिल्क</h3>
-                  <p className='text-amber-600 dark:text-amber-400 text-sm'>प्रामाणिक हैंडलूम सिल्क साड़ियां</p>
+                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>
+                    {language === 'hi' ? 'मैसूर सिल्क' : 'Mysore Silk'}
+                  </h3>
+                  <p className='text-amber-600 dark:text-amber-400 text-sm'>
+                    {language === 'hi' ? 'प्रामाणिक हैंडलूम सिल्क साड़ियां' : 'Authentic Handloom Silk Sarees'}
+                  </p>
                 </div>
                 <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-amber-200 dark:border-amber-700'>
                   <div className='text-3xl mb-3'>🍯</div>
-                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>मैसूर पाक</h3>
-                  <p className='text-amber-600 dark:text-amber-400 text-sm'>मूल रेसिपी की मिठाई</p>
+                  <h3 className='font-bold text-amber-800 dark:text-amber-200 mb-2'>
+                    {language === 'hi' ? 'मैसूर पाक' : 'Mysore Pak'}
+                  </h3>
+                  <p className='text-amber-600 dark:text-amber-400 text-sm'>
+                    {language === 'hi' ? 'मूल रेसिपी की मिठाई' : 'Original recipe sweet'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -276,32 +354,89 @@ const DevarajaMarket = () => {
         <div className='max-w-7xl mx-auto px-6 mb-16'>
           <div className='bg-gradient-to-r from-amber-600 to-yellow-600 rounded-3xl p-12 text-white'>
             <div className='text-center mb-8'>
-              <h3 className='text-3xl font-bold mb-4'>मैसूर पैलेस कनेक्शन</h3>
+              <h3 className='text-3xl font-bold mb-4'>
+                {language === 'hi' ? 'मैसूर पैलेस कनेक्शन' : 'Mysore Palace Connection'}
+              </h3>
               <p className='text-xl text-amber-100 max-w-3xl mx-auto'>
-                मैसूर पैलेस से केवल 2 किमी दूर स्थित यह बाजार शाही परिवार की पसंदीदा खरीदारी का स्थान था
+                {language === 'hi'
+                  ? 'मैसूर पैलेस से केवल 2 किमी दूर स्थित यह बाजार शाही परिवार की पसंदीदा खरीदारी का स्थान था'
+                  : 'Located just 2 km from Mysore Palace, this market was a favorite shopping destination for the royal family'}
               </p>
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
               <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🏰</div>
-                <h4 className='text-lg font-semibold mb-2'>शाही संरक्षण</h4>
-                <p className='text-amber-100 text-sm'>महाराजाओं द्वारा संरक्षित</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'शाही संरक्षण' : 'Royal Patronage'}
+                </h4>
+                <p className='text-amber-100 text-sm'>
+                  {language === 'hi' ? 'महाराजाओं द्वारा संरक्षित' : 'Patronized by Maharajas'}
+                </p>
               </div>
               <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🛒</div>
-                <h4 className='text-lg font-semibold mb-2'>शाही आपूर्तिकर्ता</h4>
-                <p className='text-amber-100 text-sm'>पैलेस के लिए सामान</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'शाही आपूर्तिकर्ता' : 'Royal Suppliers'}
+                </h4>
+                <p className='text-amber-100 text-sm'>
+                  {language === 'hi' ? 'पैलेस के लिए सामान' : 'Supplies for Palace'}
+                </p>
               </div>
               <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>🎨</div>
-                <h4 className='text-lg font-semibold mb-2'>पारंपरिक कला</h4>
-                <p className='text-amber-100 text-sm'>दरबारी शिल्पकारी</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'पारंपरिक कला' : 'Traditional Art'}
+                </h4>
+                <p className='text-amber-100 text-sm'>
+                  {language === 'hi' ? 'दरबारी शिल्पकारी' : 'Court Craftsmanship'}
+                </p>
               </div>
               <div className='text-center bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm rounded-xl p-6'>
                 <div className='text-3xl mb-3'>📜</div>
-                <h4 className='text-lg font-semibold mb-2'>ऐतिहासिक रिकॉर्ड</h4>
-                <p className='text-amber-100 text-sm'>139 साल का इतिहास</p>
+                <h4 className='text-lg font-semibold mb-2'>
+                  {language === 'hi' ? 'ऐतिहासिक रिकॉर्ड' : 'Historic Record'}
+                </h4>
+                <p className='text-amber-100 text-sm'>
+                  {language === 'hi' ? '139 साल का इतिहास' : '139 Years of History'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interactive Map Section */}
+        <div className='max-w-7xl mx-auto px-6 mb-16'>
+          <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl p-8 shadow-lg'>
+            <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-6 text-center flex items-center justify-center space-x-3'>
+              <span>🗺️</span>
+              <span>{language === 'hi' ? 'देवराज मार्केट का नक्शा' : t('marketMap')}</span>
+            </h3>
+            <div className='relative flex justify-center'>
+              <img
+                src={map}
+                alt='Devaraja Market Map'
+                className='rounded-2xl w-full max-w-4xl shadow-lg hover:scale-105 transition-transform duration-500'
+              />
+            </div>
+            <div className='mt-8 grid grid-cols-1 md:grid-cols-3 gap-6'>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  ⏰ {language === 'hi' ? 'समय' : t('openingHours')}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.openingHours}</p>
+              </div>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  🌤️ {language === 'hi' ? 'बेस्ट टाइम' : t('bestTime')}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.bestTime}</p>
+              </div>
+              <div className='text-center bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
+                <h4 className='font-semibold text-emerald-800 dark:text-emerald-200 mb-2'>
+                  🚈 {language === 'hi' ? 'परिवहन' : 'Transport'}
+                </h4>
+                <p className='text-emerald-700 dark:text-emerald-300'>{marketInfo.transport[0]}</p>
               </div>
             </div>
           </div>
@@ -310,25 +445,25 @@ const DevarajaMarket = () => {
         {/* Category Filter */}
         <div className='max-w-7xl mx-auto px-6 mb-12'>
           <div className='bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg'>
-            <h3 className='text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4 text-center'>दुकान श्रेणियां</h3>
+            <h3 className='text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4 text-center'>
+              {language === 'hi' ? 'दुकान श्रेणियां' : t('shopCategories')}
+            </h3>
             <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3'>
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveFilter(category.id)}
-                  className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${
-                    activeFilter === category.id
-                      ? 'bg-gradient-to-br from-amber-500 to-yellow-500 text-white shadow-lg scale-105'
-                      : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
-                  }`}
+                  className={`flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 ${activeFilter === category.id
+                    ? 'bg-gradient-to-br from-amber-500 to-yellow-500 text-white shadow-lg scale-105'
+                    : 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 hover:border-emerald-300'
+                    }`}
                 >
                   <span className='text-2xl'>{category.icon}</span>
                   <span className='font-medium text-sm text-center leading-tight'>{category.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    activeFilter === category.id
-                      ? 'bg-white/20 dark:bg-gray-800/20 text-white'
-                      : 'bg-emerald-100 dark:bg-gray-800 text-emerald-600 dark:text-emerald-400'
-                  }`}>
+                  <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
+                    ? 'bg-white/20 dark:bg-gray-800/20 text-white'
+                    : 'bg-emerald-100 dark:bg-gray-800 text-emerald-600 dark:text-emerald-400'
+                    }`}>
                     {category.count}
                   </span>
                 </button>
@@ -340,11 +475,13 @@ const DevarajaMarket = () => {
         {/* Shops Grid */}
         <div className='max-w-7xl mx-auto px-6 pb-20'>
           <div className='text-center mb-12'>
-            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 dark:text-emerald-200 mb-4'>प्रमुख दुकानें</h3>
+            <h3 className='text-3xl md:text-4xl font-bold text-emerald-800 dark:text-emerald-200 mb-4'>
+              {language === 'hi' ? 'प्रमुख दुकानें' : t('majorShops')}
+            </h3>
             <p className='text-xl text-emerald-600 dark:text-emerald-400'>
               {activeFilter === 'all'
-                ? 'देवराज मार्केट की सभी प्रसिद्ध दुकानें'
-                : `${categories.find(c => c.id === activeFilter)?.name} की दुकानें`
+                ? (language === 'hi' ? 'देवराज मार्केट की सभी प्रसिद्ध दुकानें' : 'All famous shops of Devaraja Market')
+                : (language === 'hi' ? `${categories.find(c => c.id === activeFilter)?.name} की दुकानें` : `${categories.find(c => c.id === activeFilter)?.name} shops`)
               }
             </p>
           </div>
@@ -365,8 +502,12 @@ const DevarajaMarket = () => {
           ) : (
             <div className='text-center py-20'>
               <div className='text-6xl mb-4'>🔍</div>
-              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>कोई दुकान नहीं मिली</h3>
-              <p className='text-emerald-600 dark:text-emerald-400'>इस श्रेणी में कोई दुकान उपलब्ध नहीं है</p>
+              <h3 className='text-2xl font-bold text-emerald-800 dark:text-emerald-200 mb-2'>
+                {language === 'hi' ? 'कोई दुकान नहीं मिली' : t('noShopsFound')}
+              </h3>
+              <p className='text-emerald-600 dark:text-emerald-400'>
+                {language === 'hi' ? 'इस श्रेणी में कोई दुकान उपलब्ध नहीं है' : t('noShopsCategory')}
+              </p>
             </div>
           )}
         </div>

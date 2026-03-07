@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../../context/NotificationContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 
 const UserManagement = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { get, put, delete: deleteUser, post } = useAPI();
   const { showSuccess, showError, showInfo } = useNotification();
+  const { language } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
@@ -74,7 +76,7 @@ const UserManagement = () => {
           sort: sortBy
         }
       });
-      
+
       if (response.success) {
         setUsers(response.users);
         setTotalUsers(response.totalUsers);
@@ -296,7 +298,7 @@ const UserManagement = () => {
       suspended: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'निलंबित' },
       banned: { bg: 'bg-red-100', text: 'text-red-800', label: 'प्रतिबंधित' }
     };
-    
+
     const config = statusConfig[status] || statusConfig.inactive;
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.bg} ${config.text}`}>
@@ -311,7 +313,7 @@ const UserManagement = () => {
       medium: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'मध्यम जोखिम' },
       high: { bg: 'bg-red-100', text: 'text-red-800', label: 'उच्च जोखिम' }
     };
-    
+
     const config = riskConfig[riskScore] || riskConfig.low;
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.bg} ${config.text}`}>
@@ -331,13 +333,13 @@ const UserManagement = () => {
   const totalPages = Math.ceil(totalUsers / usersPerPage);
 
   if (loading) {
-    return <LoadingSpinner message="यूज़र डेटा लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "यूज़र डेटा लोड हो रहा है..." : "Loading user data..."} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 pt-20">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-start">
@@ -349,7 +351,7 @@ const UserManagement = () => {
                 कुल {totalUsers.toLocaleString()} यूज़र्स प्रबंधित करें
               </p>
             </div>
-            
+
             <button
               onClick={() => navigate('/admin')}
               className="bg-slate-500 text-white px-6 py-3 rounded-xl hover:bg-slate-600 transition-colors duration-200"
@@ -362,7 +364,7 @@ const UserManagement = () => {
         {/* Filters and Search */}
         <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            
+
             {/* Search */}
             <div className="md:col-span-2">
               <label className="block text-slate-800 font-semibold mb-2">खोजें</label>
@@ -526,8 +528,8 @@ const UserManagement = () => {
                       <div className="flex flex-col space-y-1">
                         <span className="text-sm font-medium text-slate-900 capitalize">
                           {user.role === 'user' ? 'ग्राहक' :
-                           user.role === 'vendor' ? 'विक्रेता' :
-                           user.role === 'admin' ? 'एडमिन' : user.role}
+                            user.role === 'vendor' ? 'विक्रेता' :
+                              user.role === 'admin' ? 'एडमिन' : user.role}
                         </span>
                         {getStatusBadge(user.status)}
                       </div>
@@ -551,7 +553,7 @@ const UserManagement = () => {
                         >
                           👁️
                         </button>
-                        
+
                         {user.status === 'active' ? (
                           <button
                             onClick={() => handleUserAction(user.id, 'suspend')}
@@ -569,7 +571,7 @@ const UserManagement = () => {
                             ▶️
                           </button>
                         )}
-                        
+
                         <button
                           onClick={() => handleUserAction(user.id, 'ban')}
                           className="text-red-600 hover:text-red-900"
@@ -577,7 +579,7 @@ const UserManagement = () => {
                         >
                           🚫
                         </button>
-                        
+
                         <button
                           onClick={() => handleUserAction(user.id, 'delete')}
                           className="text-red-600 hover:text-red-900"

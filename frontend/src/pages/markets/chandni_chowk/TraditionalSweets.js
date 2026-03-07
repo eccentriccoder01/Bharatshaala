@@ -9,11 +9,13 @@ import { useAnalytics } from '../../analytics';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import apiService from '../../apiService';
+import { useLanguage } from '../../context/LanguageContext';
 
 const TraditionalSweets = () => {
   const { trackEvent, trackPageView } = useAnalytics();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { t } = useLanguage();
 
   const [sweets, setSweets] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -21,81 +23,80 @@ const TraditionalSweets = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const sweetShopInfo = {
-    name: 'चांदनी चौक मिठाई की दुकानें',
-    nameEn: 'Chandni Chowk Traditional Sweets',
-    description: '200+ साल पुराना मिठाई का स्वर्ग - दिल्ली की सबसे प्रसिद्ध मिठाइयों का घर',
+    name: t('sweetsTitle'),
+    description: t('sweetsDescription'),
     established: '1800s',
-    speciality: 'बेसन के लड्डू, जलेबी, रबड़ी',
-    location: 'दरीबा कलां, चांदनी चौक',
+    speciality: t('sweetsSpeciality'),
+    location: t('sweetsLocation'),
     heroImage: '/images/markets/chandni-chowk-sweets.jpg'
   };
 
   const sweetCategories = [
-    { id: 'all', name: 'सभी मिठाइयां', icon: '🍯' },
-    { id: 'traditional', name: 'पारंपरिक', icon: '🪔' },
-    { id: 'seasonal', name: 'मौसमी', icon: '🌙' },
-    { id: 'festival', name: 'त्योहारी', icon: '🎉' },
-    { id: 'dry-fruits', name: 'ड्राई फ्रूट्स', icon: '🥜' },
-    { id: 'milk-based', name: 'दूध आधारित', icon: '🥛' },
-    { id: 'fried', name: 'तली हुई', icon: '🔥' }
+    { id: 'all', name: t('allSweets'), icon: '🍯' },
+    { id: 'traditional', name: t('traditional'), icon: '🪔' },
+    { id: 'seasonal', name: t('seasonal'), icon: '🌙' },
+    { id: 'festival', name: t('festival'), icon: '🎉' },
+    { id: 'dry-fruits', name: t('dryFruits'), icon: '🥜' },
+    { id: 'milk-based', name: t('milkBased'), icon: '🥛' },
+    { id: 'fried', name: t('fried'), icon: '🔥' }
   ];
 
   const famousSweets = [
     {
-      name: 'घेवर (राजस्थानी)',
-      description: 'पारंपरिक राजस्थानी मिठाई - मुंह में घुल जाने वाली',
+      name: t('ghevar'),
+      description: t('ghevarDesc'),
       price: '₹350/kg',
-      specialty: 'तीज-तेओहार विशेष',
-      vendor: 'ओल्ड फेमस जलेबी वाला'
+      specialty: t('teejFestivalSpecial'),
+      vendor: t('oldFamousJalebiWala')
     },
     {
-      name: 'बेसन लड्डू',
-      description: 'शुद्ध घी में बने बेसन के लड्डू',
+      name: t('besanLadoo'),
+      description: t('besanLadooDesc'),
       price: '₹480/kg',
-      specialty: '100 साल पुराना रेसिपी',
-      vendor: 'गुरु कृपा स्वीट्स'
+      specialty: t('hundredYearRecipe'),
+      vendor: t('guruKripaSweets')
     },
     {
-      name: 'दिल्ली की जलेबी',
-      description: 'गर्म-गर्म कुरकुरी जलेबी',
+      name: t('delhiJalebi'),
+      description: t('jalebiDesc'),
       price: '₹320/kg',
-      specialty: 'सुबह ताज़ी बनी',
-      vendor: 'जलेबी महल'
+      specialty: t('freshMorning'),
+      vendor: t('jalebiMahal')
     }
   ];
 
   const famousShops = [
     {
-      name: 'ओल्ड फेमस जलेबी वाला',
+      name: t('oldFamousJalebiWala'),
       established: '1884',
-      specialty: 'जलेबी, रबड़ी',
+      specialty: t('jalebiRabri'),
       rating: 4.9,
-      experience: '140+ वर्ष',
-      famous_for: 'सुबह की ताज़ी जलेबी'
+      experience: `140+ ${t('yearsOld', 'years')}`,
+      famous_for: t('morningFreshJalebi')
     },
     {
-      name: 'गुरु कृपा स्वीट्स',
+      name: t('guruKripaSweets'),
       established: '1902',
-      specialty: 'बेसन लड्डू, मिठाई',
+      specialty: t('besanLadooSweets'),
       rating: 4.8,
-      experience: '120+ वर्ष',
-      famous_for: 'शुद्ध घी की मिठाई'
+      experience: `120+ ${t('yearsOld', 'years')}`,
+      famous_for: t('pureGheeSweets')
     },
     {
-      name: 'जलेबी महल',
+      name: t('jalebiMahal'),
       established: '1925',
-      specialty: 'जलेबी, समोसा',
+      specialty: t('jalebiSamosa'),
       rating: 4.7,
-      experience: '98+ वर्ष',
-      famous_for: 'कुरकुरी जलेबी'
+      experience: `98+ ${t('yearsOld', 'years')}`,
+      famous_for: t('crispyJalebi')
     }
   ];
 
   const sweetsByOccasion = [
-    { occasion: 'दिवाली', sweets: ['कजू कतली', 'गुलाब जामुन', 'मोतीचूर लड्डू'] },
-    { occasion: 'होली', sweets: ['गुझिया', 'ठंडाई', 'मालपुआ'] },
-    { occasion: 'करवा चौथ', sweets: ['खीर', 'हलवा', 'मेवा मिठाई'] },
-    { occasion: 'राखी', sweets: ['कजू बर्फी', 'रसमलाई', 'पेड़ा'] }
+    { occasion: t('diwali'), sweets: ['Ads', `${t('gulabJamun', 'Gulab Jamun')}`, 'Motichoor Ladoo'] },
+    { occasion: t('holi'), sweets: ['Gujiya', 'Thandai', 'Malpua'] },
+    { occasion: t('karwaChauth'), sweets: ['Kheer', 'Halwa', 'Mewa Sweets'] },
+    { occasion: t('rakhi'), sweets: ['Kaju Barfi', 'Rasmalai', 'Peda'] }
   ];
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const TraditionalSweets = () => {
   const loadSweetShopData = async () => {
     try {
       setLoading(true);
-      
+
       const [sweetsResponse, vendorsResponse] = await Promise.all([
         apiService.get('/markets/chandni-chowk/traditional-sweets/products'),
         apiService.get('/markets/chandni-chowk/traditional-sweets/vendors')
@@ -155,16 +156,16 @@ const TraditionalSweets = () => {
     }
   };
 
-  const filteredSweets = activeCategory === 'all' 
-    ? sweets 
+  const filteredSweets = activeCategory === 'all'
+    ? sweets
     : sweets.filter(sweet => sweet.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>{sweetShopInfo.name} - भारतशाला | चांदनी चौक की प्रसिद्ध मिठाइयां</title>
-        <meta name="description" content="चांदनी चौक की 200 साल पुराने मिठाई की दुकानों से घेवर, जलेबी, बेसन लड्डू और अन्य पारंपरिक मिठाइयां।" />
-        <meta name="keywords" content="चांदनी चौक मिठाई, जलेबी वाला, घेवर, बेसन लड्डू, दिल्ली स्वीट्स, पारंपरिक मिठाई" />
+        <title>{sweetShopInfo.name} - {t('welcome')} | {t('sweetsDescription')}</title>
+        <meta name="description" content={t('sweetsDescription')} />
+        <meta name="keywords" content="chandni chowk sweets, jalebi, ghevar, besan ladoo, delhi sweets, traditional sweets" />
         <link rel="canonical" href="https://bharatshaala.com/markets/chandni-chowk/traditional-sweets" />
       </Helmet>
 
@@ -172,11 +173,11 @@ const TraditionalSweets = () => {
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-orange-600 to-yellow-500 text-white py-16">
           <div className="absolute inset-0 bg-black/40"></div>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-30"
             style={{ backgroundImage: `url(${sweetShopInfo.heroImage})` }}
           ></div>
-          
+
           <div className="container mx-auto px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -191,18 +192,18 @@ const TraditionalSweets = () => {
                   <p className="text-xl opacity-90">{sweetShopInfo.description}</p>
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mt-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थापना</h3>
+                  <h3 className="font-semibold mb-2">{t('established')}</h3>
                   <p className="text-yellow-200">{sweetShopInfo.established}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">प्रसिद्ध</h3>
+                  <h3 className="font-semibold mb-2">{t('famous')}</h3>
                   <p className="text-yellow-200">{sweetShopInfo.speciality}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">स्थान</h3>
+                  <h3 className="font-semibold mb-2">{t('locationLabel')}</h3>
                   <p className="text-yellow-200">{sweetShopInfo.location}</p>
                 </div>
               </div>
@@ -214,13 +215,13 @@ const TraditionalSweets = () => {
         <div className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
             <nav className="text-sm text-gray-600">
-              <Link to="/" className="hover:text-emerald-600">होम</Link>
+              <Link to="/" className="hover:text-emerald-600">{t('home')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets" className="hover:text-emerald-600">बाजार</Link>
+              <Link to="/markets" className="hover:text-emerald-600">{t('markets')}</Link>
               <span className="mx-2">›</span>
-              <Link to="/markets/chandni-chowk" className="hover:text-emerald-600">चांदनी चौक</Link>
+              <Link to="/markets/chandni-chowk" className="hover:text-emerald-600">{t('market_chandni_chowk')}</Link>
               <span className="mx-2">›</span>
-              <span className="text-gray-900">पारंपरिक मिठाइयां</span>
+              <span className="text-gray-900">{t('sweetsTitle')}</span>
             </nav>
           </div>
         </div>
@@ -228,17 +229,16 @@ const TraditionalSweets = () => {
         {/* Categories Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">मिठाई श्रेणियां</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('sweetsCategories')}</h2>
             <div className="flex flex-wrap gap-4">
               {sweetCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    activeCategory === category.id
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors duration-200 ${activeCategory === category.id
                       ? 'bg-orange-500 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <span>{category.icon}</span>
                   <span>{category.name}</span>
@@ -251,7 +251,7 @@ const TraditionalSweets = () => {
         {/* Famous Sweets */}
         <section className="py-12 bg-orange-50">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">आज की विशेष मिठाइयां</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('featuredSweets')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {famousSweets.map((sweet, index) => (
                 <motion.div
@@ -274,7 +274,7 @@ const TraditionalSweets = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">{sweet.vendor}</span>
                     <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200">
-                      ऑर्डर करें
+                      {t('orderNow')}
                     </button>
                   </div>
                 </motion.div>
@@ -286,7 +286,7 @@ const TraditionalSweets = () => {
         {/* Festival Sweets */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">त्योहारी मिठाइयां</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('festivalSweets')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {sweetsByOccasion.map((occasion, index) => (
                 <motion.div
@@ -313,7 +313,7 @@ const TraditionalSweets = () => {
         {/* Famous Shops */}
         <section className="py-16 bg-gradient-to-r from-yellow-100 to-orange-100">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">प्रसिद्ध मिठाई की दुकानें</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('famousSweetsShops')}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {famousShops.map((shop, index) => (
                 <motion.div
@@ -326,10 +326,10 @@ const TraditionalSweets = () => {
                   <div className="text-4xl mb-4">🏪</div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{shop.name}</h3>
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <p><strong>स्थापना:</strong> {shop.established}</p>
-                    <p><strong>विशेषता:</strong> {shop.specialty}</p>
-                    <p><strong>प्रसिद्ध:</strong> {shop.famous_for}</p>
-                    <p><strong>अनुभव:</strong> {shop.experience}</p>
+                    <p><strong>{t('established')}:</strong> {shop.established}</p>
+                    <p><strong>{t('specialityLabel')}:</strong> {shop.specialty}</p>
+                    <p><strong>{t('famous')}:</strong> {shop.famous_for}</p>
+                    <p><strong>{t('experience')}:</strong> {shop.experience}</p>
                   </div>
                   <div className="flex items-center justify-center space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -340,7 +340,7 @@ const TraditionalSweets = () => {
                     <span className="text-sm text-gray-600 ml-2">{shop.rating}</span>
                   </div>
                   <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200">
-                    दुकान देखें
+                    {t('viewShop', 'View Shop')}
                   </button>
                 </motion.div>
               ))}
@@ -351,27 +351,27 @@ const TraditionalSweets = () => {
         {/* Sweet Making Process */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">मिठाई बनाने की कला</h2>
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">{t('artOfSweetMaking')}</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl mb-4">🥛</div>
-                <h3 className="text-xl font-semibold mb-2">शुद्ध सामग्री</h3>
-                <p className="text-gray-600">केवल शुद्ध दूध, घी और प्राकृतिक चीनी का उपयोग</p>
+                <h3 className="text-xl font-semibold mb-2">{t('pureIngredients')}</h3>
+                <p className="text-gray-600">{t('pureIngredientsDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">👨‍🍳</div>
-                <h3 className="text-xl font-semibold mb-2">कुशल हलवाई</h3>
-                <p className="text-gray-600">पीढ़ियों का अनुभव और पारंपरिक तकनीक</p>
+                <h3 className="text-xl font-semibold mb-2">{t('skilledHalwai')}</h3>
+                <p className="text-gray-600">{t('skilledHalwaiDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🔥</div>
-                <h3 className="text-xl font-semibold mb-2">धीमी आंच</h3>
-                <p className="text-gray-600">धैर्य और समय से बनाई गई स्वादिष्ट मिठाई</p>
+                <h3 className="text-xl font-semibold mb-2">{t('slowFire')}</h3>
+                <p className="text-gray-600">{t('slowFireDesc')}</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl mb-4">🍯</div>
-                <h3 className="text-xl font-semibold mb-2">प्राकृतिक मिठास</h3>
-                <p className="text-gray-600">कृत्रिम रंग या स्वाद से मुक्त</p>
+                <h3 className="text-xl font-semibold mb-2">{t('naturalSweetness')}</h3>
+                <p className="text-gray-600">{t('naturalSweetnessDesc')}</p>
               </div>
             </div>
           </div>
@@ -380,15 +380,15 @@ const TraditionalSweets = () => {
         {/* Products Section */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <LoadingSpinner size="large" text="मिठाइयां लोड हो रही हैं..." />
+            <LoadingSpinner size="large" text={t('loading')} />
           </div>
         ) : (
           <section className="py-12 bg-gray-50">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                {activeCategory === 'all' ? 'सभी मिठाइयां' : sweetCategories.find(cat => cat.id === activeCategory)?.name}
+                {activeCategory === 'all' ? t('allSweets') : sweetCategories.find(cat => cat.id === activeCategory)?.name}
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {filteredSweets.map((sweet) => (
                   <ProductCard
@@ -405,8 +405,8 @@ const TraditionalSweets = () => {
               {filteredSweets.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🍯</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">इस श्रेणी में कोई मिठाई नहीं मिली</h3>
-                  <p className="text-gray-600">कृपया दूसरी श्रेणी का चयन करें</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noSweetsFound')}</h3>
+                  <p className="text-gray-600">{t('chooseOtherCategory')}</p>
                 </div>
               )}
             </div>
@@ -416,28 +416,26 @@ const TraditionalSweets = () => {
         {/* Sweet Experience */}
         <section className="py-16 bg-gradient-to-r from-orange-600 to-yellow-500 text-white">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-8">चांदनी चौक मिठाई का अनुभव</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('sweetsExperience')}</h2>
             <div className="max-w-4xl mx-auto">
               <p className="text-xl leading-relaxed mb-8">
-                200 साल पुराने इन मिठाई की दुकानों में छुपी है दिल्ली की मिठास। 
-                यहाँ हर सुबह ताज़ी जलेबी की खुशबू और हलवाइयों की मेहनत देखने को मिलती है। 
-                हर मिठाई में बसा है प्रेम और हर स्वाद में छुपी है पुरानी दिल्ली की रवायत।
+                {t('sweetsExpDesc')}
               </p>
               <div className="grid md:grid-cols-3 gap-8 mt-12">
                 <div>
                   <div className="text-4xl mb-4">📍</div>
-                  <h3 className="text-xl font-semibold mb-2">स्थान</h3>
-                  <p>दरीबा कलां, चांदनी चौक</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('locationLabel')}</h3>
+                  <p>{t('sweetsLocation')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🕒</div>
-                  <h3 className="text-xl font-semibold mb-2">समय</h3>
-                  <p>सुबह 8:00 - रात 10:00</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('timingLabel')}</h3>
+                  <p>{t('morningToNight')}</p>
                 </div>
                 <div>
                   <div className="text-4xl mb-4">🎯</div>
-                  <h3 className="text-xl font-semibold mb-2">विशेषता</h3>
-                  <p>ताज़ी और पारंपरिक मिठाई</p>
+                  <h3 className="text-xl font-semibold mb-2">{t('specialityLabel')}</h3>
+                  <p>{t('freshLegacy')}</p>
                 </div>
               </div>
             </div>

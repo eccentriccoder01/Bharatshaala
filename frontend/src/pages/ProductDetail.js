@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useAPI } from '../hooks/useAPI';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../context/NotificationContext';
 import { useRecentlyViewed } from '../hooks/useLocalStorage';
 import QuantitySelector from '../components/QuantitySelector';
 import ReviewCard from '../components/ReviewCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useLanguage } from '../context/LanguageContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const ProductDetail = () => {
   const { get } = useAPI();
   const { showSuccess, showError } = useNotification();
   const { addItem: addToRecentlyViewed } = useRecentlyViewed();
+  const { t, language } = useLanguage();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,8 +26,10 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [reviews, setReviews] = useState([]);
+  // const [/* showReviews, setShowReviews */] = useState(false);
   const [pincode, setPincode] = useState('');
   const [deliveryInfo, setDeliveryInfo] = useState(null);
+  // const [/* similarProducts, setSimilarProducts */] = useState([]);
   const [activeTab, setActiveTab] = useState('description');
 
   useEffect(() => {
@@ -178,26 +182,26 @@ const ProductDetail = () => {
   };
 
   const tabs = [
-    { id: 'description', name: 'विवरण', icon: '📝' },
-    { id: 'specifications', name: 'स्पेसिफिकेशन', icon: '📋' },
-    { id: 'reviews', name: `समीक्षा (${product?.reviewCount || 0})`, icon: '⭐' },
-    { id: 'delivery', name: 'डिलीवरी जानकारी', icon: '🚚' }
+    { id: 'description', name: t('description'), icon: '📝' },
+    { id: 'specifications', name: t('specifications'), icon: '📋' },
+    { id: 'reviews', name: `${t('reviews')} (${product?.reviewCount || 0})`, icon: '⭐' },
+    { id: 'delivery', name: t('deliveryInfo'), icon: '🚚' }
   ];
 
   if (loading) {
-    return <LoadingSpinner message="उत्पाद लोड हो रहा है..." />;
+    return <LoadingSpinner message={loading ? t('loading') : ""} />;
   }
 
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">उत्पाद नहीं मिला</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">{t('productNotFound')}</h2>
           <button
             onClick={() => navigate('/markets')}
             className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600"
           >
-            बाज़ार देखें
+            {t('browseMarkets')}
           </button>
         </div>
       </div>
@@ -211,9 +215,9 @@ const ProductDetail = () => {
         {/* Breadcrumb */}
         <nav className="mb-8">
           <div className="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400">
-            <button onClick={() => navigate('/')} className="hover:text-emerald-700">होम</button>
+            <button onClick={() => navigate('/')} className="hover:text-emerald-700">{t('home')}</button>
             <span>›</span>
-            <button onClick={() => navigate('/markets')} className="hover:text-emerald-700">बाज़ार</button>
+            <button onClick={() => navigate('/markets')} className="hover:text-emerald-700">{t('markets')}</button>
             <span>›</span>
             <button onClick={() => navigate(`/categories/${product.category.id}`)} className="hover:text-emerald-700">
               {product.category.name}
@@ -238,7 +242,7 @@ const ProductDetail = () => {
               {/* Discount Badge */}
               {product.discount > 0 && (
                 <div className="absolute top-6 left-6 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  {product.discount}% छूट
+                  {product.discount}% {t('off')}
                 </div>
               )}
             </div>
@@ -249,9 +253,8 @@ const ProductDetail = () => {
                 <button
                   key={index}
                   onClick={() => handleImageClick(index)}
-                  className={`bg-white dark:bg-gray-800 rounded-lg p-2 border-2 transition-all duration-200 ${
-                    selectedImage === index ? 'border-emerald-500 dark:border-emerald-400' : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
-                  }`}
+                  className={`bg-white dark:bg-gray-800 rounded-lg p-2 border-2 transition-all duration-200 ${selectedImage === index ? 'border-emerald-500 dark:border-emerald-400' : 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
+                    }`}
                 >
                   <img
                     src={image.url}
@@ -268,8 +271,10 @@ const ProductDetail = () => {
 
             {/* Title and Rating */}
             <div>
-              <h1 className="text-3xl font-bold text-emerald-800 dark:text-emerald-200 mb-2">{product.name}</h1>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">{product.nameEn}</p>
+              <h1 className="text-3xl font-bold text-emerald-800 dark:text-emerald-200 mb-2">
+                {language === 'hi' ? product.name : product.nameEn || product.name}
+              </h1>
+              {language === 'hi' && <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">{product.nameEn}</p>}
 
               <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center space-x-1">
@@ -281,7 +286,7 @@ const ProductDetail = () => {
                     ))}
                   </div>
                   <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{product.rating}</span>
-                  <span className="text-gray-500 dark:text-gray-400">({product.reviewCount} समीक्षा)</span>
+                  <span className="text-gray-500 dark:text-gray-400">({product.reviewCount} {t('reviews')})</span>
                 </div>
               </div>
             </div>
@@ -299,34 +304,33 @@ const ProductDetail = () => {
                 )}
                 {product.discount > 0 && (
                   <span className="bg-green-500 text-white px-2 py-1 rounded text-sm font-bold">
-                    {product.discount}% बचत
+                    {product.discount}% {t('saving')}
                   </span>
                 )}
               </div>
-              <p className="text-emerald-600 dark:text-emerald-400 text-sm mt-2">सभी टैक्स शामिल</p>
+              <p className="text-emerald-600 dark:text-emerald-400 text-sm mt-2">{t('allTaxesIncluded')}</p>
             </div>
 
             {/* Variants */}
             {product.variants && product.variants.length > 1 && (
               <div>
-                <h3 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">वेरिएंट चुनें:</h3>
+                <h3 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">{t('selectVariant')}:</h3>
                 <div className="grid grid-cols-3 gap-3">
                   {product.variants.map((variant) => (
                     <button
                       key={variant.id}
                       onClick={() => setSelectedVariant(variant)}
                       disabled={!variant.inStock}
-                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        selectedVariant?.id === variant.id
-                          ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
-                          : variant.inStock
-                            ? 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
-                            : 'border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-400 cursor-not-allowed'
-                      }`}
+                      className={`p-3 border-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedVariant?.id === variant.id
+                        ? 'border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                        : variant.inStock
+                          ? 'border-gray-200 dark:border-gray-700 hover:border-emerald-300'
+                          : 'border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-400 cursor-not-allowed'
+                        }`}
                     >
                       {variant.name}
                       <div className="text-xs mt-1">₹{variant.price.toLocaleString()}</div>
-                      {!variant.inStock && <div className="text-xs text-red-500 dark:text-red-400">स्टॉक में नहीं</div>}
+                      {!variant.inStock && <div className="text-xs text-red-500 dark:text-red-400">{t('outOfStock')}</div>}
                     </button>
                   ))}
                 </div>
@@ -340,7 +344,7 @@ const ProductDetail = () => {
                 min={1}
                 max={product.quantity || 10}
                 onChange={setQuantity}
-                label="मात्रा"
+                label={t('quantity')}
               />
             </div>
 
@@ -352,8 +356,8 @@ const ProductDetail = () => {
                 className="w-full bg-emerald-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 {isItemInCart(product.id) ?
-                  `कार्ट में जोड़ें (${getItemQuantity(product.id)} पहले से)` :
-                  'कार्ट में जोड़ें'
+                  `${t('addToCart')} (${getItemQuantity(product.id)} ${t('alreadyInCart')})` :
+                  t('addToCart')
                 }
               </button>
 
@@ -362,7 +366,7 @@ const ProductDetail = () => {
                 disabled={!product.inStock}
                 className="w-full bg-orange-500 text-white py-4 rounded-xl font-semibold text-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
               >
-                अभी खरीदें
+                {t('buyNow')}
               </button>
             </div>
 
@@ -371,27 +375,30 @@ const ProductDetail = () => {
               <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
               <span className={`font-medium ${product.inStock ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                 {product.inStock ?
-                  (product.quantity > 10 ? 'स्टॉक में उपलब्ध' : `केवल ${product.quantity} बचे`) :
-                  'स्टॉक में नहीं'
+                  (product.quantity > 10 ? t('inStock') : `${t('only')} ${product.quantity} ${t('left')}`) :
+                  t('outOfStock')
                 }
               </span>
             </div>
 
             {/* Vendor Info */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700">
-              <h3 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">विक्रेता की जानकारी</h3>
+              <h3 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">{t('vendorInfo')}</h3>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">{product.vendor.name}</p>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">{product.vendor.name}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">{product.vendor.location}</p>
                   <div className="flex items-center space-x-1 mt-1">
                     <span className="text-yellow-500">⭐</span>
-                    <span className="text-sm">{product.vendor.rating}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">रेटिंग</span>
+                    <span className="text-sm dark:text-gray-300">{product.vendor.rating}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{t('rating')}</span>
                   </div>
                 </div>
-                <button className="bg-emerald-100 dark:bg-gray-800 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-lg hover:bg-emerald-200 dark:hover:bg-gray-700 transition-colors duration-200">
-                  स्टोर देखें
+                <button
+                  onClick={() => navigate(`/vendors/${product.vendor.id}`)}
+                  className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors duration-200"
+                >
+                  {t('viewStore')}
                 </button>
               </div>
             </div>
@@ -400,21 +407,21 @@ const ProductDetail = () => {
 
         {/* Pincode Check */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8">
-          <h3 className="font-bold text-emerald-800 dark:text-emerald-200 mb-4">डिलीवरी चेक करें</h3>
+          <h3 className="font-bold text-emerald-800 dark:text-emerald-200 mb-4">{t('checkDelivery')}</h3>
           <div className="flex space-x-3">
             <input
               type="text"
-              placeholder="पिनकोड डालें"
+              placeholder={t('enterPincode')}
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
               maxLength={6}
-              className="flex-1 px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 focus:outline-none"
+              className="flex-1 px-4 py-3 border border-emerald-200 dark:border-emerald-700 rounded-lg focus:border-emerald-500 dark:bg-gray-700 dark:text-white focus:outline-none"
             />
             <button
               onClick={checkDelivery}
               className="bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-colors duration-200"
             >
-              चेक करें
+              {t('check')}
             </button>
           </div>
 
@@ -422,12 +429,12 @@ const ProductDetail = () => {
             <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
               <div className="flex items-center space-x-2 mb-2">
                 <span className="text-green-600 dark:text-green-400">✅</span>
-                <span className="font-semibold text-green-800 dark:text-green-400">डिलीवरी उपलब्ध</span>
+                <span className="font-semibold text-green-800 dark:text-green-400">{t('deliveryAvailable')}</span>
               </div>
               <div className="text-sm text-green-700 dark:text-green-400 space-y-1">
-                <p>• अनुमानित डिलीवरी: {deliveryInfo.estimatedDays} कार्यदिवस</p>
-                <p>• {deliveryInfo.freeDelivery ? 'मुफ्त डिलीवरी' : 'डिलीवरी चार्ज लागू'}</p>
-                <p>• {deliveryInfo.codAvailable ? 'कैश ऑन डिलीवरी उपलब्ध' : 'केवल ऑनलाइन भुगतान'}</p>
+                <p>• {t('estimatedDelivery')}: {deliveryInfo.estimatedDays} {t('workingDays')}</p>
+                <p>• {deliveryInfo.freeDelivery ? t('freeDelivery') : t('deliveryChargeApplies')}</p>
+                <p>• {deliveryInfo.codAvailable ? t('codAvailable') : t('onlinePaymentOnly')}</p>
               </div>
             </div>
           )}
@@ -442,11 +449,10 @@ const ProductDetail = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 px-6 py-4 text-center font-medium transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600'
-                }`}
+                className={`flex-1 px-6 py-4 text-center font-medium transition-colors duration-200 ${activeTab === tab.id
+                  ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 dark:border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600'
+                  }`}
               >
                 <span className="mr-2">{tab.icon}</span>
                 {tab.name}
@@ -461,18 +467,18 @@ const ProductDetail = () => {
             {activeTab === 'description' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">उत्पाद विवरण</h3>
+                  <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">{t('productDescription')}</h3>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{product.description}</p>
                 </div>
 
                 {product.features && (
                   <div>
-                    <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">मुख्य विशेषताएं:</h4>
+                    <h4 className="font-semibold text-emerald-800 dark:text-emerald-200 mb-3">{t('keyFeatures')}:</h4>
                     <ul className="space-y-2">
                       {product.features.map((feature, index) => (
                         <li key={index} className="flex items-center space-x-2">
                           <span className="text-emerald-500 dark:text-emerald-400">✓</span>
-                          <span>{feature}</span>
+                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -484,7 +490,7 @@ const ProductDetail = () => {
             {/* Specifications Tab */}
             {activeTab === 'specifications' && (
               <div>
-                <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">तकनीकी विवरण</h3>
+                <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">{t('technicalDetails')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.entries(product.specifications).map(([key, value]) => (
                     <div key={key} className="border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -500,9 +506,9 @@ const ProductDetail = () => {
             {activeTab === 'reviews' && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200">ग्राहक समीक्षा</h3>
+                  <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200">{t('customerReviews')}</h3>
                   <button className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600">
-                    समीक्षा लिखें
+                    {t('writeReview')}
                   </button>
                 </div>
 
@@ -517,23 +523,23 @@ const ProductDetail = () => {
             {/* Delivery Tab */}
             {activeTab === 'delivery' && (
               <div className="space-y-6">
-                <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">डिलीवरी जानकारी</h3>
+                <h3 className="text-xl font-bold text-emerald-800 dark:text-emerald-200 mb-4">{t('deliveryInfo')}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 dark:text-emerald-400 text-xl">🚚</span>
                       <div>
-                        <h4 className="font-semibold">मुफ्त डिलीवरी</h4>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">₹499 से अधिक के ऑर्डर पर</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{t('freeDelivery')}</h4>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">{t('onOrdersAbove499')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 dark:text-emerald-400 text-xl">📦</span>
                       <div>
-                        <h4 className="font-semibold">सुरक्षित पैकेजिंग</h4>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">प्रीमियम पैकेजिंग के साथ</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{t('securePackaging')}</h4>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">{t('withPremiumPackaging')}</p>
                       </div>
                     </div>
                   </div>
@@ -542,16 +548,16 @@ const ProductDetail = () => {
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 dark:text-emerald-400 text-xl">🔄</span>
                       <div>
-                        <h4 className="font-semibold">आसान रिटर्न</h4>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">7 दिन की रिटर्न गारंटी</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{t('easyReturns')}</h4>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">{t('7DayReturnGuarantee')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
                       <span className="text-emerald-600 dark:text-emerald-400 text-xl">💳</span>
                       <div>
-                        <h4 className="font-semibold">कैश ऑन डिलीवरी</h4>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">उपलब्ध (चुनिंदा शहरों में)</p>
+                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{t('cod')}</h4>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">{t('availableInSelectCities')}</p>
                       </div>
                     </div>
                   </div>

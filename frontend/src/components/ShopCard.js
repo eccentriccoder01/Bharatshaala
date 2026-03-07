@@ -1,14 +1,16 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
-const ShopCard = ({ 
-  shop, 
-  index, 
-  isHovered, 
-  onHover, 
+const ShopCard = ({
+  shop,
+  index,
+  isHovered,
+  onHover,
   marketTheme = 'default',
-  onClick 
+  onClick
 }) => {
-  
+  const { language, t } = useLanguage();
+
   const getThemeColors = (theme) => {
     const themes = {
       default: { primary: 'from-emerald-500 to-green-500', secondary: 'emerald' },
@@ -24,49 +26,60 @@ const ShopCard = ({
 
   const themeColors = getThemeColors(marketTheme);
 
+  // Dynamic Content Styling
+  const displayName = language === 'hi' ? shop.name : (shop.nameEn || shop.name);
+  const displaySubtitle = language === 'hi' ? (shop.nameEn || '') : shop.name;
+  const displaySpecialty = language === 'hi' ? shop.specialty : (shop.specialtyEn || shop.specialty);
+  const displayBadge = language === 'hi' ? shop.badge : (shop.badgeEn || shop.badge);
+  const displayItems = language === 'hi' ? shop.specialty_items : (shop.specialtyItemsEn || shop.specialty_items);
+  const displayOwner = language === 'hi' ? shop.owner : (shop.ownerEn || shop.owner);
+  const displayExperience = language === 'hi' ? shop.experience : (shop.experienceEn || shop.experience);
+  const displayTimings = language === 'hi' ? shop.timings : (shop.timingsEn || shop.timings);
+  const displayLanguages = language === 'hi' ? shop.languages : (shop.languagesEn || shop.languages);
+  const displayPayment = language === 'hi' ? shop.payment_methods : (shop.paymentMethodsEn || shop.payment_methods);
+
   return (
-    <a 
+    <a
       href={shop.href}
       className='group block'
       onMouseEnter={() => onHover(shop.id)}
       onMouseLeave={() => onHover(null)}
       onClick={onClick}
     >
-      <div className={`relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${
-        isHovered ? 'scale-[1.02]' : ''
-      }`}>
-        
+      <div className={`relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${isHovered ? 'scale-[1.02]' : ''
+        }`}>
+
         {/* Header Section */}
         <div className={`bg-gradient-to-br ${themeColors.primary} p-6 text-white relative overflow-hidden`}>
           {/* Decorative Background Elements */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
-          
+
           <div className='relative z-10'>
             <div className='flex items-start justify-between mb-4'>
               <div className='flex-1'>
-                <h2 className='text-2xl font-bold mb-1 leading-tight'>{shop.name}</h2>
-                <p className='text-white/90 text-lg'>{shop.nameEn}</p>
+                <h2 className='text-2xl font-bold mb-1 leading-tight'>{displayName}</h2>
+                {displaySubtitle && <p className='text-white/90 text-lg'>{displaySubtitle}</p>}
               </div>
               <div className='bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 ml-4'>
-                <span className='text-sm font-medium'>{shop.badge}</span>
+                <span className='text-sm font-medium'>{displayBadge}</span>
               </div>
             </div>
-            
+
             {/* Shop Stats */}
             <div className='flex items-center space-x-4 text-white/90 text-sm'>
               <div className='flex items-center space-x-1'>
                 <span>⭐</span>
                 <span className='font-medium'>{shop.rating}</span>
-                <span>({shop.reviews} समीक्षाएं)</span>
+                <span>({shop.reviews} {t('reviews')})</span>
               </div>
               <div className='flex items-center space-x-1'>
                 <span>📅</span>
-                <span>स्थापना {shop.established}</span>
+                <span>{t('established')} {shop.established}</span>
               </div>
               <div className='flex items-center space-x-1'>
                 <span>📦</span>
-                <span>{shop.products}+ उत्पाद</span>
+                <span>{shop.products}+ {t('products')}</span>
               </div>
             </div>
           </div>
@@ -76,32 +89,32 @@ const ShopCard = ({
         <div className='p-8'>
           {/* Specialty Description */}
           <p className='text-gray-600 dark:text-gray-300 leading-relaxed mb-6 text-lg'>
-            {shop.specialty}
+            {displaySpecialty}
           </p>
 
           {/* Shop Details Grid */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
             {/* Owner Info */}
             <div className='bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-4 border border-emerald-200 dark:border-emerald-700'>
-              <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium mb-1'>दुकान मालिक</div>
-              <div className='text-emerald-800 dark:text-emerald-200 font-semibold'>{shop.owner}</div>
-              <div className='text-emerald-600 dark:text-emerald-400 text-sm'>{shop.experience} का अनुभव</div>
+              <div className='text-emerald-600 dark:text-emerald-400 text-sm font-medium mb-1'>{t('shopOwner')}</div>
+              <div className='text-emerald-800 dark:text-emerald-200 font-semibold'>{displayOwner}</div>
+              <div className='text-emerald-600 dark:text-emerald-400 text-sm'>{displayExperience} {t('experience')}</div>
             </div>
 
             {/* Timing Info */}
-            <div className={`bg-${themeColors.secondary}-50 rounded-xl p-4 border border-${themeColors.secondary}-200`}>
-              <div className={`text-${themeColors.secondary}-600 text-sm font-medium mb-1`}>समय</div>
-              <div className={`text-${themeColors.secondary}-800 font-semibold`}>{shop.timings}</div>
-              <div className={`text-${themeColors.secondary}-600 text-sm`}>रोज़ाना खुला</div>
+            <div className={`bg-${themeColors.secondary}-50 dark:bg-${themeColors.secondary}-900/30 rounded-xl p-4 border border-${themeColors.secondary}-200 dark:border-${themeColors.secondary}-700`}>
+              <div className={`text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 text-sm font-medium mb-1`}>{t('openingHours')}</div>
+              <div className={`text-${themeColors.secondary}-800 dark:text-${themeColors.secondary}-200 font-semibold`}>{displayTimings}</div>
+              <div className={`text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 text-sm`}>{t('openDaily')}</div>
             </div>
           </div>
 
           {/* Specialty Items */}
           <div className='mb-6'>
-            <h4 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>विशेष वस्तुएं:</h4>
+            <h4 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>{t('specialtyItems')}:</h4>
             <div className='flex flex-wrap gap-2'>
-              {shop.specialty_items.slice(0, 5).map((item, idx) => (
-                <span key={idx} className='bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-700 dark:text-orange-400 px-3 py-1 rounded-full text-sm border border-orange-200 dark:border-orange-700 flex items-center space-x-1'>
+              {displayItems?.slice(0, 5).map((item, idx) => (
+                <span key={idx} className='bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/20 dark:to-orange-900/20 text-orange-700 dark:text-orange-400 px-3 py-1 rounded-full text-sm border border-orange-200 dark:border-orange-700 flex items-center space-x-1'>
                   <span>✨</span>
                   <span>{item}</span>
                 </span>
@@ -113,9 +126,9 @@ const ShopCard = ({
           <div className='grid grid-cols-2 gap-4 mb-6'>
             {/* Languages */}
             <div>
-              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>भाषाएं:</h5>
+              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>{t('languages')}:</h5>
               <div className='flex flex-wrap gap-1'>
-                {shop.languages?.map((lang, idx) => (
+                {displayLanguages?.map((lang, idx) => (
                   <span key={idx} className='bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs'>
                     {lang}
                   </span>
@@ -125,9 +138,9 @@ const ShopCard = ({
 
             {/* Payment Methods */}
             <div>
-              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>पेमेंट:</h5>
+              <h5 className='text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>{t('payment')}:</h5>
               <div className='flex flex-wrap gap-1'>
-                {shop.payment_methods?.map((method, idx) => (
+                {displayPayment?.map((method, idx) => (
                   <span key={idx} className='bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-1 rounded text-xs'>
                     {method}
                   </span>
@@ -141,24 +154,23 @@ const ShopCard = ({
             {shop.delivery_available && (
               <div className='flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-2 rounded-full border border-green-200 dark:border-green-700'>
                 <span>🚚</span>
-                <span className='text-sm font-medium'>होम डिलीवरी</span>
+                <span className='text-sm font-medium'>{t('homeDelivery')}</span>
               </div>
             )}
             {shop.wholesale_available && (
               <div className='flex items-center space-x-2 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 px-3 py-2 rounded-full border border-purple-200 dark:border-purple-700'>
                 <span>📦</span>
-                <span className='text-sm font-medium'>थोक विक्रय</span>
+                <span className='text-sm font-medium'>{t('wholesale')}</span>
               </div>
             )}
           </div>
 
           {/* Action Section */}
-          <div className={`flex items-center justify-between transition-all duration-300 ${
-            isHovered ? 'transform translate-x-2' : ''
-          }`}>
+          <div className={`flex items-center justify-between transition-all duration-300 ${isHovered ? 'transform translate-x-2' : ''
+            }`}>
             <div className='flex items-center space-x-3'>
-              <span className='text-emerald-600 dark:text-emerald-400 font-semibold group-hover:text-emerald-700 dark:group-hover:text-emerald-300 dark:hover:text-emerald-300'>
-                दुकान में जाएं
+              <span className='text-emerald-600 dark:text-emerald-400 font-semibold group-hover:text-emerald-700 dark:group-hover:text-emerald-300'>
+                {t('visitShop')}
               </span>
               <div className='flex items-center space-x-1'>
                 <div className={`w-2 h-2 bg-${themeColors.secondary}-400 rounded-full animate-pulse`}></div>
@@ -169,9 +181,9 @@ const ShopCard = ({
 
             {/* Quick Actions */}
             <div className='flex items-center space-x-2'>
-              <button 
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
-                title="फोन करें"
+              <button
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
+                title={language === 'hi' ? "फोन करें" : "Call"}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -180,9 +192,9 @@ const ShopCard = ({
               >
                 📞
               </button>
-              <button 
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
-                title="दिशा"
+              <button
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
+                title={language === 'hi' ? "दिशा" : "Direction"}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -191,9 +203,9 @@ const ShopCard = ({
               >
                 📍
               </button>
-              <button 
-                className={`p-2 bg-${themeColors.secondary}-100 text-${themeColors.secondary}-600 rounded-lg hover:bg-${themeColors.secondary}-200 transition-colors duration-200`}
-                title="शेयर करें"
+              <button
+                className={`p-2 bg-${themeColors.secondary}-100 dark:bg-${themeColors.secondary}-900/40 text-${themeColors.secondary}-600 dark:text-${themeColors.secondary}-400 rounded-lg hover:bg-${themeColors.secondary}-200 dark:hover:bg-${themeColors.secondary}-800 transition-colors duration-200`}
+                title={language === 'hi' ? "शेयर करें" : "Share"}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

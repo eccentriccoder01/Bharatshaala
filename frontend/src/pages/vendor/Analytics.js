@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
+// import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { useLanguage } from '../../context/LanguageContext';
 import VendorSidebar from "../../components/VendorSidebar";
 import "../../App.css";
 
 const VendorAnalytics = () => {
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('last_30_days');
+  // const [selectedMetric, setSelectedMetric] = useState('revenue');
+  // const [chartData, setChartData] = useState([]);
+  // const navigate = useNavigate();
 
   const periods = [
     { id: 'today', name: 'आज', icon: '📅' },
@@ -17,6 +23,16 @@ const VendorAnalytics = () => {
     { id: 'last_90_days', name: 'पिछले 90 दिन', icon: '📄' },
     { id: 'this_year', name: 'इस साल', icon: '🗓️' }
   ];
+
+  /*
+  const metrics = [
+    { id: 'revenue', name: 'राजस्व', icon: '💰', color: 'emerald' },
+    { id: 'orders', name: 'ऑर्डर', icon: '📦', color: 'blue' },
+    { id: 'customers', name: 'ग्राहक', icon: '👥', color: 'purple' },
+    { id: 'views', name: 'व्यू', icon: '👁️', color: 'orange' },
+    { id: 'conversion', name: 'कन्वर्शन', icon: '📊', color: 'green' }
+  ];
+  */
 
   useEffect(() => {
     loadAnalyticsData();
@@ -30,6 +46,7 @@ const VendorAnalytics = () => {
       const response = await axios.get(`/vendor/analytics?period=${selectedPeriod}`);
       if (response.data.success) {
         setAnalyticsData(response.data.analytics);
+        // setChartData(response.data.chartData);
       }
     } catch (error) {
       console.error("Analytics data fetch error:", error);
@@ -145,12 +162,18 @@ const VendorAnalytics = () => {
     return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
   };
 
+  /*
+  const getGrowthColor = (growth) => {
+    return growth >= 0 ? 'text-green-600' : 'text-red-600';
+  };
+  */
+
   const getGrowthIcon = (growth) => {
     return growth >= 0 ? '📈' : '📉';
   };
 
   if (loading) {
-    return <LoadingSpinner message="एनालिटिक्स डेटा लोड हो रहा है..." />;
+    return <LoadingSpinner message={language === 'hi' ? "Analytics लोड हो रहा है..." : "Analytics is loading..."} />;
   }
 
   return (
@@ -176,11 +199,10 @@ const VendorAnalytics = () => {
                   <button
                     key={period.id}
                     onClick={() => setSelectedPeriod(period.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      selectedPeriod === period.id
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
-                        : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700'
-                    }`}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${selectedPeriod === period.id
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md'
+                      : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700'
+                      }`}
                   >
                     <span>{period.icon}</span>
                     <span>{period.name}</span>
@@ -333,12 +355,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.revenue?.byCategory?.map((item, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${
-                            index === 0 ? 'from-emerald-400 to-green-500' :
+                          <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${index === 0 ? 'from-emerald-400 to-green-500' :
                             index === 1 ? 'from-blue-400 to-indigo-500' :
-                            index === 2 ? 'from-purple-400 to-pink-500' :
-                            'from-orange-400 to-red-500'
-                          }`}></div>
+                              index === 2 ? 'from-purple-400 to-pink-500' :
+                                'from-orange-400 to-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100 capitalize">{item.category}</span>
                         </div>
                         <div className="text-right">
@@ -357,20 +378,19 @@ const VendorAnalytics = () => {
                     {Object.entries(analyticsData?.orders?.status || {}).map(([status, count], index) => (
                       <div key={status} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-xl">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            status === 'pending' ? 'bg-yellow-500' :
+                          <div className={`w-3 h-3 rounded-full ${status === 'pending' ? 'bg-yellow-500' :
                             status === 'processing' ? 'bg-blue-500' :
-                            status === 'shipped' ? 'bg-purple-500' :
-                            status === 'delivered' ? 'bg-green-500' :
-                            status === 'cancelled' ? 'bg-red-500' :
-                            'bg-orange-500'
-                          }`}></div>
+                              status === 'shipped' ? 'bg-purple-500' :
+                                status === 'delivered' ? 'bg-green-500' :
+                                  status === 'cancelled' ? 'bg-red-500' :
+                                    'bg-orange-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100 capitalize">
                             {status === 'pending' ? 'लंबित' :
-                             status === 'processing' ? 'प्रक्रिया में' :
-                             status === 'shipped' ? 'भेजे गए' :
-                             status === 'delivered' ? 'वितरित' :
-                             status === 'cancelled' ? 'रद्द' : 'वापस'}
+                              status === 'processing' ? 'प्रक्रिया में' :
+                                status === 'shipped' ? 'भेजे गए' :
+                                  status === 'delivered' ? 'वितरित' :
+                                    status === 'cancelled' ? 'रद्द' : 'वापस'}
                           </span>
                         </div>
                         <span className="font-bold text-gray-800 dark:text-gray-100">{count}</span>
@@ -430,12 +450,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.traffic?.sources?.map((source, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            index === 0 ? 'bg-emerald-500' :
+                          <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
                             index === 1 ? 'bg-blue-500' :
-                            index === 2 ? 'bg-purple-500' :
-                            index === 3 ? 'bg-orange-500' : 'bg-red-500'
-                          }`}></div>
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100">{source.source}</span>
                         </div>
                         <div className="text-right">
@@ -454,12 +473,11 @@ const VendorAnalytics = () => {
                     {analyticsData?.customers?.geography?.map((location, index) => (
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            index === 0 ? 'bg-emerald-500' :
+                          <div className={`w-3 h-3 rounded-full ${index === 0 ? 'bg-emerald-500' :
                             index === 1 ? 'bg-blue-500' :
-                            index === 2 ? 'bg-purple-500' :
-                            index === 3 ? 'bg-orange-500' : 'bg-red-500'
-                          }`}></div>
+                              index === 2 ? 'bg-purple-500' :
+                                index === 3 ? 'bg-orange-500' : 'bg-red-500'
+                            }`}></div>
                           <span className="font-medium text-gray-800 dark:text-gray-100">{location.state}</span>
                         </div>
                         <div className="text-right">

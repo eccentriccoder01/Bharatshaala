@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 
 const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
+  const { t, language } = useLanguage();
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -19,7 +20,13 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
   });
 
   // Ensure specialties is an array
-  const specialties = market.specialties || [];
+  // const specialties = market.specialties || [];
+
+  // Get language specific name and description
+  const displayName = language === 'hi' ? (market.nameHindi || market.name) : market.name;
+  const displayCity = language === 'hi' ? (market.cityHindi || market.city) : market.city;
+  const displayDescription = language === 'en' ? (market.descriptionEn || market.description) : market.description;
+  const displaySpecialties = language === 'en' ? (market.specialtiesEn || market.specialties) : market.specialties;
 
   // Handle image loading with proper fallback
   const getImageSrc = () => {
@@ -27,7 +34,7 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
     if (!imageError && market.image && typeof market.image === 'string' && market.image.length > 0) {
       return market.image;
     }
-    
+
     // Return a placeholder SVG
     return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzEwYjk4MSIvPgo8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSI0OCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7wn4+qPC90ZXh0Pgo8L3N2Zz4K';
   };
@@ -58,7 +65,7 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
                 isHovered ? 'scale-110' : 'scale-100'
               }`} 
               src={getImageSrc()}
-              alt={market.name || 'Market'}
+              alt={displayName || 'Market'}
               onError={handleImageError}
               onLoad={handleImageLoad}
             />
@@ -81,9 +88,9 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
                 <p className='text-lg font-medium text-emerald-600'>{market.name}</p>
                 <div className='flex items-center mt-1 space-x-2 text-emerald-600'>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                   </svg>
-                  <span>{market.cityHindi || market.city}</span>
+                  <span>{displayCity}</span>
                 </div>
               </div>
             </div>
@@ -149,20 +156,18 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
     >
       {/* Image Section */}
       <div className='relative h-64 overflow-hidden'>
-        <img 
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            isHovered ? 'scale-110' : 'scale-100'
-          }`} 
+        <img
+          className={`w-full h-full object-cover transition-transform duration-700 ${isHovered ? 'scale-110' : 'scale-100'
+            }`}
           src={getImageSrc()}
-          alt={market.name || 'Market'}
+          alt={displayName || 'Market'}
           onError={handleImageError}
           onLoad={handleImageLoad}
         />
-        
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-500 ${
-          isHovered ? 'opacity-70' : 'opacity-50'
-        }`}></div>
-        
+
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-70' : 'opacity-50'
+          }`}></div>
+
         {/* Heritage Badge */}
         <div className='absolute top-4 left-4'>
           <div className='px-3 py-1 text-sm font-medium text-white rounded-full bg-emerald-500'>
@@ -173,7 +178,7 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
         {/* Rating Badge */}
         <div className='absolute flex items-center px-3 py-1 space-x-1 rounded-full top-4 right-4 bg-white/90 backdrop-blur-sm'>
           <svg className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
           <span className='text-sm font-semibold text-emerald-800'>{market.rating || '0'}</span>
         </div>
@@ -198,9 +203,9 @@ const MarketCard = ({ market, viewMode = 'grid', onClick }) => {
           <p className='text-lg font-medium text-emerald-600'>{market.name}</p>
           <div className='flex items-center mt-1 space-x-2 text-emerald-600'>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
-            <span>{market.cityHindi || market.city}</span>
+            <span>{displayCity}</span>
           </div>
         </div>
 
